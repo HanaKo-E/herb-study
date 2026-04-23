@@ -9,13 +9,13 @@
     
     <style>
         :root {
-            --primary-color: #7D6B7D;    /* 莫蘭迪深紫 */
-            --accent-color: #B5A4B1;     /* 莫蘭迪灰粉 */
-            --bg-color: #F4F0F2;         /* 背景粉灰 */
+            --primary-color: #7D6B7D;
+            --accent-color: #B5A4B1;
+            --bg-color: #F4F0F2;
             --card-bg: #FFFFFF;
             --text-color: #5A4E5A;
-            --toxic-small-bg: #006400;   /* 深綠色底 */
-            --toxic-large-bg: #FF0000;   /* 鮮紅色底 */
+            --toxic-small-bg: #006400;
+            --toxic-large-bg: #FF0000;
         }
 
         body {
@@ -97,12 +97,28 @@
             padding-bottom: 8px;
             display: flex;
             justify-content: space-between;
-            align-items: center; /* 確保內容垂直居中 */
+            align-items: center;
+            cursor: pointer; /* 提示可以點擊 */
         }
 
         .info-label {
             font-weight: bold;
             color: var(--primary-color);
+        }
+
+        /* 答案遮罩樣式 */
+        .answer {
+            position: relative;
+            min-width: 80px;
+            text-align: right;
+            transition: all 0.3s;
+        }
+
+        .answer.hidden {
+            background-color: #E0E0E0;
+            color: transparent;
+            border-radius: 5px;
+            filter: blur(4px);
         }
 
         /* 毒性標籤樣式 */
@@ -111,14 +127,8 @@
             border-radius: 8px;
             font-weight: bold;
         }
-        .toxic-small { 
-            background-color: var(--toxic-small-bg); 
-            color: #FFFFFF; 
-        }
-        .toxic-large { 
-            background-color: var(--toxic-large-bg); 
-            color: #FFFFFF; 
-        }
+        .toxic-small { background-color: var(--toxic-small-bg); color: #FFFFFF; }
+        .toxic-large { background-color: var(--toxic-large-bg); color: #FFFFFF; }
 
         .next-btn {
             background-color: var(--primary-color);
@@ -138,6 +148,12 @@
             transform: translateY(4px);
             box-shadow: 0 0 #5E4F5E;
         }
+        
+        .tip-text {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -149,14 +165,25 @@
     <div class="image-container">
         <img id="medImage" src="" alt="圖片載入中...">
     </div>
+    
+    <div style="margin-top:10px;" class="tip-text">💡 點擊下方欄位揭曉答案</div>
 
     <div class="info-card">
-        <div class="info-item"><span class="info-label">藥名</span><span id="medName">---</span></div>
-        <div class="info-item"><span class="info-label">屬性</span><span id="medProp">---</span></div>
-        <div class="info-item"><span class="info-label">毒性</span><span id="medTox">---</span></div>
+        <div class="info-item" onclick="reveal(this)">
+            <span class="info-label">藥名</span>
+            <span id="medName" class="answer hidden">---</span>
+        </div>
+        <div class="info-item" onclick="reveal(this)">
+            <span class="info-label">屬性</span>
+            <span id="medProp" class="answer hidden">---</span>
+        </div>
+        <div class="info-item" onclick="reveal(this)">
+            <span class="info-label">毒性</span>
+            <span id="medTox" class="answer hidden">---</span>
+        </div>
     </div>
 
-    <button class="next-btn" onclick="showNext()">查看下一種</button>
+    <button class="next-btn" onclick="showNext()">查看下一個</button>
 </div>
 
 <script>
@@ -224,7 +251,16 @@
 
     let currentIndex = 0;
 
+    // 點擊揭曉答案
+    function reveal(el) {
+        const answerSpan = el.querySelector('.answer');
+        answerSpan.classList.remove('hidden');
+    }
+
     function showNext() {
+        // 重置所有答案為隱藏狀態
+        document.querySelectorAll('.answer').forEach(span => span.classList.add('hidden'));
+
         const med = medicines[currentIndex];
         
         document.getElementById('medName').innerText = med.name;
@@ -232,15 +268,12 @@
         
         const toxEl = document.getElementById('medTox');
         toxEl.innerText = med.toxicity;
+        toxEl.className = "answer hidden"; // 先重置 class
         
-        // 重置樣式
-        toxEl.className = ""; 
-        
-        // 根據毒性套用底色標籤
         if (med.toxicity === '小毒') {
-            toxEl.className = "toxic-tag toxic-small";
+            toxEl.classList.add('toxic-tag', 'toxic-small');
         } else if (med.toxicity === '大毒') {
-            toxEl.className = "toxic-tag toxic-large";
+            toxEl.classList.add('toxic-tag', 'toxic-large');
         }
         
         document.getElementById('medImage').src = encodeURIComponent(med.img);
