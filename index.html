@@ -16,6 +16,7 @@
             --text-color: #5A4E5A;
             --toxic-small-bg: #006400;
             --toxic-large-bg: #FF0000;
+            --disabled-color: #D1CCD1;
         }
 
         body {
@@ -80,7 +81,6 @@
             padding: 10px;
         }
 
-        /* 提示文字加大加強 */
         .tip-text {
             font-size: 1.1rem;
             color: #FFFFFF;
@@ -118,7 +118,6 @@
             color: var(--primary-color);
         }
 
-        /* 遮罩樣式更新：增加不透明度 */
         .answer {
             position: relative;
             min-width: 90px;
@@ -141,23 +140,38 @@
         .toxic-small { background-color: var(--toxic-small-bg); color: #FFFFFF; }
         .toxic-large { background-color: var(--toxic-large-bg); color: #FFFFFF; }
 
-        .next-btn {
+        /* 按鈕容器設計 */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            flex: 1;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            width: 100%;
             padding: 18px;
             border-radius: 50px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px #5E4F5E;
             transition: all 0.1s;
         }
 
-        .next-btn:active {
+        .nav-btn:active {
             transform: translateY(4px);
             box-shadow: 0 0 #5E4F5E;
+        }
+
+        .nav-btn:disabled {
+            background-color: var(--disabled-color);
+            box-shadow: 0 4px #BDB9BD;
+            cursor: not-allowed;
+            transform: none;
         }
     </style>
 </head>
@@ -188,7 +202,10 @@
         </div>
     </div>
 
-    <button class="next-btn" onclick="showNext()">查看下一個</button>
+    <div class="btn-group">
+        <button id="prevBtn" class="nav-btn" onclick="changeMed(-1)">上一頁</button>
+        <button id="nextBtn" class="nav-btn" onclick="changeMed(1)">下一個</button>
+    </div>
 </div>
 
 <script>
@@ -261,44 +278,56 @@
         answerSpan.classList.remove('hidden');
     }
 
-    function showNext() {
-        // 第一步：先清空舊的文字內容，避免切換時閃現
+    // 整合上一頁與下一頁的邏輯
+    function changeMed(step) {
+        // 更新索引
+        currentIndex += step;
+
+        // 循環處理：最後一張點下一個回到第一張，第一張點上一個回到最後一張
+        if (currentIndex >= medicines.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = medicines.length - 1;
+
+        updateUI();
+    }
+
+    function updateUI() {
         const nameEl = document.getElementById('medName');
         const propEl = document.getElementById('medProp');
         const toxEl = document.getElementById('medTox');
         
+        // 1. 清空內容
         nameEl.innerText = "";
         propEl.innerText = "";
         toxEl.innerText = "";
         
-        // 第二步：恢復遮罩
+        // 2. 恢復遮罩樣式
         nameEl.className = "answer hidden";
         propEl.className = "answer hidden";
         toxEl.className = "answer hidden";
 
-        // 第三步：載入新資料
+        // 3. 填充新內容
         const med = medicines[currentIndex];
-        
         nameEl.innerText = med.name;
         propEl.innerText = med.property;
         toxEl.innerText = med.toxicity;
         
+        // 毒性樣式處理
         if (med.toxicity === '小毒') {
             toxEl.classList.add('toxic-tag', 'toxic-small');
         } else if (med.toxicity === '大毒') {
             toxEl.classList.add('toxic-tag', 'toxic-large');
         }
         
+        // 圖片與進度
         document.getElementById('medImage').src = encodeURIComponent(med.img);
         document.getElementById('currentNum').innerText = currentIndex + 1;
 
-        currentIndex++;
-        if (currentIndex >= medicines.length) {
-            currentIndex = 0; 
-        }
+        // 4. 控制「上一頁」按鈕是否禁用 (如果不想循環，可以開啟這段)
+        // document.getElementById('prevBtn').disabled = (currentIndex === 0);
     }
 
-    window.onload = showNext;
+    // 初始化顯示第一張
+    window.onload = updateUI;
 </script>
 </body>
 </html>
