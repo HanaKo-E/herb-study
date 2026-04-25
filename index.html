@@ -41,6 +41,48 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+        /* 搜尋器樣式 */
+        .search-container {
+            width: 90%;
+            max-width: 400px;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--accent-color);
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+            color: var(--text-color);
+        }
+
+        #searchResult {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .result-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #EEE;
+            cursor: pointer;
+        }
+
+        .result-item:last-child { border-bottom: none; }
+        .result-item:active { background-color: var(--bg-color); }
+
         .progress-box {
             margin-top: 10px;
             font-size: 1rem;
@@ -140,7 +182,6 @@
         .toxic-small { background-color: var(--toxic-small-bg); color: #FFFFFF; }
         .toxic-large { background-color: var(--toxic-large-bg); color: #FFFFFF; }
 
-        /* 按鈕容器設計 */
         .btn-group {
             display: flex;
             gap: 15px;
@@ -166,18 +207,17 @@
             transform: translateY(4px);
             box-shadow: 0 0 #5E4F5E;
         }
-
-        .nav-btn:disabled {
-            background-color: var(--disabled-color);
-            box-shadow: 0 4px #BDB9BD;
-            cursor: not-allowed;
-            transform: none;
-        }
     </style>
 </head>
 <body>
 
 <header>學習圖鑑中藥</header>
+
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()" onfocus="this.value=''">
+    <div id="searchResult"></div>
+</div>
+
 <div class="progress-box">進度：<span id="currentNum">1</span> / 59</div>
 
 <div class="container">
@@ -210,67 +250,65 @@
 
 <script>
     const medicines = [
-已按你指定的順序重新排列如下：
-
-{ name: '麻黃', property: '溫', toxicity: '無毒', img: '麻黃.png' },
-{ name: '桂枝', property: '溫', toxicity: '無毒', img: '桂枝.png' },
-{ name: '紫蘇葉', property: '溫', toxicity: '無毒', img: '紫蘇葉.png' },
-{ name: '生薑', property: '溫', toxicity: '無毒', img: '生薑.png' },
-{ name: '香薷(儒)', property: '微溫', toxicity: '無毒', img: '香薷.png' },
-{ name: '荊芥', property: '微溫', toxicity: '無毒', img: '荊芥.png' },
-{ name: '防風', property: '微溫', toxicity: '無毒', img: '防風.png' },
-{ name: '羌活', property: '溫', toxicity: '無毒', img: '羌活.png' },
-{ name: '白芷', property: '溫', toxicity: '無毒', img: '白芷.png' },
-{ name: '細辛', property: '溫', toxicity: '小毒', img: '細辛.png' },
-{ name: '藁(稿)本', property: '溫', toxicity: '無毒', img: '藁本.png' },
-{ name: '蒼耳子', property: '溫', toxicity: '小毒', img: '蒼耳子.png' },
-{ name: '蔥白', property: '溫', toxicity: '無毒', img: '蔥白.png' },
-{ name: '辛夷', property: '溫', toxicity: '無毒', img: '辛夷.png' },
-{ name: '薄荷', property: '涼', toxicity: '無毒', img: '薄荷.png' },
-{ name: '牛蒡子', property: '寒', toxicity: '無毒', img: '牛蒡子.png' },
-{ name: '蟬蛻(退)', property: '寒', toxicity: '無毒', img: '蟬蛻.png' },
-{ name: '桑葉', property: '寒', toxicity: '無毒', img: '桑葉.png' },
-{ name: '菊花', property: '微寒', toxicity: '無毒', img: '菊花.png' },
-{ name: '蔓荊子', property: '微寒', toxicity: '無毒', img: '蔓荊子.png' },
-{ name: '柴胡', property: '微寒', toxicity: '無毒', img: '柴胡.png' },
-{ name: '升麻', property: '微寒', toxicity: '無毒', img: '升麻.png' },
-{ name: '葛根', property: '涼', toxicity: '無毒', img: '葛根.png' },
-{ name: '木賊', property: '平', toxicity: '無毒', img: '木賊.png' },
-{ name: '浮萍', property: '寒', toxicity: '無毒', img: '浮萍.png' },
-{ name: '決明子', property: '微寒', toxicity: '無毒', img: '決明子.png' },
-{ name: '石膏', property: '大寒', toxicity: '無毒', img: '石膏.png' },
-{ name: '知母', property: '寒', toxicity: '無毒', img: '知母.png' },
-{ name: '天花粉', property: '微寒', toxicity: '無毒', img: '天花粉.png' },
-{ name: '黃芩(琴)', property: '寒', toxicity: '無毒', img: '黃芩.png' },
-{ name: '黃連', property: '寒', toxicity: '無毒', img: '黃連.png' },
-{ name: '黃柏(百)', property: '寒', toxicity: '無毒', img: '黃柏.png' },
-{ name: '龍膽', property: '寒', toxicity: '無毒', img: '龍膽.png' },
-{ name: '金銀花', property: '寒', toxicity: '無毒', img: '金銀花.png' },
-{ name: '連翹(橋)', property: '微寒', toxicity: '無毒', img: '連翹.png' },
-{ name: '板藍根', property: '寒', toxicity: '無毒', img: '板藍根.png' },
-{ name: '土茯苓', property: '平', toxicity: '無毒', img: '土茯苓.png' },
-{ name: '射干', property: '寒', toxicity: '無毒', img: '射干.png' },
-{ name: '玄參', property: '微寒', toxicity: '無毒', img: '玄參.png' },
-{ name: '大黃', property: '寒', toxicity: '無毒', img: '大黃.png' },
-{ name: '芒硝(消)', property: '寒', toxicity: '無毒', img: '芒硝.png' },
-{ name: '獨活', property: '微溫', toxicity: '無毒', img: '獨活.png' },
-{ name: '威靈仙', property: '溫', toxicity: '無毒', img: '威靈仙.png' },
-{ name: '烏梢(消)蛇', property: '平', toxicity: '無毒', img: '烏梢蛇.png' },
-{ name: '木瓜', property: '溫', toxicity: '無毒', img: '木瓜.png' },
-{ name: '路路通', property: '平', toxicity: '無毒', img: '路路通.png' },
-{ name: '秦艽(交)', property: '平', toxicity: '無毒', img: '秦艽.png' },
-{ name: '漢防己', property: '寒', toxicity: '無毒', img: '漢防己.png' },
-{ name: '桑枝', property: '平', toxicity: '無毒', img: '桑枝.png' },
-{ name: '絡石藤', property: '微寒', toxicity: '無毒', img: '絡石藤.png' },
-{ name: '雷公藤', property: '寒', toxicity: '大毒', img: '雷公藤.png' },
-{ name: '昆布', property: '寒', toxicity: '無毒', img: '昆布.png' },
-{ name: '當歸', property: '溫', toxicity: '無毒', img: '當歸.png' },
-{ name: '西洋參', property: '涼', toxicity: '無毒', img: '西洋參.png' },
-{ name: '石斛(酷)', property: '微寒', toxicity: '無毒', img: '石斛.png' },
-{ name: '百合', property: '微寒', toxicity: '無毒', img: '百合.png' },
-{ name: '鹿茸', property: '溫', toxicity: '無毒', img: '鹿茸.png' },
-{ name: '巴戟天', property: '微溫', toxicity: '無毒', img: '巴戟天.png' },
-{ name: '山楂', property: '微溫', toxicity: '無毒', img: '山楂.png' }
+        { name: '麻黃', property: '溫', toxicity: '無毒', img: '麻黃.png' },
+        { name: '桂枝', property: '溫', toxicity: '無毒', img: '桂枝.png' },
+        { name: '紫蘇葉', property: '溫', toxicity: '無毒', img: '紫蘇葉.png' },
+        { name: '生薑', property: '溫', toxicity: '無毒', img: '生薑.png' },
+        { name: '香薷(儒)', property: '微溫', toxicity: '無毒', img: '香薷.png' },
+        { name: '荊芥', property: '微溫', toxicity: '無毒', img: '荊芥.png' },
+        { name: '防風', property: '微溫', toxicity: '無毒', img: '防風.png' },
+        { name: '羌活', property: '溫', toxicity: '無毒', img: '羌活.png' },
+        { name: '白芷', property: '溫', toxicity: '無毒', img: '白芷.png' },
+        { name: '細辛', property: '溫', toxicity: '小毒', img: '細辛.png' },
+        { name: '藁(稿)本', property: '溫', toxicity: '無毒', img: '藁本.png' },
+        { name: '蒼耳子', property: '溫', toxicity: '小毒', img: '蒼耳子.png' },
+        { name: '蔥白', property: '溫', toxicity: '無毒', img: '蔥白.png' },
+        { name: '辛夷', property: '溫', toxicity: '無毒', img: '辛夷.png' },
+        { name: '薄荷', property: '涼', toxicity: '無毒', img: '薄荷.png' },
+        { name: '牛蒡子', property: '寒', toxicity: '無毒', img: '牛蒡子.png' },
+        { name: '蟬蛻(退)', property: '寒', toxicity: '無毒', img: '蟬蛻.png' },
+        { name: '桑葉', property: '寒', toxicity: '無毒', img: '桑葉.png' },
+        { name: '菊花', property: '微寒', toxicity: '無毒', img: '菊花.png' },
+        { name: '蔓荊子', property: '微寒', toxicity: '無毒', img: '蔓荊子.png' },
+        { name: '柴胡', property: '微寒', toxicity: '無毒', img: '柴胡.png' },
+        { name: '升麻', property: '微寒', toxicity: '無毒', img: '升麻.png' },
+        { name: '葛根', property: '涼', toxicity: '無毒', img: '葛根.png' },
+        { name: '木賊', property: '平', toxicity: '無毒', img: '木賊.png' },
+        { name: '浮萍', property: '寒', toxicity: '無毒', img: '浮萍.png' },
+        { name: '決明子', property: '微寒', toxicity: '無毒', img: '決明子.png' },
+        { name: '石膏', property: '大寒', toxicity: '無毒', img: '石膏.png' },
+        { name: '知母', property: '寒', toxicity: '無毒', img: '知母.png' },
+        { name: '天花粉', property: '微寒', toxicity: '無毒', img: '天花粉.png' },
+        { name: '黃芩(琴)', property: '寒', toxicity: '無毒', img: '黃芩.png' },
+        { name: '黃連', property: '寒', toxicity: '無毒', img: '黃連.png' },
+        { name: '黃柏(百)', property: '寒', toxicity: '無毒', img: '黃柏.png' },
+        { name: '龍膽', property: '寒', toxicity: '無毒', img: '龍膽.png' },
+        { name: '金銀花', property: '寒', toxicity: '無毒', img: '金銀花.png' },
+        { name: '連翹(橋)', property: '微寒', toxicity: '無毒', img: '連翹.png' },
+        { name: '板藍根', property: '寒', toxicity: '無毒', img: '板藍根.png' },
+        { name: '土茯苓', property: '平', toxicity: '無毒', img: '土茯苓.png' },
+        { name: '射干', property: '寒', toxicity: '無毒', img: '射干.png' },
+        { name: '玄參', property: '微寒', toxicity: '無毒', img: '玄參.png' },
+        { name: '大黃', property: '寒', toxicity: '無毒', img: '大黃.png' },
+        { name: '芒硝(消)', property: '寒', toxicity: '無毒', img: '芒硝.png' },
+        { name: '獨活', property: '微溫', toxicity: '無毒', img: '獨活.png' },
+        { name: '威靈仙', property: '溫', toxicity: '無毒', img: '威靈仙.png' },
+        { name: '烏梢(消)蛇', property: '平', toxicity: '無毒', img: '烏梢蛇.png' },
+        { name: '木瓜', property: '溫', toxicity: '無毒', img: '木瓜.png' },
+        { name: '路路通', property: '平', toxicity: '無毒', img: '路路通.png' },
+        { name: '秦艽(交)', property: '平', toxicity: '無毒', img: '秦艽.png' },
+        { name: '漢防己', property: '寒', toxicity: '無毒', img: '漢防己.png' },
+        { name: '桑枝', property: '平', toxicity: '無毒', img: '桑枝.png' },
+        { name: '絡石藤', property: '微寒', toxicity: '無毒', img: '絡石藤.png' },
+        { name: '雷公藤', property: '寒', toxicity: '大毒', img: '雷公藤.png' },
+        { name: '昆布', property: '寒', toxicity: '無毒', img: '昆布.png' },
+        { name: '當歸', property: '溫', toxicity: '無毒', img: '當歸.png' },
+        { name: '西洋參', property: '涼', toxicity: '無毒', img: '西洋參.png' },
+        { name: '石斛(酷)', property: '微寒', toxicity: '無毒', img: '石斛.png' },
+        { name: '百合', property: '微寒', toxicity: '無毒', img: '百合.png' },
+        { name: '鹿茸', property: '溫', toxicity: '無毒', img: '鹿茸.png' },
+        { name: '巴戟天', property: '微溫', toxicity: '無毒', img: '巴戟天.png' },
+        { name: '山楂', property: '微溫', toxicity: '無毒', img: '山楂.png' }
     ];
 
     let currentIndex = 0;
@@ -280,55 +318,82 @@
         answerSpan.classList.remove('hidden');
     }
 
-    // 整合上一頁與下一頁的邏輯
     function changeMed(step) {
-        // 更新索引
         currentIndex += step;
-
-        // 循環處理：最後一張點下一個回到第一張，第一張點上一個回到最後一張
         if (currentIndex >= medicines.length) currentIndex = 0;
         if (currentIndex < 0) currentIndex = medicines.length - 1;
-
         updateUI();
     }
+
+    // 搜尋功能邏輯
+    function handleSearch() {
+        const input = document.getElementById('searchInput').value.trim();
+        const resultBox = document.getElementById('searchResult');
+        resultBox.innerHTML = "";
+        
+        if (input === "") {
+            resultBox.style.display = "none";
+            return;
+        }
+
+        const filtered = medicines
+            .map((m, index) => ({...m, originalIndex: index}))
+            .filter(m => m.name.includes(input));
+
+        if (filtered.length > 0) {
+            filtered.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerText = m.name;
+                div.onclick = () => {
+                    currentIndex = m.originalIndex;
+                    updateUI();
+                    resultBox.style.display = "none";
+                    document.getElementById('searchInput').value = m.name;
+                };
+                resultBox.appendChild(div);
+            });
+            resultBox.style.display = "block";
+        } else {
+            resultBox.style.display = "none";
+        }
+    }
+
+    // 點擊外面隱藏搜尋結果
+    document.addEventListener('click', function(e) {
+        if (!document.querySelector('.search-container').contains(e.target)) {
+            document.getElementById('searchResult').style.display = "none";
+        }
+    });
 
     function updateUI() {
         const nameEl = document.getElementById('medName');
         const propEl = document.getElementById('medProp');
         const toxEl = document.getElementById('medTox');
         
-        // 1. 清空內容
         nameEl.innerText = "";
         propEl.innerText = "";
         toxEl.innerText = "";
         
-        // 2. 恢復遮罩樣式
         nameEl.className = "answer hidden";
         propEl.className = "answer hidden";
         toxEl.className = "answer hidden";
 
-        // 3. 填充新內容
         const med = medicines[currentIndex];
         nameEl.innerText = med.name;
         propEl.innerText = med.property;
         toxEl.innerText = med.toxicity;
         
-        // 毒性樣式處理
         if (med.toxicity === '小毒') {
             toxEl.classList.add('toxic-tag', 'toxic-small');
         } else if (med.toxicity === '大毒') {
             toxEl.classList.add('toxic-tag', 'toxic-large');
         }
         
-        // 圖片與進度
         document.getElementById('medImage').src = encodeURIComponent(med.img);
         document.getElementById('currentNum').innerText = currentIndex + 1;
-
-        // 4. 控制「上一頁」按鈕是否禁用 (如果不想循環，可以開啟這段)
-        // document.getElementById('prevBtn').disabled = (currentIndex === 0);
     }
 
-    // 初始化顯示第一張
     window.onload = updateUI;
 </script>
 </body>
