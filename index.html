@@ -1,3 +1,13 @@
+沒問題！我已經調整了 CSS 的排版與資訊讀取的邏輯，現在資料欄位會完全依照你要求的格式顯示：
+
+1.  **左右對齊佈局**：標籤（Label）固定在左側，內容（Answer）靠右，中間留出對應的間距。
+2.  **屬性與毒性併行**：這兩項會顯示在同一行，並保持對齊。
+3.  **多行自動調整**：對於「功效」或「使用注意」等較長的文字，會自動換行並保持與左側標籤的對齊關係。
+4.  **完整資料載入**：我已經根據你上傳的 CSV 附件，更新了所有藥材的「使用注意」等詳細文字（例如麻黃的詳細慎用說明）。
+
+以下是更新後的程式碼：
+
+```html
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -246,4 +256,113 @@
         { name: '細辛', property: '溫', toxicity: '小毒', nature: '辛。歸肺、腎、心經。', effect: '解表散寒，祛風止痛，通竅，溫肺化飲。', usage: '煎服，1～3g。', notice: '反藜蘆。氣虛多汗、陰虛陽亢者忌。', img: '細辛.png' },
         { name: '藁本', property: '溫', toxicity: '無毒', nature: '辛。歸膀胱經。', effect: '祛風散寒，勝濕止痛。', usage: '煎服，3～10g。', notice: '血虛頭痛者忌用。', img: '藁本.png' },
         { name: '蒼耳子', property: '溫', toxicity: '小毒', nature: '辛、苦。歸肺經。', effect: '散寒解表，通鼻竅，祛風濕，止癢。', usage: '煎服，3～10g。', notice: '血虛頭痛者忌用。過量易中毒。', img: '蒼耳子.png' },
-        { name: '蔥白', property: '溫', toxicity: '無毒', nature: '辛。歸肺、胃經。', effect: '發汗解表，通陽散結，解毒殺蟲。', usage: '煎服，3～10g；外用適量。', notice
+        { name: '蔥白', property: '溫', toxicity: '無毒', nature: '辛。歸肺、胃經。', effect: '發汗解表，通陽散結，解毒殺蟲。', usage: '煎服，3～10g；外用適量。', notice: '表虛多汗者忌用。', img: '蔥白.png' },
+        { name: '辛夷', property: '溫', toxicity: '無毒', nature: '辛。歸肺經。', effect: '發散風寒，通鼻竅。', usage: '煎服，3～10g。包煎。', notice: '陰虛火旺者慎用。', img: '辛夷.png' },
+        { name: '薄荷', property: '涼', toxicity: '無毒', nature: '辛。歸肺、肝經。', effect: '疏散風熱，清利頭目，利咽，透疹，疏肝解鬱。', usage: '煎服，3～6g。後下。', notice: '體虛多汗者忌用。', img: '薄荷.png' },
+        { name: '牛蒡子', property: '寒', toxicity: '無毒', nature: '辛、苦。歸肺、胃經。', effect: '疏散風熱，宣肺透疹，解毒利咽。', usage: '煎服，6～12g。炒用。', notice: '本品能滑腸，氣虛便溏者慎用。', img: '牛蒡子.png' },
+        { name: '蟬蛻', property: '寒', toxicity: '無毒', nature: '甘。歸肺、肝經。', effect: '疏散風熱，利咽透疹，明目退翳，止痙。', usage: '煎服，3～10g。', notice: '孕婦慎用。', img: '蟬蛻.png' },
+        { name: '桑葉', property: '寒', toxicity: '無毒', nature: '苦、甘。歸肺、肝經。', effect: '疏散風熱，清肺潤燥，清肝明目。', usage: '煎服，5～10g。', notice: '無', img: '桑葉.png' },
+        { name: '菊花', property: '微寒', toxicity: '無毒', nature: '辛、甘、苦。歸肺、肝經。', effect: '疏散風熱，平抑肝陽，清肝明目，清熱解毒。', usage: '煎服，5～15g。', notice: '氣虛便溏者慎用。', img: '菊花.png' },
+        { name: '蔓荊子', property: '微寒', toxicity: '無毒', nature: '辛、苦。歸膀胱、肝、胃經。', effect: '疏散風熱，清利頭目，止痛。', usage: '煎服，5～10g。', notice: '血虛有火之頭痛目眩者忌用。', img: '蔓荊子.png' },
+        { name: '柴胡', property: '微寒', toxicity: '無毒', nature: '苦、辛。歸肝、膽、肺經。', effect: '和解少陽，疏肝解鬱，升陽舉陷。', usage: '煎服，3～10g。', notice: '真陰虧損、肝陽上亢者忌用。', img: '柴胡.png' },
+        { name: '升麻', property: '微寒', toxicity: '無毒', nature: '辛、微甘。歸肺、脾、胃、大腸經。', effect: '發表透疹，清熱解毒，升陽舉陷。', usage: '煎服，3～10g。', notice: '陰虛陽浮者忌用；麻疹已透者忌。', img: '升麻.png' },
+        { name: '葛根', property: '涼', toxicity: '無毒', nature: '甘、辛。歸脾、胃、肺經。', effect: '解肌退熱，透疹，生津止渴，升陽止瀉。', usage: '煎服，10～15g。', notice: '無', img: '葛根.png' },
+        { name: '木賊', property: '平', toxicity: '無毒', nature: '甘、苦。歸肺、肝經。', effect: '疏散風熱，明目退翳，止血。', usage: '煎服，3～10g。', notice: '氣血虛者慎用。孕婦慎用。', img: '木賊.png' },
+        { name: '浮萍', property: '寒', toxicity: '無毒', nature: '辛。歸肺、膀胱經。', effect: '發汗解表，透疹止癢，利尿消腫。', usage: '煎服，3～10g。', notice: '表虛自汗者忌用。', img: '浮萍.png' },
+        { name: '決明子', property: '微寒', toxicity: '無毒', nature: '甘、苦、鹹。歸肝、大腸經。', effect: '清肝明目，潤腸通便。', usage: '煎服，9～15g。', notice: '脾虛便溏者忌用。', img: '決明子.png' },
+        { name: '石膏', property: '大寒', toxicity: '無毒', nature: '辛、甘。歸肺、胃經。', effect: '清熱瀉火，除煩止渴。', usage: '煎服，15～60g。先煎。', notice: '脾胃虛寒及陰虛內熱者忌。', img: '石膏.png' },
+        { name: '知母', property: '寒', toxicity: '無毒', nature: '苦、甘。歸肺、胃、腎經。', effect: '清熱瀉火，滋陰潤燥。', usage: '煎服，6～12g。', notice: '脾胃虛寒，大便溏洩者忌用。', img: '知母.png' },
+        { name: '天花粉', property: '微寒', toxicity: '無毒', nature: '甘、微苦。歸肺、胃經。', effect: '清熱瀉火，生津止渴，消腫排膿。', usage: '煎服，10～15g。', notice: '不宜與烏頭類藥材同用。孕婦忌用。', img: '天花粉.png' },
+        { name: '黃芩', property: '寒', toxicity: '無毒', nature: '苦。歸肺、胃、膽、大腸經。', effect: '清熱燥濕，瀉火解毒，止血，安胎。', usage: '煎服，3～10g。', notice: '脾胃虛寒者忌用。', img: '黃芩.png' },
+        { name: '黃連', property: '寒', toxicity: '無毒', nature: '苦。歸心、脾、胃、肝、膽、大腸經。', effect: '清熱燥濕，瀉火解毒。', usage: '煎服，2～5g。', notice: '本品大苦大寒，過服易傷脾胃。', img: '黃連.png' },
+        { name: '黃柏', property: '寒', toxicity: '無毒', nature: '苦。歸腎、膀胱、大腸經。', effect: '清熱燥濕，瀉火除蒸，解毒療瘡。', usage: '煎服，3～12g。', notice: '脾胃虛寒者忌用。', img: '黃柏.png' },
+        { name: '龍膽', property: '寒', toxicity: '無毒', nature: '苦。歸肝、膽經。', effect: '清熱燥濕，瀉肝膽火。', usage: '煎服，3～6g。', notice: '脾胃虛寒及陰虛津傷者慎用。', img: '龍膽.png' },
+        { name: '金銀花', property: '寒', toxicity: '無毒', nature: '甘。歸肺、心、胃經。', effect: '清熱解毒，疏散風熱。', usage: '煎服，6～15g。', notice: '脾胃虛寒及氣虛瘡瘍膿清者忌用。', img: '金銀花.png' },
+        { name: '連翹', property: '微寒', toxicity: '無毒', nature: '苦。歸肺、心、小腸經。', effect: '清熱解毒，消腫散結，疏散風熱。', usage: '煎服，6～15g。', notice: '脾胃虛寒及氣虛膿清者不宜用。', img: '連翹.png' },
+        { name: '板藍根', property: '寒', toxicity: '無毒', nature: '苦。歸心、胃經。', effect: '清熱解毒，涼血，利咽。', usage: '煎服，9～15g。', notice: '脾胃虛寒者慎用。', img: '板藍根.png' },
+        { name: '土茯苓', property: '平', toxicity: '無毒', nature: '甘、淡。歸肝、胃經。', effect: '解毒，除濕，通利關節。', usage: '煎服，15～60g。', notice: '服藥時忌茶。', img: '土茯苓.png' },
+        { name: '射干', property: '寒', toxicity: '無毒', nature: '苦。歸肺經。', effect: '清熱解毒，消痰，利咽。', usage: '煎服，3～9g。', notice: '脾虛便溏者不宜用。孕婦忌用或慎用。', img: '射干.png' },
+        { name: '玄參', property: '微寒', toxicity: '無毒', nature: '甘、苦、鹹。歸肺、胃、腎經。', effect: '清熱涼血，滋陰解毒。', usage: '煎服，9～15g。', notice: '反藜蘆。脾胃有濕及便溏者忌。', img: '玄參.png' },
+        { name: '大黃', property: '寒', toxicity: '無毒', nature: '苦。歸脾、胃、大腸、肝、心包經。', effect: '瀉下攻積，清熱瀉火，止血，解毒。', usage: '煎服，5～15g。後下。', notice: '孕婦、月經期、哺乳期慎用。', img: '大黃.png' },
+        { name: '芒硝', property: '寒', toxicity: '無毒', nature: '鹹、苦。歸胃、大腸經。', effect: '瀉下通便，潤燥軟堅，清火消腫。', usage: '沖入藥汁內服用，6～12g。', notice: '孕婦、哺乳期忌用。', img: '芒硝.png' },
+        { name: '獨活', property: '微溫', toxicity: '無毒', nature: '辛、苦。歸腎、膀胱經。', effect: '祛風勝濕，散寒止痛。', usage: '煎服，3～10g。', notice: '陰虛血燥者慎用。', img: '獨活.png' },
+        { name: '威靈仙', property: '溫', toxicity: '無毒', nature: '辛、鹹。歸膀胱經。', effect: '祛風濕，通經絡。', usage: '煎服，6～10g。', notice: '氣血虧虛者慎用。', img: '威靈仙.png' },
+        { name: '烏梢蛇', property: '平', toxicity: '無毒', nature: '甘。歸肝經。', effect: '祛風，通絡，止痙。', usage: '煎服，5～10g。研末2～3g。', notice: '血虛生風者慎用。', img: '烏梢蛇.png' },
+        { name: '木瓜', property: '溫', toxicity: '無毒', nature: '酸。歸肝、脾經。', effect: '舒筋活絡，和胃化濕。', usage: '煎服，6～12g。', notice: '胃酸過多者慎用。', img: '木瓜.png' },
+        { name: '路路通', property: '平', toxicity: '無毒', nature: '苦。歸肝、腎經。', effect: '祛風活絡，利水，通經。', usage: '煎服，5～10g。', notice: '孕婦忌用。', img: '路路通.png' },
+        { name: '秦艽', property: '平', toxicity: '無毒', nature: '苦、辛。歸胃、肝、膽經。', effect: '祛風濕，通絡止痛，退虛熱。', usage: '煎服，3～10g。', notice: '久痹虛寒者慎用。', img: '秦艽.png' },
+        { name: '漢防己', property: '寒', toxicity: '無毒', nature: '苦、辛。歸膀胱、肺、脾經。', effect: '祛風濕，止痛，利水消腫。', usage: '煎服，5～10g。', notice: '本品苦寒，食欲不振者慎用。', img: '漢防己.png' },
+        { name: '桑枝', property: '平', toxicity: '無毒', nature: '微苦。歸肝經。', effect: '祛風濕，通絡止痛。', usage: '煎服，10～30g。', notice: '無', img: '桑枝.png' },
+        { name: '絡石藤', property: '微寒', toxicity: '無毒', nature: '苦。歸肝經。', effect: '祛風通絡，涼血消腫。', usage: '煎服，6～15g。', notice: '陽衰寒痹者忌用。', img: '絡石藤.png' },
+        { name: '雷公藤', property: '寒', toxicity: '大毒', nature: '苦、辛。歸肝、腎經。', effect: '祛風除濕，活血通絡，消腫止痛。', usage: '煎服，10～12g。久煎。', notice: '本品有大毒，應嚴格控制劑量。', img: '雷公藤.png' },
+        { name: '昆布', property: '寒', toxicity: '無毒', nature: '鹹。歸肝、胃、腎經。', effect: '消痰軟堅，利水消腫。', usage: '煎服，6～15g。', notice: '脾胃虛寒者慎用。', img: '昆布.png' },
+        { name: '當歸', property: '溫', toxicity: '無毒', nature: '甘、辛。歸肝、心、脾經。', effect: '補血活血，調經止痛，潤腸通便。', usage: '煎服，6～12g。', notice: '濕阻中滿、便溏者慎用。', img: '當歸.png' },
+        { name: '西洋參', property: '涼', toxicity: '無毒', nature: '甘、微苦。歸心、肺、腎經。', effect: '補氣養陰，清熱生津。', usage: '煎服，3～6g。另煎兌服。', notice: '不宜與藜蘆同用。中陽不足者忌。', img: '西洋參.png' },
+        { name: '石斛', property: '微寒', toxicity: '無毒', nature: '甘。歸胃、腎經。', effect: '益胃生津，滋陰清熱。', usage: '煎服，6～12g。', notice: '溫熱病早期陰未傷者忌。', img: '石斛.png' },
+        { name: '百合', property: '微寒', toxicity: '無毒', nature: '甘。歸心、肺經。', effect: '養陰潤肺，清心安神。', usage: '煎服，10～30g。', notice: '風寒咳嗽及脾虛便溏者忌。', img: '百合.png' },
+        { name: '鹿茸', property: '溫', toxicity: '無毒', nature: '甘、鹹。歸肝、腎經。', effect: '壯腎陽，益精血，強筋骨。', usage: '研末吞服，1～2g。', notice: '陰虛陽亢者忌用。', img: '鹿茸.png' },
+        { name: '巴戟天', property: '微溫', toxicity: '無毒', nature: '甘、辛。歸腎、肝經。', effect: '補腎陽，強筋骨，祛風濕。', usage: '煎服，3～10g。', notice: '陰虛火旺及小便不利者忌。', img: '巴戟天.png' },
+        { name: '山楂', property: '微溫', toxicity: '無毒', nature: '酸、甘。歸脾、胃、肝經。', effect: '消食化積，行氣散瘀。', usage: '煎服，9～12g。', notice: '胃酸過多者慎用。', img: '山楂.png' }
+    ];
+
+    let currentIndex = 0;
+
+    function reveal(el) {
+        el.querySelectorAll('.answer').forEach(ans => ans.classList.remove('hidden'));
+    }
+
+    function changeMed(step) {
+        currentIndex += step;
+        if (currentIndex >= medicines.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = medicines.length - 1;
+        updateUI();
+    }
+
+    function handleSearch() {
+        const input = document.getElementById('searchInput').value.trim();
+        const resultBox = document.getElementById('searchResult');
+        resultBox.innerHTML = "";
+        if (input === "") { resultBox.style.display = "none"; return; }
+        const filtered = medicines.map((m, index) => ({...m, originalIndex: index})).filter(m => m.name.includes(input));
+        if (filtered.length > 0) {
+            filtered.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerText = m.name;
+                div.onclick = () => { currentIndex = m.originalIndex; updateUI(); resultBox.style.display = "none"; document.getElementById('searchInput').value = m.name; };
+                resultBox.appendChild(div);
+            });
+            resultBox.style.display = "block";
+        } else { resultBox.style.display = "none"; }
+    }
+
+    function updateUI() {
+        const med = medicines[currentIndex];
+        document.getElementById('medName').innerText = med.name;
+        document.getElementById('medProp').innerText = med.property;
+        document.getElementById('medTox').innerText = med.toxicity;
+        document.getElementById('medNature').innerText = med.nature;
+        document.getElementById('medEffect').innerText = med.effect;
+        document.getElementById('medUsage').innerText = med.usage;
+        document.getElementById('medNotice').innerText = med.notice;
+
+        // 隱藏所有答案
+        document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
+
+        // 圖片與進度
+        document.getElementById('medImage').src = encodeURIComponent(med.img);
+        document.getElementById('currentNum').innerText = currentIndex + 1;
+        window.scrollTo(0, 0);
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!document.querySelector('.search-container').contains(e.target)) {
+            document.getElementById('searchResult').style.display = "none";
+        }
+    });
+
+    window.onload = updateUI;
+</script>
+</body>
+</html>
+```
