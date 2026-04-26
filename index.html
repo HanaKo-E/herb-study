@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>中藥學習圖鑑</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#6B5B6B">
+
     <style>
         :root {
             --primary-color: #6B5B6B;
@@ -82,7 +87,7 @@
 
         .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; justify-content: flex-start; text-align: left; }
 
-        /* 毒性等級顏色 */
+        /* 毒性色彩 */
         .tox-small { background-color: #2E5A31 !important; color: #FFFFFF !important; }
         .tox-large { background-color: #A32D2D !important; color: #FFFFFF !important; }
 
@@ -222,16 +227,12 @@ function updateUI() {
     document.getElementById('currentNum').innerText = (currentIndex + 1).toString().padStart(2, '0');
     document.getElementById('totalNum').innerText = medicines.length.toString().padStart(2, '0');
 
-    // 毒性色彩邏輯
     const toxEl = document.getElementById('medTox');
     toxEl.className = 'answer hidden fixed-6';
     if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
     if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
 
-    // 設置圖片 (URI編碼處理)
     document.getElementById('medImage').src = encodeURIComponent(med.img);
-
-    // 重置所有遮罩
     document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
 }
 
