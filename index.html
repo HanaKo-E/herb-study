@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑 - 完美對齊版</title>
+    <title>中藥學習圖鑑 - 完整功能版</title>
     
     <style>
         :root {
@@ -12,7 +12,7 @@
             --bg-color: #F4F0F2;
             --card-bg: #FFFFFF;
             --text-color: #333333;
-            --label-width: 90px; /* 統一標籤寬度 */
+            --label-width: 90px; /* 控制左側標籤寬度 */
         }
 
         body {
@@ -27,77 +27,101 @@
             padding: 15px 0; text-align: center; font-size: 1.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .container { width: 95%; max-width: 500px; margin-top: 15px; }
+        /* 搜尋框樣式 */
+        .search-container {
+            width: 90%; max-width: 480px; margin-top: 15px; position: relative;
+        }
+        #searchInput {
+            width: 100%; padding: 12px 20px; border-radius: 25px;
+            border: 2px solid var(--accent-color); font-size: 1rem; outline: none; box-sizing: border-box;
+        }
+        #searchResult {
+            position: absolute; top: 50px; left: 0; width: 100%;
+            background: white; border-radius: 15px; z-index: 100;
+            max-height: 250px; overflow-y: auto; display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .result-item { padding: 12px 20px; border-bottom: 1px solid #EEE; cursor: pointer; }
+
+        .progress-box { margin-top: 10px; font-size: 1rem; color: var(--primary-color); font-weight: bold; }
+
+        .container { width: 95%; max-width: 500px; margin-top: 10px; }
+
+        /* 圖片區域 */
+        .image-container {
+            width: 100%; height: 250px; background-color: #FFF;
+            border-radius: 20px; border: 2px solid var(--accent-color);
+            margin-bottom: 15px; display: flex; justify-content: center;
+            align-items: center; position: relative; overflow: hidden;
+        }
+        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .img-placeholder { position: absolute; color: #999; font-size: 0.9rem; text-align: center; padding: 20px; }
 
         .info-card {
-            background-color: var(--card-bg); padding: 25px 20px;
+            background-color: var(--card-bg); padding: 20px;
             border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* 每一行的基礎結構 */
-        .info-row {
-            display: flex; align-items: flex-start; margin-bottom: 18px;
-            font-size: 1.1rem; line-height: 1.5;
-        }
+        /* 列表行排版 */
+        .info-row { display: flex; margin-bottom: 15px; line-height: 1.6; font-size: 1.05rem; }
+        .full-row { border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; cursor: pointer; }
 
-        /* 粗體標籤，固定寬度確保答案起始點一致 */
-        .label {
-            width: var(--label-width); font-weight: bold; flex-shrink: 0;
-        }
+        /* 標籤粗體固定寬度 */
+        .label { width: var(--label-width); font-weight: bold; flex-shrink: 0; }
 
-        /* 屬性與毒性並列行 */
-        .split-row {
-            display: flex; width: 100%; align-items: center;
-            border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;
-        }
+        /* 50/50 屬性與毒性對比區域 */
+        .split-row { display: flex; width: 100%; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
+        .split-item { flex: 0 0 50%; display: flex; align-items: center; cursor: pointer; }
+        
+        .slash { color: #CCC; margin: 0 5px; }
 
-        /* 50/50 分割 */
-        .split-item {
-            flex: 0 0 50%; /* 剛好佔一半 */
-            display: flex; align-items: center; cursor: pointer;
-        }
-
-        /* 答案遮罩基礎 */
+        /* 答案遮罩設計 */
         .answer {
             display: inline-flex; justify-content: center; align-items: center;
-            min-width: 3em; /* 固定寬度：即使是一個字也會佔三個字的空間，對齊美觀且防猜 */
+            min-width: 3.5em; /* 固定寬度，防窺對齊 */
             height: 1.4em; border-radius: 4px; transition: all 0.2s;
+            padding: 2px 4px;
         }
-
         .answer.hidden {
-            background-color: #E0E0E0 !important;
-            color: transparent !important;
+            background-color: #E0E0E0 !important; color: transparent !important;
             filter: blur(5px);
         }
 
-        /* 毒性特殊樣式 */
-        .toxic-small { background-color: #006400; color: #FFFFFF !important; font-weight: bold; } /* 深綠 */
-        .toxic-large { background-color: #FF0000; color: #FFFFFF !important; font-weight: bold; } /* 鮮紅 */
+        /* 毒性配色要求 */
+        .toxic-none { color: var(--text-color); }
+        .toxic-small { background-color: #006400; color: #FFFFFF !important; font-weight: bold; }
+        .toxic-large { background-color: #FF0000; color: #FFFFFF !important; font-weight: bold; }
 
-        .slash { color: #CCC; margin: 0 5px; flex-shrink: 0; }
-
-        /* 其他通用行樣式 */
-        .full-width-row { border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; cursor: pointer; }
-        .answer-text { flex-grow: 1; }
-
+        .btn-group { display: flex; gap: 15px; margin-top: 20px; }
         .nav-btn {
             flex: 1; background-color: var(--primary-color); color: white;
             border: none; padding: 15px; border-radius: 50px; font-size: 1.1rem;
-            margin-top: 20px; cursor: pointer; box-shadow: 0 4px #5E4F5E;
+            cursor: pointer; box-shadow: 0 4px #5E4F5E;
         }
+        .nav-btn:active { transform: translateY(2px); box-shadow: 0 2px #5E4F5E; }
     </style>
 </head>
 <body>
 
 <header>中藥圖鑑學習系統</header>
 
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
+    <div id="searchResult"></div>
+</div>
+
+<div class="progress-box">進度：<span id="currentNum">1</span> / <span id="totalNum"></span></div>
+
 <div class="container">
+    <div class="image-container" id="imgBox">
+        <div class="img-placeholder" id="noImgText"></div>
+        <img id="medImage" src="" alt="">
+    </div>
+
     <div class="info-card">
-        <div class="info-row full-width-row" onclick="reveal(this)">
+        <div class="info-row full-row" onclick="reveal(this)">
             <div class="label">藥名</div>
-            <div class="answer-text">
-                <span id="medName" class="answer hidden"></span>
-            </div>
+            <span id="medName" class="answer hidden"></span>
         </div>
 
         <div class="info-row">
@@ -108,45 +132,79 @@
                 </div>
                 <div class="slash">/</div>
                 <div class="split-item" onclick="reveal(this)">
-                    <div class="label" style="width: 60px; padding-left: 10px;">毒性</div>
+                    <div class="label" style="width: 55px; padding-left: 10px;">毒性</div>
                     <span id="medTox" class="answer hidden"></span>
                 </div>
             </div>
         </div>
 
-        <div class="info-row full-width-row" onclick="reveal(this)">
+        <div class="info-row full-row" onclick="reveal(this)">
             <div class="label">性味歸經</div>
-            <div class="answer-text"><span id="medNature" class="answer hidden"></span></div>
+            <span id="medNature" class="answer hidden"></span>
         </div>
-        <div class="info-row full-width-row" onclick="reveal(this)">
+        <div class="info-row full-row" onclick="reveal(this)">
             <div class="label">功效</div>
-            <div class="answer-text"><span id="medEffect" class="answer hidden"></span></div>
+            <span id="medEffect" class="answer hidden"></span>
         </div>
-        <div class="info-row full-width-row" onclick="reveal(this)">
+        <div class="info-row full-row" onclick="reveal(this)">
             <div class="label">用法用量</div>
-            <div class="answer-text"><span id="medUsage" class="answer hidden"></span></div>
+            <span id="medUsage" class="answer hidden"></span>
         </div>
-        <div class="info-row full-width-row" onclick="reveal(this)">
+        <div class="info-row full-row" onclick="reveal(this)">
             <div class="label">使用注意</div>
-            <div class="answer-text"><span id="medNotice" class="answer hidden"></span></div>
+            <span id="medNotice" class="answer hidden"></span>
         </div>
+    </div>
 
-        <div style="display:flex; gap:10px;">
-            <button class="nav-btn" onclick="changeMed(-1)">上一個</button>
-            <button class="nav-btn" onclick="changeMed(1)">下一個</button>
-        </div>
+    <div class="btn-group">
+        <button class="nav-btn" onclick="changeMed(-1)">上一個</button>
+        <button class="nav-btn" onclick="changeMed(1)">下一個</button>
     </div>
 </div>
 
 <script>
+    // 資料庫（此處僅列範例，請按此格式加入 59 味藥）
     const medicines = [
-        { name: '麻黃', property: '溫', toxicity: '無毒', nature: '辛、微苦。歸肺、膀胱經。', effect: '發汗解表，宣肺平喘，利水消腫。', usage: '煎服，2～10g。', notice: '表虛自汗及陰虛盜汗者慎用。' },
-        { name: '細辛', property: '溫', toxicity: '小毒', nature: '辛。歸肺、腎、心經。', effect: '解表散寒，祛風止痛，通竅，溫肺化飲。', usage: '煎服，1～3g。', notice: '反藜蘆。' },
-        { name: '雷公藤', property: '寒', toxicity: '大毒', nature: '苦、辛。歸肝、腎經。', effect: '祛風除濕，活血通絡，消腫止痛。', usage: '煎服，10～12g。', notice: '嚴格控制劑量。' }
-        // ... 其他資料類推
+        { name: '麻黃', property: '溫', toxicity: '無毒', nature: '辛、微苦。歸肺、膀胱經。', effect: '發汗解表，宣肺平喘，利水消腫。', usage: '煎服，2～10g。', notice: '表虛自汗及陰虛盜汗者慎用。', img: '麻黃.png' },
+        { name: '細辛', property: '溫', toxicity: '小毒', nature: '辛。歸肺、腎、心經。', effect: '解表散寒，祛風止痛，通竅，溫肺化飲。', usage: '煎服，1～3g。', notice: '反藜蘆。', img: '細辛.png' },
+        { name: '雷公藤', property: '寒', toxicity: '大毒', nature: '苦、辛。歸肝、腎經。', effect: '祛風除濕，活血通絡，消腫止痛。', usage: '煎服，10～12g。', notice: '嚴格控制劑量。', img: '雷公藤.png' },
+        { name: '當歸', property: '溫', toxicity: '無毒', nature: '甘、辛。歸肝、心、脾經。', effect: '補血活血，調經止痛。', usage: '煎服，6～12g。', notice: '便溏者慎用。', img: '當歸.png' }
     ];
 
     let currentIndex = 0;
+
+    function updateUI() {
+        const med = medicines[currentIndex];
+        document.getElementById('medName').innerText = med.name;
+        document.getElementById('medProp').innerText = med.property;
+        document.getElementById('medTox').innerText = med.toxicity;
+        document.getElementById('medNature').innerText = med.nature;
+        document.getElementById('medEffect').innerText = med.effect;
+        document.getElementById('medUsage').innerText = med.usage;
+        document.getElementById('medNotice').innerText = med.notice;
+
+        // 處理毒性顏色
+        const toxEl = document.getElementById('medTox');
+        toxEl.className = 'answer hidden'; // 重置
+        if (med.toxicity === '小毒') toxEl.classList.add('toxic-small');
+        if (med.toxicity === '大毒') toxEl.classList.add('toxic-large');
+
+        // 圖片處理
+        const imgEl = document.getElementById('medImage');
+        const placeholder = document.getElementById('noImgText');
+        imgEl.style.display = 'none';
+        placeholder.style.display = 'block';
+        placeholder.innerHTML = `載入圖片中...<br>${med.img}`;
+
+        imgEl.src = encodeURIComponent(med.img);
+        imgEl.onload = () => { imgEl.style.display = 'block'; placeholder.style.display = 'none'; };
+        imgEl.onerror = () => { placeholder.innerHTML = `<span style="color:red">缺少圖片</span><br>${med.img}`; };
+
+        // 遮罩初始化
+        document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
+        document.getElementById('currentNum').innerText = currentIndex + 1;
+        document.getElementById('totalNum').innerText = medicines.length;
+    }
 
     function reveal(el) {
         const target = el.querySelector('.answer');
@@ -158,33 +216,32 @@
         updateUI();
     }
 
-    function updateUI() {
-        const med = medicines[currentIndex];
-        const toxEl = document.getElementById('medTox');
+    function handleSearch() {
+        const input = document.getElementById('searchInput').value.trim();
+        const resultBox = document.getElementById('searchResult');
+        resultBox.innerHTML = "";
+        if (!input) { resultBox.style.display = "none"; return; }
         
-        document.getElementById('medName').innerText = med.name;
-        document.getElementById('medProp').innerText = med.property;
-        document.getElementById('medNature').innerText = med.nature;
-        document.getElementById('medEffect').innerText = med.effect;
-        document.getElementById('medUsage').innerText = med.usage;
-        document.getElementById('medNotice').innerText = med.notice;
-        
-        // 設置毒性文字與樣式
-        toxEl.innerText = med.toxicity;
-        toxEl.className = 'answer hidden'; // 重置狀態
-        
-        if (med.toxicity.includes('小毒')) {
-            toxEl.classList.add('toxic-small');
-        } else if (med.toxicity.includes('大毒')) {
-            toxEl.classList.add('toxic-large');
+        const filtered = medicines.map((m, i) => ({...m, idx: i})).filter(m => m.name.includes(input));
+        if (filtered.length > 0) {
+            filtered.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerText = m.name;
+                div.onclick = () => { currentIndex = m.idx; updateUI(); resultBox.style.display = "none"; document.getElementById('searchInput').value = ""; };
+                resultBox.appendChild(div);
+            });
+            resultBox.style.display = "block";
         }
-
-        // 全部重新遮蓋
-        document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
     }
+
+    document.addEventListener('click', (e) => {
+        if (!document.querySelector('.search-container').contains(e.target)) {
+            document.getElementById('searchResult').style.display = "none";
+        }
+    });
 
     window.onload = updateUI;
 </script>
-
 </body>
 </html>
