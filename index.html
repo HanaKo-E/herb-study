@@ -3,35 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑 - 檔名修正版</title>
+    <title>中藥學習圖鑑 - 宣紙質感裝飾版</title>
     <style>
         :root {
-            --primary-color: #7D6B7D;
-            --accent-color: #B5A4B1;
-            --bg-color: #F4F0F2;
-            --card-bg: #FFFFFF;
-            --text-color: #333333;
+            --primary-color: #6B5B6B; /* 深色沉穩 */
+            --accent-color: #A393A1;
+            --bg-color: #F7F3F0;    /* 稍微暖一點的紙張底色 */
+            --card-bg: rgba(255, 255, 255, 0.9); /* 卡片微透明，透出背景紋理 */
+            --text-color: #332D2D;
             --label-width: 85px;
             --mask-fixed-6: 6em; 
-            --inner-gap: 10px; /* 標籤與遮罩間的固定間距 10px */
+            --inner-gap: 10px; /* 固定 10px 間距 */
         }
 
         body {
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            background-color: var(--bg-color); margin: 0; display: flex; 
+            margin: 0; display: flex; 
             flex-direction: column; align-items: center; color: var(--text-color); 
             user-select: none; padding-bottom: 40px;
+            
+            /* --- 方案 1: 宣紙紋理裝飾 --- */
+            background-color: var(--bg-color);
+            background-image: url("https://www.transparenttextures.com/patterns/rice-paper-2.png");
+            background-attachment: fixed;
         }
 
         header {
-            background-color: var(--primary-color); color: #FFFFFF; width: 100%;
-            padding: 15px 0; text-align: center; font-size: 1.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: var(--primary-color); 
+            color: #FFFFFF; width: 100%;
+            padding: 20px 0; text-align: center; font-size: 1.5rem; 
+            letter-spacing: 2px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border-bottom: 2px solid var(--accent-color);
         }
 
         .search-container { width: 90%; max-width: 550px; margin-top: 15px; position: relative; }
         #searchInput {
             width: 100%; padding: 12px 20px; border-radius: 25px;
             border: 2px solid var(--accent-color); font-size: 1rem; outline: none; box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.8);
         }
         #searchResult {
             position: absolute; top: 55px; left: 0; width: 100%;
@@ -40,53 +50,58 @@
         }
         .result-item { padding: 12px 20px; border-bottom: 1px solid #EEE; cursor: pointer; }
 
-        .progress-box { margin-top: 12px; font-size: 1.1rem; color: var(--primary-color); font-weight: bold; }
+        .progress-box { margin-top: 15px; font-size: 1.1rem; color: var(--primary-color); font-weight: bold; }
 
         .container { width: 95%; max-width: 550px; margin-top: 10px; }
 
         .image-container {
             width: 100%; height: 260px; background-color: #FFF; border-radius: 20px;
-            border: 2px solid var(--accent-color); margin-bottom: 15px;
+            border: 1px solid var(--accent-color); margin-bottom: 15px;
             display: flex; justify-content: center; align-items: center; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        .info-card { background-color: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .info-card { 
+            background-color: var(--card-bg); 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid rgba(181, 164, 177, 0.3);
+        }
 
         .info-row { display: flex; align-items: flex-start; margin-bottom: 18px; line-height: 1.6; width: 100%; }
-        .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; }
+        .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; color: #5D4F5D; }
 
-        /* 答案置中設定 */
         .answer {
-            background-color: #f0f0f0; border-radius: 4px; padding: 2px 6px;
+            background-color: #f2f2f2; border-radius: 4px; padding: 2px 6px;
             transition: all 0.2s; display: inline-flex; align-items: center; 
-            justify-content: center; 
-            text-align: center;
-            box-sizing: border-box;
+            justify-content: center; text-align: center; box-sizing: border-box;
         }
-        .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
+        .answer.hidden { background-color: #DFD7DC !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
 
-        /* 固定 6em 寬度，並確保 margin-left 恆定為 10px */
         .fixed-6 { width: var(--mask-fixed-6); margin-left: var(--inner-gap); flex-shrink: 0; }
         
         .split-row { display: flex; width: 100%; align-items: center; }
-        .spacer { flex: 1; } /* 將毒性推至最右邊 */
+        .spacer { flex: 1; }
 
         .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; justify-content: flex-start; text-align: left; }
 
-        .tox-small { background-color: #006400 !important; color: #FFFFFF !important; font-weight: bold; }
-        .tox-large { background-color: #FF0000 !important; color: #FFFFFF !important; font-weight: bold; }
+        .tox-small { background-color: #2E5A31 !important; color: #FFFFFF !important; font-weight: bold; }
+        .tox-large { background-color: #A32D2D !important; color: #FFFFFF !important; font-weight: bold; }
 
         .btn-group { display: flex; gap: 15px; margin-top: 20px; }
         .nav-btn {
             flex: 1; background-color: var(--primary-color); color: white; border: none;
-            padding: 15px; border-radius: 50px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px #5E4F5E;
+            padding: 15px; border-radius: 50px; font-size: 1.1rem; cursor: pointer; 
+            box-shadow: 0 4px #4A3E4A; transition: 0.1s;
         }
+        .nav-btn:active { transform: translateY(2px); box-shadow: 0 2px #4A3E4A; }
     </style>
 </head>
 <body>
 
-<header>中藥圖鑑學習系統</header>
+<header>古韻中藥學習圖鑑</header>
 
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
@@ -103,7 +118,7 @@
             <span id="medName" class="answer hidden fixed-6"></span>
         </div>
         
-        <div class="info-row" style="border-top:1px solid #F0F0F0; border-bottom:1px solid #F0F0F0; padding:12px 0;">
+        <div class="info-row" style="border-top:1px solid #EEE; border-bottom:1px solid #EEE; padding:12px 0;">
             <div class="split-row">
                 <div style="display:flex; align-items:center;" onclick="reveal(this)">
                     <div class="label">屬性</div>
@@ -130,7 +145,7 @@
 </div>
 
 <script>
-// 已包含您修正的 10 味藥材文字
+// 依據附件校對與括號修正
 const medicines = [
     { name: "麻黃", property: "溫", toxicity: "無毒", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盜汗，咳喘由於腎不納氣的虛喘者慎用。" },
     { name: "桂枝", property: "溫", toxicity: "無毒", nature: "辛、甘。歸肺、心、膀胱經。", effect: "發汗解肌，溫經通脈，通陽化氣。", usage: "煎服，3～10g。", notice: "辛溫助陽，易傷陰耗血，故外感熱病、陰虛火旺、血熱妄行之出血證忌。孕婦及月經過多者慎。" },
@@ -213,7 +228,7 @@ function updateUI() {
     if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
     if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
 
-    // 關鍵修正：去除括號後再尋找圖片 (例如 "香薷(儒)" 變為 "香薷")
+    // 關鍵修正：去除括號後再尋找圖片檔名
     const cleanImgName = med.name.split('(')[0];
     document.getElementById('medImage').src = encodeURIComponent(cleanImgName + ".png");
 
