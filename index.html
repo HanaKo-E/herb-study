@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>學習圖鑑中藥</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
+    <title>學習圖鑑中藥 - 進階版</title>
     
     <style>
         :root {
@@ -28,6 +26,7 @@
             align-items: center;
             color: var(--text-color);
             user-select: none;
+            padding-bottom: 40px;
         }
 
         header {
@@ -41,10 +40,9 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        /* 搜尋器樣式 */
         .search-container {
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             margin-top: 15px;
             position: relative;
         }
@@ -57,7 +55,6 @@
             font-size: 1rem;
             outline: none;
             box-sizing: border-box;
-            color: var(--text-color);
         }
 
         #searchResult {
@@ -80,9 +77,6 @@
             cursor: pointer;
         }
 
-        .result-item:last-child { border-bottom: none; }
-        .result-item:active { background-color: var(--bg-color); }
-
         .progress-box {
             margin-top: 10px;
             font-size: 1rem;
@@ -95,7 +89,7 @@
 
         .container {
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -104,7 +98,7 @@
 
         .image-container {
             width: 100%;
-            height: 250px;
+            height: 220px;
             background-color: var(--card-bg);
             border-radius: 20px;
             display: flex;
@@ -113,7 +107,7 @@
             border: 3px solid var(--accent-color);
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
             overflow: hidden;
-            box-sizing: border-box;
+            margin-bottom: 15px;
         }
 
         .image-container img {
@@ -123,48 +117,41 @@
             padding: 10px;
         }
 
-        .tip-text {
-            font-size: 1.1rem;
-            color: #FFFFFF;
-            background-color: var(--accent-color);
-            margin: 15px 0;
-            padding: 8px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
         .info-card {
             width: 100%;
             background-color: var(--card-bg);
-            margin-bottom: 20px;
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             box-sizing: border-box;
+            margin-bottom: 20px;
         }
 
         .info-item {
-            margin: 15px 0;
-            font-size: 1.2rem;
-            border-bottom: 1px dashed var(--accent-color);
-            padding-bottom: 10px;
+            margin: 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #eee;
+            cursor: pointer;
+        }
+
+        .info-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
+            margin-bottom: 5px;
         }
 
         .info-label {
             font-weight: bold;
             color: var(--primary-color);
+            font-size: 1rem;
         }
 
         .answer {
-            position: relative;
-            min-width: 90px;
-            text-align: right;
-            transition: color 0.2s, filter 0.2s;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            transition: all 0.3s;
+            display: block;
         }
 
         .answer.hidden {
@@ -172,21 +159,20 @@
             color: transparent !important;
             border-radius: 5px;
             filter: blur(8px);
+            user-select: none;
         }
 
         .toxic-tag {
-            padding: 2px 12px;
-            border-radius: 8px;
-            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: white;
         }
-        .toxic-small { background-color: var(--toxic-small-bg); color: #FFFFFF; }
-        .toxic-large { background-color: var(--toxic-large-bg); color: #FFFFFF; }
 
         .btn-group {
             display: flex;
             gap: 15px;
             width: 100%;
-            margin-bottom: 30px;
         }
 
         .nav-btn {
@@ -194,13 +180,12 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 18px;
+            padding: 15px;
             border-radius: 50px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px #5E4F5E;
-            transition: all 0.1s;
         }
 
         .nav-btn:active {
@@ -211,7 +196,7 @@
 </head>
 <body>
 
-<header>學習圖鑑中藥</header>
+<header>中藥學習圖鑑</header>
 
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()" onfocus="this.value=''">
@@ -224,91 +209,102 @@
     <div class="image-container">
         <img id="medImage" src="" alt="圖片載入中...">
     </div>
-    
-    <div class="tip-text">💡 點擊下方欄位揭曉答案</div>
 
     <div class="info-card">
         <div class="info-item" onclick="reveal(this)">
-            <span class="info-label">藥名</span>
+            <div class="info-header"><span class="info-label">藥名</span></div>
             <span id="medName" class="answer hidden"></span>
         </div>
         <div class="info-item" onclick="reveal(this)">
-            <span class="info-label">屬性</span>
-            <span id="medProp" class="answer hidden"></span>
+            <div class="info-header"><span class="info-label">屬性 / 毒性</span></div>
+            <span id="medPropTox" class="answer hidden"></span>
         </div>
         <div class="info-item" onclick="reveal(this)">
-            <span class="info-label">毒性</span>
-            <span id="medTox" class="answer hidden"></span>
+            <div class="info-header"><span class="info-label">性味歸經</span></div>
+            <span id="medNature" class="answer hidden"></span>
+        </div>
+        <div class="info-item" onclick="reveal(this)">
+            <div class="info-header"><span class="info-label">功效</span></div>
+            <span id="medEffect" class="answer hidden"></span>
+        </div>
+        <div class="info-item" onclick="reveal(this)">
+            <div class="info-header"><span class="info-label">用法用量</span></div>
+            <span id="medUsage" class="answer hidden"></span>
+        </div>
+        <div class="info-item" onclick="reveal(this)">
+            <div class="info-header"><span class="info-label">使用注意</span></div>
+            <span id="medNotice" class="answer hidden"></span>
         </div>
     </div>
 
     <div class="btn-group">
-        <button id="prevBtn" class="nav-btn" onclick="changeMed(-1)">上一頁</button>
-        <button id="nextBtn" class="nav-btn" onclick="changeMed(1)">下一個</button>
+        <button class="nav-btn" onclick="changeMed(-1)">上一頁</button>
+        <button class="nav-btn" onclick="changeMed(1)">下一個</button>
     </div>
 </div>
 
 <script>
+    // 依據 CSV 資料整理的完整數據庫
     const medicines = [
-        { name: '麻黃', property: '溫', toxicity: '無毒', img: '麻黃.png' },
-        { name: '桂枝', property: '溫', toxicity: '無毒', img: '桂枝.png' },
-        { name: '紫蘇葉', property: '溫', toxicity: '無毒', img: '紫蘇葉.png' },
-        { name: '生薑', property: '溫', toxicity: '無毒', img: '生薑.png' },
-        { name: '香薷(儒)', property: '微溫', toxicity: '無毒', img: '香薷.png' },
-        { name: '荊芥', property: '微溫', toxicity: '無毒', img: '荊芥.png' },
-        { name: '防風', property: '微溫', toxicity: '無毒', img: '防風.png' },
-        { name: '羌活', property: '溫', toxicity: '無毒', img: '羌活.png' },
-        { name: '白芷', property: '溫', toxicity: '無毒', img: '白芷.png' },
-        { name: '細辛', property: '溫', toxicity: '小毒', img: '細辛.png' },
-        { name: '藁(稿)本', property: '溫', toxicity: '無毒', img: '藁本.png' },
-        { name: '蒼耳子', property: '溫', toxicity: '小毒', img: '蒼耳子.png' },
-        { name: '蔥白', property: '溫', toxicity: '無毒', img: '蔥白.png' },
-        { name: '辛夷', property: '溫', toxicity: '無毒', img: '辛夷.png' },
-        { name: '薄荷', property: '涼', toxicity: '無毒', img: '薄荷.png' },
-        { name: '牛蒡子', property: '寒', toxicity: '無毒', img: '牛蒡子.png' },
-        { name: '蟬蛻(退)', property: '寒', toxicity: '無毒', img: '蟬蛻.png' },
-        { name: '桑葉', property: '寒', toxicity: '無毒', img: '桑葉.png' },
-        { name: '菊花', property: '微寒', toxicity: '無毒', img: '菊花.png' },
-        { name: '蔓荊子', property: '微寒', toxicity: '無毒', img: '蔓荊子.png' },
-        { name: '柴胡', property: '微寒', toxicity: '無毒', img: '柴胡.png' },
-        { name: '升麻', property: '微寒', toxicity: '無毒', img: '升麻.png' },
-        { name: '葛根', property: '涼', toxicity: '無毒', img: '葛根.png' },
-        { name: '木賊', property: '平', toxicity: '無毒', img: '木賊.png' },
-        { name: '浮萍', property: '寒', toxicity: '無毒', img: '浮萍.png' },
-        { name: '決明子', property: '微寒', toxicity: '無毒', img: '決明子.png' },
-        { name: '石膏', property: '大寒', toxicity: '無毒', img: '石膏.png' },
-        { name: '知母', property: '寒', toxicity: '無毒', img: '知母.png' },
-        { name: '天花粉', property: '微寒', toxicity: '無毒', img: '天花粉.png' },
-        { name: '黃芩(琴)', property: '寒', toxicity: '無毒', img: '黃芩.png' },
-        { name: '黃連', property: '寒', toxicity: '無毒', img: '黃連.png' },
-        { name: '黃柏(百)', property: '寒', toxicity: '無毒', img: '黃柏.png' },
-        { name: '龍膽', property: '寒', toxicity: '無毒', img: '龍膽.png' },
-        { name: '金銀花', property: '寒', toxicity: '無毒', img: '金銀花.png' },
-        { name: '連翹(橋)', property: '微寒', toxicity: '無毒', img: '連翹.png' },
-        { name: '板藍根', property: '寒', toxicity: '無毒', img: '板藍根.png' },
-        { name: '土茯苓', property: '平', toxicity: '無毒', img: '土茯苓.png' },
-        { name: '射干', property: '寒', toxicity: '無毒', img: '射干.png' },
-        { name: '玄參', property: '微寒', toxicity: '無毒', img: '玄參.png' },
-        { name: '大黃', property: '寒', toxicity: '無毒', img: '大黃.png' },
-        { name: '芒硝(消)', property: '寒', toxicity: '無毒', img: '芒硝.png' },
-        { name: '獨活', property: '微溫', toxicity: '無毒', img: '獨活.png' },
-        { name: '威靈仙', property: '溫', toxicity: '無毒', img: '威靈仙.png' },
-        { name: '烏梢(消)蛇', property: '平', toxicity: '無毒', img: '烏梢蛇.png' },
-        { name: '木瓜', property: '溫', toxicity: '無毒', img: '木瓜.png' },
-        { name: '路路通', property: '平', toxicity: '無毒', img: '路路通.png' },
-        { name: '秦艽(交)', property: '平', toxicity: '無毒', img: '秦艽.png' },
-        { name: '漢防己', property: '寒', toxicity: '無毒', img: '漢防己.png' },
-        { name: '桑枝', property: '平', toxicity: '無毒', img: '桑枝.png' },
-        { name: '絡石藤', property: '微寒', toxicity: '無毒', img: '絡石藤.png' },
-        { name: '雷公藤', property: '寒', toxicity: '大毒', img: '雷公藤.png' },
-        { name: '昆布', property: '寒', toxicity: '無毒', img: '昆布.png' },
-        { name: '當歸', property: '溫', toxicity: '無毒', img: '當歸.png' },
-        { name: '西洋參', property: '涼', toxicity: '無毒', img: '西洋參.png' },
-        { name: '石斛(酷)', property: '微寒', toxicity: '無毒', img: '石斛.png' },
-        { name: '百合', property: '微寒', toxicity: '無毒', img: '百合.png' },
-        { name: '鹿茸', property: '溫', toxicity: '無毒', img: '鹿茸.png' },
-        { name: '巴戟天', property: '微溫', toxicity: '無毒', img: '巴戟天.png' },
-        { name: '山楂', property: '微溫', toxicity: '無毒', img: '山楂.png' }
+        { name: '麻黃', property: '溫', toxicity: '無毒', nature: '辛、微苦。歸肺、膀胱經。', effect: '發汗解表，宣肺平喘，利水消腫。', usage: '煎服，2～10g。', notice: '表虛自汗及陰虛盜汗者慎用。', img: '麻黃.png' },
+        { name: '桂枝', property: '溫', toxicity: '無毒', nature: '辛、甘。歸肺、心、膀胱經。', effect: '發汗解肌，溫經通脈，通陽化氣。', usage: '煎服，3～10g。', notice: '熱病、陰虛火旺忌。孕婦慎用。', img: '桂枝.png' },
+        { name: '紫蘇葉', property: '溫', toxicity: '無毒', nature: '辛。歸肺、脾經。', effect: '發汗解表，理氣寬中，解魚蟹毒。', usage: '煎服，3～10g。不宜久煎。', notice: '無', img: '紫蘇葉.png' },
+        { name: '生薑', property: '溫', toxicity: '無毒', nature: '辛。歸肺、脾、胃經。', effect: '解表散寒，溫中止嘔，溫肺止咳。', usage: '煎服，3～9g。', notice: '熱盛及陰虛內熱者忌服。', img: '生薑.png' },
+        { name: '香薷(儒)', property: '微溫', toxicity: '無毒', nature: '辛。歸肺、胃、脾經。', effect: '發汗解表，化濕和中，利水消腫。', usage: '煎服，3～10g。不宜久煎。', notice: '汗多表虛者忌用。', img: '香薷.png' },
+        { name: '荊芥', property: '微溫', toxicity: '無毒', nature: '辛。歸肺、肝經。', effect: '祛風解表，透疹止癢，消瘡，止血。', usage: '煎服，5～10g。', notice: '表虛自汗及陰虛火旺者慎用。', img: '荊芥.png' },
+        { name: '防風', property: '微溫', toxicity: '無毒', nature: '辛、甘。歸膀胱、肝、脾經。', effect: '祛風解表，勝濕止痛，止痙。', usage: '煎服，5～10g。', notice: '血虛發痙及陰虛火旺者慎用。', img: '防風.png' },
+        { name: '羌活', property: '溫', toxicity: '無毒', nature: '辛、苦。歸膀胱、腎經。', effect: '散寒祛風，勝濕止痛。', usage: '煎服，3～10g。', notice: '血虛痹痛及陰虛頭痛者慎用。', img: '羌活.png' },
+        { name: '白芷', property: '溫', toxicity: '無毒', nature: '辛。歸胃、大腸、肺經。', effect: '解表散寒，祛風止痛，通鼻竅，燥濕止帶。', usage: '煎服，3～10g。', notice: '陰虛血熱者忌用。', img: '白芷.png' },
+        { name: '細辛', property: '溫', toxicity: '小毒', nature: '辛。歸肺、腎、心經。', effect: '解表散寒，祛風止痛，通竅，溫肺化飲。', usage: '煎服，1～3g。', notice: '反藜蘆。氣虛多汗、陰虛陽亢者忌。', img: '細辛.png' },
+        { name: '藁(稿)本', property: '溫', toxicity: '無毒', nature: '辛。歸膀胱經。', effect: '祛風散寒，勝濕止痛。', usage: '煎服，3～10g。', notice: '血虛頭痛者忌用。', img: '藁本.png' },
+        { name: '蒼耳子', property: '溫', toxicity: '小毒', nature: '辛、苦。歸肺經。', effect: '散寒解表，通鼻竅，祛風濕，止癢。', usage: '煎服，3～10g。', notice: '血虛頭痛者忌用。過量易中毒。', img: '蒼耳子.png' },
+        { name: '蔥白', property: '溫', toxicity: '無毒', nature: '辛。歸肺、胃經。', effect: '發汗解表，通陽散結，解毒殺蟲。', usage: '煎服，3～10g；外用適量。', notice: '表虛多汗者忌用。', img: '蔥白.png' },
+        { name: '辛夷', property: '溫', toxicity: '無毒', nature: '辛。歸肺經。', effect: '發散風寒，通鼻竅。', usage: '煎服，3～10g。包煎。', notice: '陰虛火旺者慎用。', img: '辛夷.png' },
+        { name: '薄荷', property: '涼', toxicity: '無毒', nature: '辛。歸肺、肝經。', effect: '疏散風熱，清利頭目，利咽，透疹，疏肝解鬱。', usage: '煎服，3～6g。後下。', notice: '體虛多汗者忌用。', img: '薄荷.png' },
+        { name: '牛蒡子', property: '寒', toxicity: '無毒', nature: '辛、苦。歸肺、胃經。', effect: '疏散風熱，宣肺透疹，解毒利咽。', usage: '煎服，6～12g。炒用。', notice: '本品能滑腸，氣虛便溏者慎用。', img: '牛蒡子.png' },
+        { name: '蟬蛻(退)', property: '寒', toxicity: '無毒', nature: '甘。歸肺、肝經。', effect: '疏散風熱，利咽透疹，明目退翳，止痙。', usage: '煎服，3～10g。', notice: '孕婦慎用。', img: '蟬蛻.png' },
+        { name: '桑葉', property: '寒', toxicity: '無毒', nature: '苦、甘。歸肺、肝經。', effect: '疏散風熱，清肺潤燥，清肝明目。', usage: '煎服，5～10g。', notice: '無', img: '桑葉.png' },
+        { name: '菊花', property: '微寒', toxicity: '無毒', nature: '辛、甘、苦。歸肺、肝經。', effect: '疏散風熱，平抑肝陽，清肝明目，清熱解毒。', usage: '煎服，5～15g。', notice: '氣虛便溏者慎用。', img: '菊花.png' },
+        { name: '蔓荊子', property: '微寒', toxicity: '無毒', nature: '辛、苦。歸膀胱、肝、胃經。', effect: '疏散風熱，清利頭目，止痛。', usage: '煎服，5～10g。', notice: '血虛有火之頭痛目眩者忌用。', img: '蔓荊子.png' },
+        { name: '柴胡', property: '微寒', toxicity: '無毒', nature: '苦、辛。歸肝、膽、肺經。', effect: '和解少陽，疏肝解鬱，升陽舉陷。', usage: '煎服，3～10g。', notice: '真陰虧損、肝陽上亢者忌用。', img: '柴胡.png' },
+        { name: '升麻', property: '微寒', toxicity: '無毒', nature: '辛、微甘。歸肺、脾、胃、大腸經。', effect: '發表透疹，清熱解毒，升陽舉陷。', usage: '煎服，3～10g。', notice: '陰虛陽浮者忌用；麻疹已透者忌。', img: '升麻.png' },
+        { name: '葛根', property: '涼', toxicity: '無毒', nature: '甘、辛。歸脾、胃、肺經。', effect: '解肌退熱，透疹，生津止渴，升陽止瀉。', usage: '煎服，10～15g。', notice: '無', img: '葛根.png' },
+        { name: '木賊', property: '平', toxicity: '無毒', nature: '甘、苦。歸肺、肝經。', effect: '疏散風熱，明目退翳，止血。', usage: '煎服，3～10g。', notice: '氣血虛者慎用。孕婦慎用。', img: '木賊.png' },
+        { name: '浮萍', property: '寒', toxicity: '無毒', nature: '辛。歸肺、膀胱經。', effect: '發汗解表，透疹止癢，利尿消腫。', usage: '煎服，3～10g。', notice: '表虛自汗者忌用。', img: '浮萍.png' },
+        { name: '決明子', property: '微寒', toxicity: '無毒', nature: '甘、苦、鹹。歸肝、大腸經。', effect: '清肝明目，潤腸通便。', usage: '煎服，9～15g。', notice: '脾虛便溏者忌用。', img: '決明子.png' },
+        { name: '石膏', property: '大寒', toxicity: '無毒', nature: '辛、甘。歸肺、胃經。', effect: '清熱瀉火，除煩止渴。', usage: '煎服，15～60g。先煎。', notice: '脾胃虛寒及陰虛內熱者忌。', img: '石膏.png' },
+        { name: '知母', property: '寒', toxicity: '無毒', nature: '苦、甘。歸肺、胃、腎經。', effect: '清熱瀉火，滋陰潤燥。', usage: '煎服，6～12g。', notice: '脾胃虛寒，大便溏洩者忌用。', img: '知母.png' },
+        { name: '天花粉', property: '微寒', toxicity: '無毒', nature: '甘、微苦。歸肺、胃經。', effect: '清熱瀉火，生津止渴，消腫排膿。', usage: '煎服，10～15g。', notice: '不宜與烏頭類藥材同用。孕婦忌用。', img: '天花粉.png' },
+        { name: '黃芩(琴)', property: '寒', toxicity: '無毒', nature: '苦。歸肺、胃、膽、大腸經。', effect: '清熱燥濕，瀉火解毒，止血，安胎。', usage: '煎服，3～10g。', notice: '脾胃虛寒者忌用。', img: '黃芩.png' },
+        { name: '黃連', property: '寒', toxicity: '無毒', nature: '苦。歸心、脾、胃、肝、膽、大腸經。', effect: '清熱燥濕，瀉火解毒。', usage: '煎服，2～5g。', notice: '本品大苦大寒，過服易傷脾胃。', img: '黃連.png' },
+        { name: '黃柏(百)', property: '寒', toxicity: '無毒', nature: '苦。歸腎、膀胱、大腸經。', effect: '清熱燥濕，瀉火除蒸，解毒療瘡。', usage: '煎服，3～12g。', notice: '脾胃虛寒者忌用。', img: '黃柏.png' },
+        { name: '龍膽', property: '寒', toxicity: '無毒', nature: '苦。歸肝、膽經。', effect: '清熱燥濕，瀉肝膽火。', usage: '煎服，3～6g。', notice: '脾胃虛寒及陰虛津傷者慎用。', img: '龍膽.png' },
+        { name: '金銀花', property: '寒', toxicity: '無毒', nature: '甘。歸肺、心、胃經。', effect: '清熱解毒，疏散風熱。', usage: '煎服，6～15g。', notice: '脾胃虛寒者忌用。', img: '金銀花.png' },
+        { name: '連翹(橋)', property: '微寒', toxicity: '無毒', nature: '苦。歸肺、心、小腸經。', effect: '清熱解毒，消腫散結，疏散風熱。', usage: '煎服，6～15g。', notice: '脾胃虛寒者不宜用。', img: '連翹.png' },
+        { name: '板藍根', property: '寒', toxicity: '無毒', nature: '苦。歸心、胃經。', effect: '清熱解毒，涼血，利咽。', usage: '煎服，9～15g。', notice: '脾胃虛寒者慎用。', img: '板藍根.png' },
+        { name: '土茯苓', property: '平', toxicity: '無毒', nature: '甘、淡。歸肝、胃經。', effect: '解毒，除濕，通利關節。', usage: '煎服，15～60g。', notice: '服藥時忌茶。', img: '土茯苓.png' },
+        { name: '射干', property: '寒', toxicity: '無毒', nature: '苦。歸肺經。', effect: '清熱解毒，消痰，利咽。', usage: '煎服，3～9g。', notice: '脾虛便溏者不宜用。孕婦慎用。', img: '射干.png' },
+        { name: '玄參', property: '微寒', toxicity: '無毒', nature: '甘、苦、鹹。歸肺、胃、腎經。', effect: '清熱涼血，滋陰解毒。', usage: '煎服，9～15g。', notice: '反藜蘆。脾胃有濕及便溏者忌。', img: '玄參.png' },
+        { name: '大黃', property: '寒', toxicity: '無毒', nature: '苦。歸脾、胃、大腸、肝、心包經。', effect: '瀉下攻積，清熱瀉火，止血，解毒。', usage: '煎服，5～15g。後下。', notice: '孕婦、月經期、哺乳期慎用。', img: '大黃.png' },
+        { name: '芒硝(消)', property: '寒', toxicity: '無毒', nature: '鹹、苦。歸胃、大腸經。', effect: '瀉下通便，潤燥軟堅，清火消腫。', usage: '沖入藥汁內服用，6～12g。', notice: '孕婦、哺乳期忌用。', img: '芒硝.png' },
+        { name: '獨活', property: '微溫', toxicity: '無毒', nature: '辛、苦。歸腎、膀胱經。', effect: '祛風勝濕，散寒止痛。', usage: '煎服，3～10g。', notice: '陰虛血燥者慎用。', img: '獨活.png' },
+        { name: '威靈仙', property: '溫', toxicity: '無毒', nature: '辛、鹹。歸膀胱經。', effect: '祛風濕，通經絡。', usage: '煎服，6～10g。', notice: '氣血虧虛者慎用。', img: '威靈仙.png' },
+        { name: '烏梢(消)蛇', property: '平', toxicity: '無毒', nature: '甘。歸肝經。', effect: '祛風，通絡，止痙。', usage: '煎服，5～10g。研末2～3g。', notice: '血虛生風者慎用。', img: '烏梢蛇.png' },
+        { name: '木瓜', property: '溫', toxicity: '無毒', nature: '酸。歸肝、脾經。', effect: '舒筋活絡，和胃化濕。', usage: '煎服，6～12g。', notice: '胃酸過多者慎用。', img: '木瓜.png' },
+        { name: '路路通', property: '平', toxicity: '無毒', nature: '苦。歸肝、腎經。', effect: '祛風活絡，利水，通經。', usage: '煎服，5～10g。', notice: '孕婦忌用。', img: '路路通.png' },
+        { name: '秦艽(交)', property: '平', toxicity: '無毒', nature: '苦、辛。歸胃、肝、膽經。', effect: '祛風濕，通絡止痛，退虛熱。', usage: '煎服，3～10g。', notice: '久痹虛寒者慎用。', img: '秦艽.png' },
+        { name: '漢防己', property: '寒', toxicity: '無毒', nature: '苦、辛。歸膀胱、肺、脾經。', effect: '祛風濕，止痛，利水消腫。', usage: '煎服，5～10g。', notice: '本品苦寒，食欲不振者慎用。', img: '漢防己.png' },
+        { name: '桑枝', property: '平', toxicity: '無毒', nature: '微苦。歸肝經。', effect: '祛風濕，通絡止痛。', usage: '煎服，10～30g。', notice: '無', img: '桑枝.png' },
+        { name: '絡石藤', property: '微寒', toxicity: '無毒', nature: '苦。歸肝經。', effect: '祛風通絡，涼血消腫。', usage: '煎服，6～15g。', notice: '陽衰寒痹者忌用。', img: '絡石藤.png' },
+        { name: '雷公藤', property: '寒', toxicity: '大毒', nature: '苦、辛。歸肝、腎經。', effect: '祛風除濕，活血通絡，消腫止痛。', usage: '煎服，10～12g。久煎。', notice: '本品有大毒，應嚴格控制劑量。', img: '雷公藤.png' },
+        { name: '昆布', property: '寒', toxicity: '無毒', nature: '鹹。歸肝、胃、腎經。', effect: '消痰軟堅，利水消腫。', usage: '煎服，6～15g。', notice: '脾胃虛寒者慎用。', img: '昆布.png' },
+        { name: '當歸', property: '溫', toxicity: '無毒', nature: '甘、辛。歸肝、心、脾經。', effect: '補血活血，調經止痛，潤腸通便。', usage: '煎服，6～12g。', notice: '濕阻中滿、便溏者慎用。', img: '當歸.png' },
+        { name: '西洋參', property: '涼', toxicity: '無毒', nature: '甘、微苦。歸心、肺、腎經。', effect: '補氣養陰，清熱生津。', usage: '煎服，3～6g。另煎兌服。', notice: '不宜與藜蘆同用。中陽不足者忌。', img: '西洋參.png' },
+        { name: '石斛(酷)', property: '微寒', toxicity: '無毒', nature: '甘。歸胃、腎經。', effect: '益胃生津，滋陰清熱。', usage: '煎服，6～12g。', notice: '溫熱病早期陰未傷者忌。', img: '石斛.png' },
+        { name: '百合', property: '微寒', toxicity: '無毒', nature: '甘。歸心、肺經。', effect: '養陰潤肺，清心安神。', usage: '煎服，10～30g。', notice: '風寒咳嗽及脾虛便溏者忌。', img: '百合.png' },
+        { name: '鹿茸', property: '溫', toxicity: '無毒', nature: '甘、鹹。歸肝、腎經。', effect: '壯腎陽，益精血，強筋骨。', usage: '研末吞服，1～2g。', notice: '陰虛陽亢者忌用。', img: '鹿茸.png' },
+        { name: '巴戟天', property: '微溫', toxicity: '無毒', nature: '甘、辛。歸腎、肝經。', effect: '補腎陽，強筋骨，祛風濕。', usage: '煎服，3～10g。', notice: '陰虛火旺及小便不利者忌。', img: '巴戟天.png' },
+        { name: '山楂', property: '微溫', toxicity: '無毒', nature: '酸、甘。歸脾、胃、肝經。', effect: '消食化積，行氣散瘀。', usage: '煎服，9～12g。', notice: '胃酸過多者慎用。', img: '山楂.png' }
     ];
 
     let currentIndex = 0;
@@ -325,7 +321,6 @@
         updateUI();
     }
 
-    // 搜尋功能邏輯
     function handleSearch() {
         const input = document.getElementById('searchInput').value.trim();
         const resultBox = document.getElementById('searchResult');
@@ -359,40 +354,39 @@
         }
     }
 
-    // 點擊外面隱藏搜尋結果
+    function updateUI() {
+        const med = medicines[currentIndex];
+        
+        // 設置文字內容
+        document.getElementById('medName').innerText = med.name;
+        document.getElementById('medPropTox').innerText = `${med.property} / ${med.toxicity}`;
+        document.getElementById('medNature').innerText = med.nature;
+        document.getElementById('medEffect').innerText = med.effect;
+        document.getElementById('medUsage').innerText = med.usage;
+        document.getElementById('medNotice').innerText = med.notice;
+
+        // 恢復遮罩
+        document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
+
+        // 毒性顏色邏輯 (合併到屬性毒性欄位)
+        const propToxEl = document.getElementById('medPropTox');
+        propToxEl.style.color = "inherit";
+        if (med.toxicity === '小毒') propToxEl.style.color = "var(--toxic-small-bg)";
+        if (med.toxicity === '大毒') propToxEl.style.color = "var(--toxic-large-bg)";
+        
+        // 圖片與進度
+        document.getElementById('medImage').src = encodeURIComponent(med.img);
+        document.getElementById('currentNum').innerText = currentIndex + 1;
+        
+        // 置頂滾動
+        window.scrollTo(0, 0);
+    }
+
     document.addEventListener('click', function(e) {
         if (!document.querySelector('.search-container').contains(e.target)) {
             document.getElementById('searchResult').style.display = "none";
         }
     });
-
-    function updateUI() {
-        const nameEl = document.getElementById('medName');
-        const propEl = document.getElementById('medProp');
-        const toxEl = document.getElementById('medTox');
-        
-        nameEl.innerText = "";
-        propEl.innerText = "";
-        toxEl.innerText = "";
-        
-        nameEl.className = "answer hidden";
-        propEl.className = "answer hidden";
-        toxEl.className = "answer hidden";
-
-        const med = medicines[currentIndex];
-        nameEl.innerText = med.name;
-        propEl.innerText = med.property;
-        toxEl.innerText = med.toxicity;
-        
-        if (med.toxicity === '小毒') {
-            toxEl.classList.add('toxic-tag', 'toxic-small');
-        } else if (med.toxicity === '大毒') {
-            toxEl.classList.add('toxic-tag', 'toxic-large');
-        }
-        
-        document.getElementById('medImage').src = encodeURIComponent(med.img);
-        document.getElementById('currentNum').innerText = currentIndex + 1;
-    }
 
     window.onload = updateUI;
 </script>
