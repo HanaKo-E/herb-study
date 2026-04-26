@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>古韻中藥學習圖鑑 - 最終微調版</title>
+    <title>古韻中藥學習圖鑑 - 簡約版</title>
     <style>
         :root {
             --primary-color: #6B5B6B;
             --accent-color: #A393A1;
-            --bg-color: #F7F3F0;
-            --card-bg: rgba(255, 255, 255, 0.9);
+            --bg-color: #F7F3F0; /* 純淨背景 */
+            --card-bg: #FFFFFF;
             --text-color: #332D2D;
             --label-width: 85px;
             --mask-fixed-6: 6em; 
-            --inner-gap: 10px; /* 標籤與答案遮罩之間的 10px 固定間距 */
+            --inner-gap: 10px;
         }
 
         body {
@@ -21,89 +21,81 @@
             margin: 0; display: flex; 
             flex-direction: column; align-items: center; color: var(--text-color); 
             user-select: none; padding-bottom: 40px;
-            background-color: var(--bg-color);
-            background-image: url("https://www.transparenttextures.com/patterns/rice-paper-2.png");
-            background-attachment: fixed;
+            background-color: var(--bg-color); /* 移除紋理 */
         }
 
         header {
             background-color: var(--primary-color); color: #FFFFFF; width: 100%;
-            padding: 20px 0; text-align: center; font-size: 1.5rem; 
-            letter-spacing: 2px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            padding: 15px 20px; box-sizing: border-box;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-bottom: 2px solid var(--accent-color);
         }
 
-        /* 搜尋框樣式 */
-        .search-container { width: 90%; max-width: 550px; margin-top: 15px; position: relative; }
+        .header-title { font-size: 1.3rem; letter-spacing: 2px; font-weight: bold; }
+        .progress-box { font-size: 1rem; opacity: 0.9; }
+
+        /* 縮短後的搜尋框 (300px) */
+        .search-container { width: 90%; max-width: 300px; margin-top: 15px; position: relative; }
         #searchInput {
-            width: 100%; padding: 12px 20px; border-radius: 25px;
-            border: 2px solid var(--accent-color); font-size: 1rem; outline: none; box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.8);
+            width: 100%; padding: 10px 15px; border-radius: 20px;
+            border: 1.5px solid var(--accent-color); font-size: 0.9rem; outline: none; box-sizing: border-box;
+            background: white;
         }
         #searchResult {
-            position: absolute; top: 55px; left: 0; width: 100%;
-            background: white; border-radius: 15px; z-index: 100;
-            max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: absolute; top: 45px; left: 0; width: 100%;
+            background: white; border-radius: 10px; z-index: 100;
+            max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .result-item { padding: 12px 20px; border-bottom: 1px solid #EEE; cursor: pointer; }
+        .result-item { padding: 10px 15px; border-bottom: 1px solid #EEE; cursor: pointer; font-size: 0.9rem; }
 
-        .progress-box { margin-top: 15px; font-size: 1.1rem; color: var(--primary-color); font-weight: bold; }
+        .container { width: 95%; max-width: 550px; margin-top: 15px; }
 
-        .container { width: 95%; max-width: 550px; margin-top: 10px; }
-
-        /* 圖片容器 */
         .image-container {
-            width: 100%; height: 260px; background-color: #FFF; border-radius: 20px;
-            border: 1px solid var(--accent-color); margin-bottom: 15px;
+            width: 100%; height: 260px; background-color: #FFF; border-radius: 15px;
+            border: 1px solid #DDD; margin-bottom: 15px;
             display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
         .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        /* 卡片與行樣式 */
-        .info-card { background-color: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .info-card { background-color: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .info-row { display: flex; align-items: flex-start; margin-bottom: 18px; line-height: 1.6; width: 100%; }
         .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; color: #5D4F5D; }
 
-        /* 答案遮罩與置中 */
         .answer {
             background-color: #f2f2f2; border-radius: 4px; padding: 2px 6px;
             transition: all 0.2s; display: inline-flex; align-items: center; 
             justify-content: center; text-align: center; box-sizing: border-box;
         }
-        .answer.hidden { background-color: #DFD7DC !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
+        .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
 
-        /* 固定長度遮罩與 10px 間距 */
         .fixed-6 { width: var(--mask-fixed-6); margin-left: var(--inner-gap); flex-shrink: 0; }
         .split-row { display: flex; width: 100%; align-items: center; }
         .spacer { flex: 1; }
 
-        /* 長文本遮罩樣式 */
         .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; justify-content: flex-start; text-align: left; }
 
-        /* 毒性顏色 */
-        .tox-small { background-color: #2E5A31 !important; color: #FFFFFF !important; font-weight: bold; }
-        .tox-large { background-color: #A32D2D !important; color: #FFFFFF !important; font-weight: bold; }
+        .tox-small { background-color: #2E5A31 !important; color: #FFFFFF !important; }
+        .tox-large { background-color: #A32D2D !important; color: #FFFFFF !important; }
 
-        /* 按鈕樣式 */
         .btn-group { display: flex; gap: 15px; margin-top: 20px; }
         .nav-btn {
             flex: 1; background-color: var(--primary-color); color: white; border: none;
-            padding: 15px; border-radius: 50px; font-size: 1.1rem; cursor: pointer; 
-            box-shadow: 0 4px #4A3E4A; transition: 0.1s;
+            padding: 12px; border-radius: 10px; font-size: 1rem; cursor: pointer; 
         }
-        .nav-btn:active { transform: translateY(2px); box-shadow: 0 2px #4A3E4A; }
     </style>
 </head>
 <body>
 
-<header>古韻中藥學習圖鑑</header>
+<header>
+    <div class="header-title">古韻中藥圖鑑</div>
+    <div class="progress-box"><span id="currentNum">01</span> / <span id="totalNum">59</span></div>
+</header>
 
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
     <div id="searchResult"></div>
 </div>
-
-<div class="progress-box"><span id="currentNum">01</span> / <span id="totalNum">59</span></div>
 
 <div class="container">
     <div class="image-container"><img id="medImage" src="" alt="藥材圖片"></div>
@@ -119,9 +111,7 @@
                     <div class="label">屬性</div>
                     <span id="medProp" class="answer hidden fixed-6"></span>
                 </div>
-                
                 <div class="spacer"></div>
-
                 <div style="display:flex; align-items:center; transform: translateX(-10px);" onclick="reveal(this)">
                     <div class="label" style="width:auto;">毒性</div>
                     <span id="medTox" class="answer hidden fixed-6"></span>
@@ -142,7 +132,6 @@
 </div>
 
 <script>
-// 採納實體圖片欄位 img 的結構
 const medicines = [
     { name: "麻黃", property: "溫", toxicity: "無毒", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盜汗，咳喘由於腎不納氣的虛喘者慎用。", img: "麻黃.png" },
     { name: "桂枝", property: "溫", toxicity: "無毒", nature: "辛、甘。歸肺、心、膀胱經。", effect: "發汗解肌，溫經通脈，通陽化氣。", usage: "煎服，3～10g。", notice: "辛溫助陽，易傷陰耗血，故外感熱病、陰虛火旺、血熱妄行之出血證忌。孕婦及月經過多者慎。", img: "桂枝.png" },
@@ -220,16 +209,12 @@ function updateUI() {
     document.getElementById('currentNum').innerText = (currentIndex + 1).toString().padStart(2, '0');
     document.getElementById('totalNum').innerText = medicines.length.toString().padStart(2, '0');
 
-    // 毒性顏色邏輯
     const toxEl = document.getElementById('medTox');
     toxEl.className = 'answer hidden fixed-6';
     if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
     if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
 
-    // 圖片路徑
     document.getElementById('medImage').src = encodeURIComponent(med.img);
-
-    // 隱藏所有答案
     document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
 }
 
