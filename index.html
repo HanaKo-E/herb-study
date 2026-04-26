@@ -1,20 +1,9 @@
-已經為您完成精密調校。
-
-### 本版修正重點：
-1. **59味藥材校對**：已嚴格對照您的附件內容，移除「酸棗仁」，確保名單與附件的 59 味藥材完全一致。
-2. **防窺寬度鎖定**：藥名、屬性、毒性的遮罩寬度一律固定為 **6em**，徹底防止透過長度猜測內容。
-3. **毒性對齊邏輯**：
-    * **左端位移**：毒性標籤後的遮罩左端，精確向右偏移了 **10px**。
-    * **右端平齊**：毒性遮罩的右邊緣，與下方長項目（性味、功效等）的右邊緣保持**絕對平齊**。
-4. **CSS 精準控制**：透過 `flex-grow` 與 `margin-left: 10px` 組合，確保視覺上的整齊劃一。
-
-```html
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑 - 59味精密對齊版</title>
+    <title>中藥圖鑑 - 59味精密對齊版</title>
     <style>
         :root {
             --primary-color: #7D6B7D;
@@ -23,8 +12,8 @@
             --card-bg: #FFFFFF;
             --text-color: #333333;
             --label-width: 85px;
-            --mask-fixed-6: 6em; /* 藥名、屬性、毒性一律固定 6em */
-            --inner-gap: 10px; /* 標籤與答案間距固定 10px */
+            --mask-fixed-6: 6em; /* 藥名、屬性、毒性固定寬度 */
+            --inner-gap: 10px;   /* 標籤與遮罩間距 */
         }
 
         body {
@@ -69,20 +58,19 @@
 
         .answer {
             background-color: #f0f0f0; border-radius: 4px; padding: 2px 6px;
-            transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center;
+            transition: all 0.2s; display: inline-flex; align-items: center; 
+            justify-content: center; /* 文字置中 */
             box-sizing: border-box;
         }
         .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
 
-        /* 統一 6em 固定寬度 */
+        /* 固定 6em 的遮罩，並保持左側 10px 間距 */
         .fixed-6 { width: var(--mask-fixed-6); margin-left: var(--inner-gap); flex-shrink: 0; }
         
-        /* 5:5 佈局 */
-        .split-row { display: flex; width: 100%; }
-        .split-half { flex: 1; display: flex; align-items: center; }
-        
-        /* 毒性遮罩右端平齊，左端保留 10px 間距 */
-        .right-half { justify-content: flex-end; } 
+        /* 雙欄對齊邏輯 */
+        .split-row { display: flex; width: 100%; justify-content: space-between; }
+        .prop-half { display: flex; align-items: center; flex: 1; }
+        .tox-half { display: flex; align-items: center; justify-content: flex-end; } /* 靠右平齊 */
 
         .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; justify-content: flex-start; text-align: left; }
 
@@ -117,11 +105,11 @@
         
         <div class="info-row" style="border-top:1px solid #F0F0F0; border-bottom:1px solid #F0F0F0; padding:12px 0;">
             <div class="split-row">
-                <div class="split-half" onclick="reveal(this)">
+                <div class="prop-half" onclick="reveal(this)">
                     <div class="label">屬性</div>
                     <span id="medProp" class="answer hidden fixed-6"></span>
                 </div>
-                <div class="split-half right-half" onclick="reveal(this)">
+                <div class="tox-half" onclick="reveal(this)">
                     <div class="label" style="width:auto;">毒性</div>
                     <span id="medTox" class="answer hidden fixed-6"></span>
                 </div>
@@ -141,7 +129,7 @@
 </div>
 
 <script>
-// 依據附件校對後的 59 味藥材名單
+// 依據附件嚴謹校對的 59 味藥材名單
 const medicines = [
     { name: "麻黃", property: "溫", toxicity: "無毒", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盜汗，咳喘由於腎不納氣的虛喘者慎用。", img: "麻黃.png" },
     { name: "桂枝", property: "溫", toxicity: "無毒", nature: "辛、甘。歸肺、心、膀胱經。", effect: "發汗解肌，溫經通脈，通陽化氣。", usage: "煎服，3～10g。", notice: "辛溫助陽，易傷陰耗血，故外感熱病、陰虛火旺、血熱妄行之出血證忌。孕婦及月經過多者慎。", img: "桂枝.png" },
@@ -221,8 +209,8 @@ function updateUI() {
 
     const toxEl = document.getElementById('medTox');
     toxEl.className = 'answer hidden fixed-6';
-    if (med.toxicity.includes('有小毒') || med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
-    if (med.toxicity.includes('有大毒') || med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
+    if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
+    if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
 
     document.getElementById('medImage').src = encodeURIComponent(med.name + ".png");
     document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
@@ -264,4 +252,3 @@ window.onload = updateUI;
 </script>
 </body>
 </html>
-```
