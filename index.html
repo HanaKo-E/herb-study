@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑 - 究極對齊版</title>
+    <title>中藥學習圖鑑 - 視覺對齊優化版</title>
     
     <style>
         :root {
@@ -12,8 +12,9 @@
             --bg-color: #F4F0F2;
             --card-bg: #FFFFFF;
             --text-color: #333333;
-            --label-width: 90px; /* 左側標籤統一寬度 */
-            --answer-gap: 20px;  /* 標籤與答案之間的精確間距 */
+            --label-width: 100px; /* 統一左側所有標籤的寬度 */
+            --answer-gap: 15px;   /* 標籤與答案之間的間隔 */
+            --mask-fixed-w: 4em;  /* 藥名、屬性、毒性固定遮罩寬度 */
         }
 
         body {
@@ -28,21 +29,8 @@
             padding: 15px 0; text-align: center; font-size: 1.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .search-container { width: 90%; max-width: 480px; margin-top: 15px; position: relative; }
-        #searchInput {
-            width: 100%; padding: 12px 20px; border-radius: 25px;
-            border: 2px solid var(--accent-color); font-size: 1rem; outline: none; box-sizing: border-box;
-        }
-        #searchResult {
-            position: absolute; top: 55px; left: 0; width: 100%;
-            background: white; border-radius: 15px; z-index: 100;
-            max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .result-item { padding: 12px 20px; border-bottom: 1px solid #EEE; cursor: pointer; }
+        .container { width: 95%; max-width: 550px; margin-top: 20px; }
 
-        .container { width: 95%; max-width: 550px; margin-top: 15px; }
-
-        /* 圖片區域 */
         .image-container {
             width: 100%; height: 260px; background-color: #FFF; border-radius: 20px;
             border: 2px solid var(--accent-color); margin-bottom: 15px;
@@ -52,101 +40,113 @@
 
         .info-card { background-color: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 
-        /* 基礎行樣式 */
-        .info-row { display: flex; align-items: flex-start; margin-bottom: 16px; min-height: 1.6em; }
+        /* 通用行排版：確保標籤後的起始點垂直對齊 */
+        .info-row { 
+            display: flex; 
+            align-items: flex-start; 
+            margin-bottom: 18px; 
+            line-height: 1.6;
+        }
 
-        /* 標籤設計 */
-        .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; }
+        /* 標籤：粗體、固定寬度 */
+        .label { 
+            font-weight: bold; 
+            width: var(--label-width); 
+            flex-shrink: 0; 
+        }
 
-        /* 答案遮罩基礎 */
+        /* 答案基礎 */
         .answer {
-            background-color: #f9f9f9; border-radius: 4px; padding: 2px 8px;
+            background-color: #f0f0f0; border-radius: 4px; padding: 2px 6px;
             transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center;
         }
         .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
 
-        /* 屬性與毒性的 5:5 容器 */
-        .split-container { display: flex; width: 100%; align-items: center; border-bottom: 1px solid #F0F0F0; padding-bottom: 12px; }
-        .split-half { flex: 0 0 50%; display: flex; align-items: center; }
+        /* --- 核心對稱設定 --- */
+        .split-row { display: flex; width: 100%; align-items: center; }
+        
+        .split-half { 
+            flex: 0 0 50%; /* 絕對 50% 寬度 */
+            display: flex; 
+            align-items: center; 
+        }
 
-        /* 關鍵：屬性與毒性內部也要有固定的標籤寬度與答案間距 */
-        .inner-label { font-weight: bold; width: 60px; flex-shrink: 0; }
-        .fixed-answer { min-width: 4.5em; margin-left: var(--answer-gap); } /* 固定寬度防窺 + 對稱間距 */
+        /* 固定寬度遮罩 (藥名、屬性、毒性) */
+        .fixed-w { 
+            min-width: var(--mask-fixed-w); 
+            max-width: var(--mask-fixed-w);
+            margin-left: var(--answer-gap);
+        }
 
-        /* 長句答案（直達行尾） */
-        .long-answer { flex-grow: 1; margin-left: var(--answer-gap); min-height: 1.4em; }
+        /* 長遮罩 (性味歸經、功效等) */
+        .long-w { 
+            flex-grow: 1; 
+            margin-left: var(--answer-gap); 
+            min-height: 1.4em;
+        }
 
         /* 毒性特別配色 */
         .tox-small { background-color: #006400 !important; color: #FFFFFF !important; font-weight: bold; }
         .tox-large { background-color: #FF0000 !important; color: #FFFFFF !important; font-weight: bold; }
 
-        .btn-group { display: flex; gap: 15px; margin-top: 25px; }
         .nav-btn {
             flex: 1; background-color: var(--primary-color); color: white; border: none;
             padding: 15px; border-radius: 50px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px #5E4F5E;
         }
-        .nav-btn:active { transform: translateY(2px); box-shadow: 0 2px #5E4F5E; }
     </style>
 </head>
 <body>
 
 <header>中藥圖鑑學習系統</header>
 
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
-    <div id="searchResult"></div>
-</div>
-
 <div class="container">
-    <div class="image-container" id="imgBox">
-        <img id="medImage" src="" alt="">
-    </div>
+    <div class="image-container"><img id="medImage" src="" alt="藥材圖片"></div>
 
     <div class="info-card">
-        <div class="info-row" style="border-bottom: 1px solid #F0F0F0; padding-bottom: 12px;" onclick="reveal(this)">
+        <div class="info-row" onclick="reveal(this)">
             <div class="label">藥名</div>
-            <span id="medName" class="answer hidden long-answer"></span>
+            <span id="medName" class="answer hidden fixed-w"></span>
         </div>
 
         <div class="info-row">
-            <div class="split-container">
+            <div class="split-row">
                 <div class="split-half" onclick="reveal(this)">
-                    <div class="inner-label">屬性</div>
-                    <span id="medProp" class="answer hidden fixed-answer"></span>
+                    <div class="label" style="width: var(--label-width);">屬性</div>
+                    <span id="medProp" class="answer hidden fixed-w"></span>
                 </div>
-                <div style="color:#CCC">/</div>
                 <div class="split-half" onclick="reveal(this)">
-                    <div class="inner-label" style="padding-left: 20px;">毒性</div>
-                    <span id="medTox" class="answer hidden fixed-answer"></span>
+                    <div class="label" style="width: var(--label-width); padding-left: 10px;">毒性</div>
+                    <span id="medTox" class="answer hidden fixed-w"></span>
                 </div>
             </div>
         </div>
 
         <div class="info-row" onclick="reveal(this)">
             <div class="label">性味歸經</div>
-            <span id="medNature" class="answer hidden long-answer"></span>
+            <span id="medNature" class="answer hidden long-w"></span>
         </div>
         <div class="info-row" onclick="reveal(this)">
             <div class="label">功效</div>
-            <span id="medEffect" class="answer hidden long-answer"></span>
+            <span id="medEffect" class="answer hidden long-w"></span>
         </div>
         <div class="info-row" onclick="reveal(this)">
             <div class="label">用法用量</div>
-            <span id="medUsage" class="answer hidden long-answer"></span>
+            <span id="medUsage" class="answer hidden long-w"></span>
         </div>
         <div class="info-row" onclick="reveal(this)">
             <div class="label">使用注意</div>
-            <span id="medNotice" class="answer hidden long-answer"></span>
+            <span id="medNotice" class="answer hidden long-w"></span>
         </div>
     </div>
 
-    <div class="btn-group">
+    <div style="display:flex; gap:15px; margin-top:20px;">
         <button class="nav-btn" onclick="changeMed(-1)">上一個</button>
         <button class="nav-btn" onclick="changeMed(1)">下一個</button>
     </div>
 </div>
 
 <script>
+    // 範例資料庫
     const medicines = [
         { name: '麻黃', property: '溫', toxicity: '無毒', nature: '辛、微苦。歸肺、膀胱經。', effect: '發汗解表，宣肺平喘，利水消腫。', usage: '煎服，2～10g。', notice: '表虛自汗及陰虛盜汗者慎用。', img: '麻黃.png' },
         { name: '細辛', property: '溫', toxicity: '小毒', nature: '辛。歸肺、腎、心經。', effect: '解表散寒，祛風止痛，通竅，溫肺化飲。', usage: '煎服，1～3g。', notice: '反藜蘆。', img: '細辛.png' },
@@ -165,13 +165,13 @@
         document.getElementById('medUsage').innerText = med.usage;
         document.getElementById('medNotice').innerText = med.notice;
 
-        // 毒性顏色判斷
+        // 毒性樣式
         const toxEl = document.getElementById('medTox');
         toxEl.classList.remove('tox-small', 'tox-large');
         if (med.toxicity === '小毒') toxEl.classList.add('tox-small');
         if (med.toxicity === '大毒') toxEl.classList.add('tox-large');
 
-        // 圖片處理
+        // 圖片
         document.getElementById('medImage').src = encodeURIComponent(med.img);
         
         // 重設遮罩
@@ -186,22 +186,6 @@
     function changeMed(step) {
         currentIndex = (currentIndex + step + medicines.length) % medicines.length;
         updateUI();
-    }
-
-    function handleSearch() {
-        const input = document.getElementById('searchInput').value.trim();
-        const resultBox = document.getElementById('searchResult');
-        resultBox.innerHTML = "";
-        if (!input) { resultBox.style.display = "none"; return; }
-        const filtered = medicines.map((m, i) => ({...m, idx: i})).filter(m => m.name.includes(input));
-        filtered.forEach(m => {
-            const div = document.createElement('div');
-            div.className = 'result-item';
-            div.innerText = m.name;
-            div.onclick = () => { currentIndex = m.idx; updateUI(); resultBox.style.display = "none"; document.getElementById('searchInput').value = ""; };
-            resultBox.appendChild(div);
-        });
-        resultBox.style.display = filtered.length ? "block" : "none";
     }
 
     window.onload = updateUI;
