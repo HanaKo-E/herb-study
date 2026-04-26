@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑</title>
+    <title>中藥學習圖鑑 - 完整版</title>
     <style>
         :root {
             --primary-color: #6B5B6B;
             --accent-color: #A393A1;
-            --bg-color: #F7F3F0; /* 純淨背景 */
+            --bg-color: #F7F3F0;
             --card-bg: #FFFFFF;
             --text-color: #332D2D;
             --label-width: 85px;
@@ -21,33 +21,40 @@
             margin: 0; display: flex; 
             flex-direction: column; align-items: center; color: var(--text-color); 
             user-select: none; padding-bottom: 40px;
-            background-color: var(--bg-color); /* 移除紋理 */
+            background-color: var(--bg-color);
         }
 
         header {
             background-color: var(--primary-color); color: #FFFFFF; width: 100%;
-            padding: 15px 20px; box-sizing: border-box;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 0; text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-bottom: 2px solid var(--accent-color);
         }
+        .header-title { font-size: 1.4rem; letter-spacing: 3px; font-weight: bold; }
 
-        .header-title { font-size: 1.3rem; letter-spacing: 2px; font-weight: bold; }
-        .progress-box { font-size: 1rem; opacity: 0.9; }
+        /* 搜尋與編號同列容器 */
+        .top-bar {
+            width: 90%; max-width: 550px; margin-top: 15px;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        }
 
-        /* 縮短後的搜尋框 (300px) */
-        .search-container { width: 90%; max-width: 300px; margin-top: 15px; position: relative; }
+        .search-container { position: relative; flex: 1; max-width: 300px; }
         #searchInput {
             width: 100%; padding: 10px 15px; border-radius: 20px;
             border: 1.5px solid var(--accent-color); font-size: 0.9rem; outline: none; box-sizing: border-box;
             background: white;
         }
         #searchResult {
-            position: absolute; top: 45px; left: 0; width: 100%;
+            position: absolute; top: 42px; left: 0; width: 100%;
             background: white; border-radius: 10px; z-index: 100;
             max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .result-item { padding: 10px 15px; border-bottom: 1px solid #EEE; cursor: pointer; font-size: 0.9rem; }
+
+        .progress-box {
+            font-size: 1.1rem; color: var(--primary-color); font-weight: bold;
+            white-space: nowrap; flex-shrink: 0;
+        }
 
         .container { width: 95%; max-width: 550px; margin-top: 15px; }
 
@@ -75,6 +82,7 @@
 
         .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; justify-content: flex-start; text-align: left; }
 
+        /* 毒性等級顏色 */
         .tox-small { background-color: #2E5A31 !important; color: #FFFFFF !important; }
         .tox-large { background-color: #A32D2D !important; color: #FFFFFF !important; }
 
@@ -83,18 +91,21 @@
             flex: 1; background-color: var(--primary-color); color: white; border: none;
             padding: 12px; border-radius: 10px; font-size: 1rem; cursor: pointer; 
         }
+        .nav-btn:active { opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-title">中藥圖鑑</div>
-    <div class="progress-box"><span id="currentNum">01</span> / <span id="totalNum">59</span></div>
+    <div class="header-title">中藥學習圖鑑</div>
 </header>
 
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
-    <div id="searchResult"></div>
+<div class="top-bar">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
+        <div id="searchResult"></div>
+    </div>
+    <div class="progress-box"><span id="currentNum">01</span> / <span id="totalNum">59</span></div>
 </div>
 
 <div class="container">
@@ -198,6 +209,8 @@ let currentIndex = 0;
 
 function updateUI() {
     const med = medicines[currentIndex];
+    if (!med) return;
+
     document.getElementById('medName').innerText = med.name;
     document.getElementById('medProp').innerText = med.property;
     document.getElementById('medTox').innerText = med.toxicity;
@@ -209,12 +222,16 @@ function updateUI() {
     document.getElementById('currentNum').innerText = (currentIndex + 1).toString().padStart(2, '0');
     document.getElementById('totalNum').innerText = medicines.length.toString().padStart(2, '0');
 
+    // 毒性色彩邏輯
     const toxEl = document.getElementById('medTox');
     toxEl.className = 'answer hidden fixed-6';
     if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
     if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
 
+    // 設置圖片 (URI編碼處理)
     document.getElementById('medImage').src = encodeURIComponent(med.img);
+
+    // 重置所有遮罩
     document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
 }
 
