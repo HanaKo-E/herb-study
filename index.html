@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑 - 究極對齊完整版</title>
+    <title>中藥學習圖鑑 - 最終完備版</title>
     
     <style>
         :root {
@@ -12,9 +12,9 @@
             --bg-color: #F4F0F2;
             --card-bg: #FFFFFF;
             --text-color: #333333;
-            --label-width: 100px; /* 左側標籤統一寬度 */
-            --answer-gap: 15px;   /* 標籤與答案之間的間隔 */
-            --mask-fixed-w: 4em;  /* 藥名、屬性、毒性固定遮罩寬度 */
+            --label-width: 100px; /* 標籤固定寬度 */
+            --answer-gap: 15px;   /* 標籤與答案間距 */
+            --mask-fixed-w: 4em;  /* 藥名、屬性、毒性固定寬度 */
         }
 
         body {
@@ -42,7 +42,10 @@
         }
         .result-item { padding: 12px 20px; border-bottom: 1px solid #EEE; cursor: pointer; }
 
-        .container { width: 95%; max-width: 550px; margin-top: 15px; }
+        /* 進度編號樣式 */
+        .progress-box { margin-top: 12px; font-size: 1.1rem; color: var(--primary-color); font-weight: bold; }
+
+        .container { width: 95%; max-width: 550px; margin-top: 10px; }
 
         /* 圖片區域 */
         .image-container {
@@ -54,7 +57,7 @@
 
         .info-card { background-color: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 
-        /* 行排版：標籤粗體 + 固定對齊起點 */
+        /* 行排版 */
         .info-row { display: flex; align-items: flex-start; margin-bottom: 18px; line-height: 1.6; }
         .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; }
 
@@ -65,17 +68,15 @@
         }
         .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
 
-        /* 5:5 對稱分佈容器 */
+        /* 5:5 對稱分佈 */
         .split-row { display: flex; width: 100%; align-items: center; }
         .split-half { flex: 0 0 50%; display: flex; align-items: center; }
 
-        /* 固定寬度遮罩 */
+        /* 固定與長遮罩 */
         .fixed-w { min-width: var(--mask-fixed-w); max-width: var(--mask-fixed-w); margin-left: var(--answer-gap); }
-
-        /* 長遮罩直達行尾 */
         .long-w { flex-grow: 1; margin-left: var(--answer-gap); min-height: 1.4em; }
 
-        /* 毒性特別配色 */
+        /* 毒性配色 */
         .tox-small { background-color: #006400 !important; color: #FFFFFF !important; font-weight: bold; }
         .tox-large { background-color: #FF0000 !important; color: #FFFFFF !important; font-weight: bold; }
 
@@ -93,6 +94,10 @@
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="輸入藥名搜尋..." oninput="handleSearch()">
     <div id="searchResult"></div>
+</div>
+
+<div class="progress-box">
+    <span id="currentNum">01</span> / <span id="totalNum">59</span>
 </div>
 
 <div class="container">
@@ -142,11 +147,11 @@
 </div>
 
 <script>
+    // 資料庫範例（請自行補充至 59 味藥）
     const medicines = [
         { name: '麻黃', property: '溫', toxicity: '無毒', nature: '辛、微苦。歸肺、膀胱經。', effect: '發汗解表，宣肺平喘，利水消腫。', usage: '煎服，2～10g。', notice: '表虛自汗及陰虛盜汗者慎用。', img: '麻黃.png' },
         { name: '細辛', property: '溫', toxicity: '小毒', nature: '辛。歸肺、腎、心經。', effect: '解表散寒，祛風止痛，通竅，溫肺化飲。', usage: '煎服，1～3g。', notice: '反藜蘆。氣虛多汗者忌用。', img: '細辛.png' },
-        { name: '雷公藤', property: '寒', toxicity: '大毒', nature: '苦、辛。歸肝、腎經。', effect: '祛風除濕，活血通絡，消腫止痛。', usage: '煎服，10～12g。', notice: '應嚴格控制劑量，孕婦忌用。', img: '雷公藤.png' },
-        { name: '當歸', property: '溫', toxicity: '無毒', nature: '甘、辛。歸肝、心、脾經。', effect: '補血活血，調經止痛，潤腸通便。', usage: '煎服，6～12g。', notice: '濕阻中滿、便溏者慎用。', img: '當歸.png' }
+        { name: '雷公藤', property: '寒', toxicity: '大毒', nature: '苦、辛。歸肝、腎經。', effect: '祛風除濕，活血通絡，消腫止痛。', usage: '煎服，10～12g。', notice: '應嚴格控制劑量，孕婦忌用。', img: '雷公藤.png' }
     ];
 
     let currentIndex = 0;
@@ -160,6 +165,10 @@
         document.getElementById('medEffect').innerText = med.effect;
         document.getElementById('medUsage').innerText = med.usage;
         document.getElementById('medNotice').innerText = med.notice;
+
+        // 進度編號格式化 (補零)
+        document.getElementById('currentNum').innerText = (currentIndex + 1).toString().padStart(2, '0');
+        document.getElementById('totalNum').innerText = medicines.length.toString().padStart(2, '0');
 
         // 毒性顏色
         const toxEl = document.getElementById('medTox');
@@ -208,7 +217,6 @@
         } else { resultBox.style.display = "none"; }
     }
 
-    // 點擊空白處關閉搜尋
     document.addEventListener('click', (e) => {
         if (!document.querySelector('.search-container').contains(e.target)) {
             document.getElementById('searchResult').style.display = "none";
