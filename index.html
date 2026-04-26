@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥圖鑑 - 59味精密對齊版</title>
+    <title>中藥學習圖鑑 - 精密間距對齊版</title>
     <style>
         :root {
             --primary-color: #7D6B7D;
@@ -12,8 +12,8 @@
             --card-bg: #FFFFFF;
             --text-color: #333333;
             --label-width: 85px;
-            --mask-fixed-6: 6em; /* 藥名、屬性、毒性固定寬度 */
-            --inner-gap: 10px;   /* 標籤與遮罩間距 */
+            --mask-fixed-6: 6em; 
+            --inner-gap: 10px; /* 標籤與遮罩間的固定間距 */
         }
 
         body {
@@ -25,7 +25,7 @@
 
         header {
             background-color: var(--primary-color); color: #FFFFFF; width: 100%;
-            padding: 15px 0; text-align: center; font-size: 1.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0; text-align: center; font-size: 1.4rem;
         }
 
         .search-container { width: 90%; max-width: 550px; margin-top: 15px; position: relative; }
@@ -59,18 +59,16 @@
         .answer {
             background-color: #f0f0f0; border-radius: 4px; padding: 2px 6px;
             transition: all 0.2s; display: inline-flex; align-items: center; 
-            justify-content: center; /* 文字置中 */
+            justify-content: center; /* 答案置中 */
             box-sizing: border-box;
         }
         .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
 
-        /* 固定 6em 的遮罩，並保持左側 10px 間距 */
-        .fixed-6 { width: var(--mask-fixed-6); margin-left: var(--inner-gap); flex-shrink: 0; }
+        /* 核心修正：固定 6em 並強制左邊距 10px */
+        .fixed-6 { width: var(--mask-fixed-6); margin-left: var(--inner-gap) !important; flex-shrink: 0; }
         
-        /* 雙欄對齊邏輯 */
-        .split-row { display: flex; width: 100%; justify-content: space-between; }
-        .prop-half { display: flex; align-items: center; flex: 1; }
-        .tox-half { display: flex; align-items: center; justify-content: flex-end; } /* 靠右平齊 */
+        .split-row { display: flex; width: 100%; align-items: center; }
+        .spacer { flex: 1; } /* 彈性空間，確保毒性組件被推至最右側 */
 
         .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; justify-content: flex-start; text-align: left; }
 
@@ -80,7 +78,7 @@
         .btn-group { display: flex; gap: 15px; margin-top: 20px; }
         .nav-btn {
             flex: 1; background-color: var(--primary-color); color: white; border: none;
-            padding: 15px; border-radius: 50px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px #5E4F5E;
+            padding: 15px; border-radius: 50px; font-size: 1.1rem; cursor: pointer;
         }
     </style>
 </head>
@@ -105,11 +103,12 @@
         
         <div class="info-row" style="border-top:1px solid #F0F0F0; border-bottom:1px solid #F0F0F0; padding:12px 0;">
             <div class="split-row">
-                <div class="prop-half" onclick="reveal(this)">
+                <div style="display:flex; align-items:center;" onclick="reveal(this)">
                     <div class="label">屬性</div>
                     <span id="medProp" class="answer hidden fixed-6"></span>
                 </div>
-                <div class="tox-half" onclick="reveal(this)">
+                <div class="spacer"></div>
+                <div style="display:flex; align-items:center;" onclick="reveal(this)">
                     <div class="label" style="width:auto;">毒性</div>
                     <span id="medTox" class="answer hidden fixed-6"></span>
                 </div>
@@ -129,7 +128,6 @@
 </div>
 
 <script>
-// 依據附件嚴謹校對的 59 味藥材名單
 const medicines = [
     { name: "麻黃", property: "溫", toxicity: "無毒", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盜汗，咳喘由於腎不納氣的虛喘者慎用。", img: "麻黃.png" },
     { name: "桂枝", property: "溫", toxicity: "無毒", nature: "辛、甘。歸肺、心、膀胱經。", effect: "發汗解肌，溫經通脈，通陽化氣。", usage: "煎服，3～10g。", notice: "辛溫助陽，易傷陰耗血，故外感熱病、陰虛火旺、血熱妄行之出血證忌。孕婦及月經過多者慎。", img: "桂枝.png" },
@@ -212,7 +210,7 @@ function updateUI() {
     if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
     if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
 
-    document.getElementById('medImage').src = encodeURIComponent(med.name + ".png");
+    document.getElementById('medImage').src = encodeURIComponent(med.name.split('(')[0] + ".png");
     document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
 }
 
