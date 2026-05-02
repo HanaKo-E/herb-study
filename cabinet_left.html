@@ -2,33 +2,33 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>百子櫃 - 左側 (800)</title>
     <style>
-        body { font-family: sans-serif; background: #f4f1ea; display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .nav-bar { background: #6b5b6b; width: 100%; padding: 15px; display: flex; justify-content: center; gap: 10px; position: sticky; top: 0; z-index: 100; }
-        .btn { padding: 8px 20px; border: none; border-radius: 20px; cursor: pointer; text-decoration: none; color: white; font-weight: bold; background: rgba(255,255,255,0.2); }
-        .btn:hover { background: rgba(255,255,255,0.4); }
-        .cabinet { display: grid; grid-template-columns: repeat(2, 140px); gap: 10px; padding: 20px; background: #8b4513; margin-top: 20px; border-radius: 8px; }
-        .drawer { background: #f5deb3; height: 80px; border: 2px solid #a0522d; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
-        .num { font-size: 0.7rem; color: #8b4513; }
-        .name { font-weight: bold; font-size: 1rem; }
+        body { font-family: sans-serif; background: #f4f1ea; text-align: center; padding: 20px; }
+        .nav-bar { margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; }
+        .btn { padding: 10px 20px; background: #8b4513; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .btn:hover { background: #a0522d; }
+        .cabinet { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 600px; margin: 0 auto; background: #5d4037; padding: 15px; border-radius: 8px; }
+        .drawer { background: #d7ccc8; padding: 15px; border: 2px solid #3e2723; cursor: pointer; transition: 0.3s; }
+        .drawer:hover { background: #bcaaa4; }
+        .num { display: block; font-size: 12px; color: #5d4037; }
+        .name { font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="nav-bar">
     <a href="index.html" class="btn">圖鑑</a>
-    <a href="cabinet_right.html" class="btn">右側 (700)</a>
+    <a href="cabinet_right.html" class="btn">右側櫃 (700)</a>
 </div>
 
-<h2 style="color: #3e2723;">左側櫃子 (800 系列)</h2>
-<div id="cabinetDisplay" class="cabinet"></div>
+<h2>左側櫃子 (800 系列)</h2>
+<div id="leftCabinet" class="cabinet"></div>
 
 <script src="data.js"></script>
 <script>
-    const container = document.getElementById('cabinetDisplay');
-    // 讀取 MEDICINE_DATABASE 中的 800 系列
+    const container = document.getElementById('leftCabinet');
+    // 只渲染 800 系列
     MEDICINE_DATABASE["800"].forEach(layer => {
         layer.items.forEach(item => {
             const div = document.createElement('div');
