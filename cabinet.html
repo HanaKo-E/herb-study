@@ -1,16 +1,61 @@
-window.onload = () => {
-    // 渲染資料 (假設 MEDICINE_DATABASE 已在 data.js 定義)
-    renderCabinet("800", "left-cabinet-root");
-    renderCabinet("700", "right-cabinet-root");
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百子櫃配置圖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#F7F3F0] pb-10">
+    <nav class="bg-[#8B735B] text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+        <h1 class="text-xl font-bold">百子櫃配置圖</h1>
+        <button onclick="location.href='home.html'" class="text-sm bg-white/20 px-3 py-1 rounded">返回</button>
+    </nav>
 
-    // 接收來自首頁的參數 (?side=800)
-    const params = new URLSearchParams(window.location.search);
-    const side = params.get('side');
+    <div class="container mx-auto px-4 max-w-2xl mt-6">
+        <div id="section-800" class="mb-10">
+            <h2 class="text-lg font-bold text-amber-900 border-l-4 border-amber-900 pl-2 mb-4">左側百子櫃 (800)</h2>
+            <div id="drawers-800" class="bg-white rounded-2xl p-4 shadow-inner space-y-6"></div>
+        </div>
 
-    if (side) {
-        const targetElement = document.getElementById('section-' + side);
-        if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
+        <div id="section-700">
+            <h2 class="text-lg font-bold text-amber-900 border-l-4 border-amber-900 pl-2 mb-4">右側百子櫃 (700)</h2>
+            <div id="drawers-700" class="bg-white rounded-2xl p-4 shadow-inner space-y-6"></div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        function render(series, targetId) {
+            const container = document.getElementById(targetId);
+            const data = MEDICINE_DATABASE[series];
+            container.innerHTML = data.map(layer => `
+                <div>
+                    <p class="text-xs text-stone-400 mb-2">${layer.layer}</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        ${layer.items.map(item => `
+                            <div class="bg-stone-50 border border-stone-200 p-2 rounded-lg flex justify-between items-center">
+                                <span class="text-xs font-mono text-stone-400">${item.code}</span>
+                                <span class="font-bold text-stone-700">${item.name}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
-    }
-};
+
+        window.onload = () => {
+            render("800", "drawers-800");
+            render("700", "drawers-700");
+            
+            const params = new URLSearchParams(window.location.search);
+            const side = params.get('side');
+            if (side) {
+                setTimeout(() => {
+                    document.getElementById('section-' + side).scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        };
+    </script>
+</body>
+</html>
