@@ -3,40 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃配置圖</title>
+    <title>百子櫃配置圖 - 中藥學習系統</title>
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background-color: #F3F4F1; 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
+        }
+        .cabinet-border { border: 2px solid #31483c; }
+        .drawer { background-color: #ffffff; border: 1px solid #e5e7eb; transition: all 0.2s; }
+        .drawer:hover { background-color: #f0fdf4; border-color: #587269; }
+    </style>
 </head>
-<body class="bg-[#F7F3F0] pb-10">
-    <nav class="bg-[#8B735B] text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
-        <h1 class="text-xl font-bold">百子櫃配置圖</h1>
-        <button onclick="location.href='home.html'" class="text-sm bg-white/20 px-3 py-1 rounded">返回</button>
+<body class="pb-10">
+
+    <!-- 頂部導航欄 -->
+    <nav class="bg-[#31483c] text-white p-4 shadow-lg sticky top-0 z-50 flex justify-between items-center">
+        <h1 class="text-xl font-bold tracking-widest">百 子 櫃 配 置 圖</h1>
+        <button onclick="location.href='home.html'" class="bg-[#587269] px-4 py-1 rounded-full text-sm hover:bg-[#4a6159]">
+            返回首頁
+        </button>
     </nav>
 
-    <div class="container mx-auto px-4 max-w-2xl mt-6">
-        <div id="section-800" class="mb-10">
-            <h2 class="text-lg font-bold text-amber-900 border-l-4 border-amber-900 pl-2 mb-4">左側百子櫃 (800)</h2>
-            <div id="drawers-800" class="bg-white rounded-2xl p-4 shadow-inner space-y-6"></div>
-        </div>
+    <div class="container mx-auto px-4 max-w-2xl mt-8">
+        
+        <!-- 左側百子櫃區域 (800) -->
+        <section id="section-800" class="mb-12">
+            <div class="flex items-center mb-4">
+                <div class="w-2 h-8 bg-[#31483c] mr-3 rounded-full"></div>
+                <h2 class="text-2xl font-bold text-[#31483c]">左側百子櫃 (800 系列)</h2>
+            </div>
+            <div id="drawers-800" class="cabinet-border rounded-3xl p-4 bg-stone-50 space-y-6 shadow-inner">
+                <!-- 由 JS 動態生成 -->
+            </div>
+        </section>
 
-        <div id="section-700">
-            <h2 class="text-lg font-bold text-amber-900 border-l-4 border-amber-900 pl-2 mb-4">右側百子櫃 (700)</h2>
-            <div id="drawers-700" class="bg-white rounded-2xl p-4 shadow-inner space-y-6"></div>
-        </div>
+        <!-- 右側百子櫃區域 (700) -->
+        <section id="section-700">
+            <div class="flex items-center mb-4">
+                <div class="w-2 h-8 bg-[#587269] mr-3 rounded-full"></div>
+                <h2 class="text-2xl font-bold text-[#587269]">右側百子櫃 (700 系列)</h2>
+            </div>
+            <div id="drawers-700" class="cabinet-border rounded-3xl p-4 bg-stone-50 space-y-6 shadow-inner" style="border-color: #587269;">
+                <!-- 由 JS 動態生成 -->
+            </div>
+        </section>
+
     </div>
 
+    <!-- 導入資料中心 -->
     <script src="data.js"></script>
     <script>
-        function render(series, targetId) {
+        // 1. 強制進入首頁保險邏輯
+        // 如果不是從系統內部跳轉且網址不含特定參數，則強制回首頁
+        if (document.referrer === "" && !window.location.search.includes('force=true')) {
+            window.location.href = "home.html";
+        }
+
+        // 2. 渲染櫃位函式
+        function renderCabinet(series, targetId) {
             const container = document.getElementById(targetId);
             const data = MEDICINE_DATABASE[series];
+
+            if (!data) {
+                container.innerHTML = `<p class="text-gray-400 text-center py-4">暫無資料</p>`;
+                return;
+            }
+
             container.innerHTML = data.map(layer => `
                 <div>
-                    <p class="text-xs text-stone-400 mb-2">${layer.layer}</p>
-                    <div class="grid grid-cols-2 gap-2">
+                    <p class="text-xs font-bold text-stone-400 mb-2 uppercase tracking-tighter">${layer.layer}</p>
+                    <div class="grid grid-cols-2 gap-3">
                         ${layer.items.map(item => `
-                            <div class="bg-stone-50 border border-stone-200 p-2 rounded-lg flex justify-between items-center">
-                                <span class="text-xs font-mono text-stone-400">${item.code}</span>
-                                <span class="font-bold text-stone-700">${item.name}</span>
+                            <div class="drawer rounded-xl p-3 flex justify-between items-center shadow-sm">
+                                <span class="text-[10px] font-mono text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">${item.code}</span>
+                                <span class="font-bold text-[#2D3A3A]">${item.name}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -44,17 +86,10 @@
             `).join('');
         }
 
+        // 3. 初始化頁面
         window.onload = () => {
-            render("800", "drawers-800");
-            render("700", "drawers-700");
-            
-            const params = new URLSearchParams(window.location.search);
-            const side = params.get('side');
-            if (side) {
-                setTimeout(() => {
-                    document.getElementById('section-' + side).scrollIntoView({ behavior: 'smooth' });
-                }, 100);
-            }
+            renderCabinet("800", "drawers-800");
+            renderCabinet("700", "drawers-700");
         };
     </script>
 </body>
