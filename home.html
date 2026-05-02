@@ -2,24 +2,30 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中藥管理系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-stone-100 min-h-screen flex items-center justify-center p-6">
-    <div class="max-w-md w-full space-y-6">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-10">中藥管理系統</h1>
+    <div class="max-w-md w-full space-y-6 text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-10 tracking-widest">中藥管理系統</h1>
         
-        <!-- 選項一 -->
-        <button onclick="location.href='index.html'" class="w-full bg-slate-700 text-white py-6 rounded-2xl shadow-lg text-xl font-bold hover:bg-slate-800 transition">
+        <button onclick="location.href='index.html'" 
+                class="w-full bg-slate-700 text-white py-6 rounded-2xl shadow-lg text-xl font-bold hover:bg-slate-800 transition transform active:scale-95">
             📖 中藥學習圖鑑
         </button>
 
-        <!-- 選項二 -->
-        <div class="bg-white p-6 rounded-2xl shadow-lg">
-            <p class="text-center text-gray-500 mb-4">百子櫃配置圖</p>
+        <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
+            <p class="text-gray-500 font-medium mb-4 italic">百子櫃配置圖</p>
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="location.href='cabinet.html?side=800'" class="bg-amber-700 text-white py-4 rounded-xl hover:bg-amber-800 transition">左側 (800)</button>
-                <button onclick="location.href='cabinet.html?side=700'" class="bg-amber-700 text-white py-4 rounded-xl hover:bg-amber-800 transition">右側 (700)</button>
+                <button onclick="location.href='cabinet.html?side=800'" 
+                        class="bg-amber-700 text-white py-4 rounded-xl font-bold hover:bg-amber-800 transition shadow-md active:scale-95">
+                    左側 (800)
+                </button>
+                <button onclick="location.href='cabinet.html?side=700'" 
+                        class="bg-amber-700 text-white py-4 rounded-xl font-bold hover:bg-amber-800 transition shadow-md active:scale-95">
+                    右側 (700)
+                </button>
             </div>
         </div>
     </div>
