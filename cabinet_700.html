@@ -5,51 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>百子櫃 - 700系列</title>
     <style>
-        /* CSS 與 800 相同，僅調整部分色彩變數（若有需要可自訂） */
         :root { --text-white: #ffffff; --main-bg: #F7F3F0; --title-color: #5D4037; --btn-color: #4b5a64; }
         body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        h1.main-title { color: var(--title-color); margin: 10px 0; font-size: 1.8rem; border-bottom: 3px solid var(--title-color); padding-bottom: 5px; }
         .cabinet-section { width: 100%; max-width: 500px; }
-        .series-heading { text-align: center; color: var(--title-color); background: rgba(93, 64, 55, 0.1); padding: 5px; border-radius: 6px; margin-bottom: 10px; font-size: 1.2rem; font-weight: bold; }
-        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .drawer { background: rgba(255, 255, 255, 0.15); aspect-ratio: 5 / 1; display: flex; align-items: center; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 4px; color: var(--text-white); }
-        .drawer .id { font-size: 1.1rem; font-weight: 900; flex: 1; text-align: center; border-right: 1px solid rgba(255, 255, 255, 0.3); }
-        .drawer .name { font-size: 1.3rem; font-weight: bold; flex: 2; text-align: center; }
-        .drawer.empty { opacity: 0.3; }
+        .series-heading { text-align: center; color: var(--title-color); background: rgba(93, 64, 55, 0.1); padding: 8px; border-radius: 6px; margin: 10px 0; font-size: 1.2rem; font-weight: bold; }
+        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
+        .drawer { background: rgba(255, 255, 255, 0.15); aspect-ratio: 5 / 1; display: flex; align-items: center; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 4px; color: var(--text-white); text-decoration: none; }
+        .drawer .id { font-size: 1rem; font-weight: 900; flex: 1; text-align: center; border-right: 1px solid rgba(255, 255, 255, 0.3); }
+        .drawer .name { font-size: 1.2rem; font-weight: bold; flex: 2; text-align: center; }
+        .drawer.empty { opacity: 0.3; pointer-events: none; }
         .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
-        .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--btn-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; font-size: 0.9rem; }
+        .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--btn-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1 class="main-title">百子櫃佈局</h1>
-    <div class="cabinet-section" id="cabinetContainer">
+    <div class="cabinet-section" id="container">
         <div class="series-heading">700 系列</div>
     </div>
     <div class="nav-footer">
         <a href="index.html" class="nav-btn">← 返回圖鑑</a>
         <a href="cabinet_800.html" class="nav-btn">切換 800 系 →</a>
     </div>
-
     <script src="data.js"></script>
     <script>
-        const container = document.getElementById('cabinetContainer');
         const blueColors = ["#313c48", "#4b5a64", "#586972", "#657880", "#72878e", "#7f969c"];
-        
+        const container = document.getElementById('container');
         if (CABINET_DATA["700"]) {
-            CABINET_DATA["700"].forEach((layer, index) => {
-                const lattice = document.createElement('div');
-                lattice.className = 'lattice-unit';
-                lattice.style.backgroundColor = blueColors[index % blueColors.length];
-                const customOrder = [0, 2, 1, 3];
-                customOrder.forEach(idx => {
+            CABINET_DATA["700"].forEach((layer, i) => {
+                const unit = document.createElement('div');
+                unit.className = 'lattice-unit';
+                unit.style.backgroundColor = blueColors[i % blueColors.length];
+                [0, 2, 1, 3].forEach(idx => {
                     const item = layer.items[idx];
                     if (!item) return;
-                    const drawer = document.createElement('div');
-                    drawer.className = `drawer ${item.name === "無" ? 'empty' : ''}`;
-                    drawer.innerHTML = `<div class="id">${item.id}</div><div class="name">${item.name}</div>`;
-                    lattice.appendChild(drawer);
+                    const a = document.createElement('a');
+                    a.href = `index.html?search=${encodeURIComponent(item.name)}`;
+                    a.className = `drawer ${item.name === "無" ? 'empty' : ''}`;
+                    a.innerHTML = `<div class="id">${item.id}</div><div class="name">${item.name}</div>`;
+                    unit.appendChild(a);
                 });
-                container.appendChild(lattice);
+                container.appendChild(unit);
             });
         }
     </script>
