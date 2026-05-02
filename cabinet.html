@@ -3,40 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃佈局優化</title>
+    <title>百子櫃佈局 - 800系列居左</title>
     <style>
         :root {
             --wood-color: #5D4037;
             --drawer-bg: #D2B48C;
             --text-color: #3e2723;
         }
-        body { font-family: sans-serif; background-color: #F7F3F0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        body { 
+            font-family: sans-serif; 
+            background-color: #F7F3F0; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
         
+        /* 確保櫃子由左至右排列 */
         .cabinet-container { 
             display: flex; 
+            flex-direction: row; 
             gap: 20px; 
             flex-wrap: wrap; 
             justify-content: center; 
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
         }
 
-        .cabinet-section { flex: 1; min-width: 320px; }
-        h3 { color: var(--wood-color); text-align: center; border-bottom: 2px solid var(--wood-color); }
+        .cabinet-section { 
+            flex: 1; 
+            min-width: 320px; 
+        }
+
+        h3 { 
+            color: var(--wood-color); 
+            text-align: center; 
+            border-bottom: 2px solid var(--wood-color); 
+            margin-bottom: 15px;
+        }
 
         .cabinet-grid {
             display: grid;
-            /* 關鍵：改為兩欄 */
             grid-template-columns: repeat(2, 1fr); 
             gap: 10px;
             background: var(--wood-color);
             padding: 12px;
             border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .drawer {
             background: var(--drawer-bg);
-            /* 關鍵：高度減半，寬度是高度的 3 倍 */
             aspect-ratio: 3 / 1; 
             display: flex;
             flex-direction: column;
@@ -44,11 +61,12 @@
             align-items: center;
             border: 1px solid #5d4037;
             cursor: pointer;
+            transition: background 0.2s;
         }
+        .drawer:active { background: #c19a6b; }
         
-        .drawer .id { font-size: 0.75rem; color: #5d4037; }
+        .drawer .id { font-size: 0.75rem; color: #5d4037; opacity: 0.8; }
         
-        /* 關鍵：字體變大 */
         .drawer .name { 
             font-size: 1.5rem; 
             font-weight: bold; 
@@ -58,19 +76,35 @@
         .drawer.empty { background: #e0d7cc; cursor: default; }
         .drawer.empty .name { color: #999; }
 
-        .back-btn { margin-top: 30px; padding: 12px 25px; background: #6B5B6B; color: white; text-decoration: none; border-radius: 20px; }
+        .back-btn { 
+            margin-top: 30px; 
+            padding: 12px 30px; 
+            background: #6B5B6B; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 25px; 
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <div class="cabinet-container" id="mainContainer"></div>
+    <div class="cabinet-container" id="mainContainer">
+        <!-- JS 將依序在此生成 800 與 700 櫃位 -->
+    </div>
+
     <a href="index.html" class="back-btn">← 返回圖鑑主頁</a>
 
     <script src="data.js"></script>
     <script>
         const mainContainer = document.getElementById('mainContainer');
 
-        Object.keys(CABINET_DATA).forEach(seriesKey => {
+        // 指定顯示順序，確保 800 在左，700 在右
+        const displayOrder = ["800", "700"];
+
+        displayOrder.forEach(seriesKey => {
+            if (!CABINET_DATA[seriesKey]) return;
+
             const section = document.createElement('div');
             section.className = 'cabinet-section';
             section.innerHTML = `<h3>${seriesKey} 系列</h3>`;
@@ -81,8 +115,9 @@
             CABINET_DATA[seriesKey].forEach(layer => {
                 const items = layer.items; 
 
-                // 關鍵排序邏輯：將 [801, 802, 803, 804] 轉換為 [801, 803, 802, 804]
-                // 這樣在 2 欄 Grid 中，第一排會是 801|803，第二排會是 802|804
+                // 排序邏輯：
+                // 第一排呈現 items[0] | items[2] (例如 801 | 803)
+                // 第二排呈現 items[1] | items[3] (例如 802 | 804)
                 const customOrder = [0, 2, 1, 3];
 
                 customOrder.forEach(idx => {
