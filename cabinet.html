@@ -1,112 +1,31 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃全景佈局</title>
-    <style>
-        :root {
-            --wood-color: #5D4037;
-            --drawer-bg: #D2B48C;
-            --text-color: #3e2723;
-        }
-        body { font-family: sans-serif; background-color: #F7F3F0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        /* 櫃體容器：在寬螢幕並排，螢幕小時堆疊 */
-        .cabinet-container { 
-            display: flex; 
-            gap: 20px; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            width: 100%;
-            max-width: 1200px;
-        }
+/* 調整抽屜比例與字體 */
+.cabinet-grid {
+    display: grid;
+    /* 這裡改為 2 欄，配合 JS 的重組邏輯 */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px;
+    background: var(--wood-color);
+    padding: 15px;
+}
 
-        .cabinet-section { flex: 1; min-width: 300px; max-width: 500px; }
-        h3 { color: var(--wood-color); text-align: center; border-bottom: 2px solid var(--wood-color); padding-bottom: 5px; }
+.drawer {
+    background: var(--drawer-bg);
+    /* 高度減半：寬高比改為 2.5:1，看起來會扁平許多 */
+    aspect-ratio: 2.5 / 1; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #5d4037;
+    cursor: pointer;
+}
 
-        .cabinet-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            background: var(--wood-color);
-            padding: 12px;
-            border-radius: 4px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
+.drawer .id { 
+    font-size: 0.8rem; /* 編號稍微放大 */
+}
 
-        .drawer {
-            background: var(--drawer-bg);
-            aspect-ratio: 1 / 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #5d4037;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-        .drawer:active { transform: scale(0.95); background: #c19a6b; }
-        .drawer .id { font-size: 0.6rem; color: #5d4037; opacity: 0.8; }
-        .drawer .name { font-size: 0.9rem; font-weight: bold; color: var(--text-color); margin-top: 2px; }
-        
-        /* 特殊標示：無資料櫃位 */
-        .drawer.empty { background: #e0d7cc; cursor: default; }
-        .drawer.empty .name { color: #999; }
-
-        .back-btn { margin-top: 30px; padding: 12px 25px; background: #6B5B6B; color: white; text-decoration: none; border-radius: 20px; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-    <div class="cabinet-container" id="mainContainer">
-        <!-- 800 與 700 系列將由 JS 自動生成於此 -->
-    </div>
-
-    <a href="index.html" class="back-btn">← 返回圖鑑主頁</a>
-
-    <script src="data.js"></script>
-    <script>
-        const mainContainer = document.getElementById('mainContainer');
-
-        // 遍歷 CABINET_DATA 中的所有系列 (800, 700...)
-        Object.keys(CABINET_DATA).forEach(seriesKey => {
-            // 1. 建立櫃體區塊
-            const section = document.createElement('div');
-            section.className = 'cabinet-section';
-            section.innerHTML = `<h3>${seriesKey} 系列櫃</h3>`;
-
-            // 2. 建立格網
-            const grid = document.createElement('div');
-            grid.className = 'cabinet-grid';
-
-            // 3. 展開該系列所有藥材並生成抽屜
-            const items = CABINET_DATA[seriesKey].flatMap(layer => layer.items);
-            
-            items.forEach(item => {
-                const drawer = document.createElement('div');
-                drawer.className = 'drawer';
-                if (item.name === "無") drawer.classList.add('empty');
-                
-                drawer.innerHTML = `
-                    <span class="id">${item.id}</span>
-                    <span class="name">${item.name}</span>
-                `;
-
-                // 點擊事件：跳轉回 index.html 並搜尋
-                drawer.onclick = () => {
-                    if (item.name !== "無") {
-                        // 確保跳轉路徑正確且參數已編碼
-                        window.location.href = `index.html?search=${encodeURIComponent(item.name)}`;
-                    }
-                };
-
-                grid.appendChild(drawer);
-            });
-
-            section.appendChild(grid);
-            mainContainer.appendChild(section);
-        });
-    </script>
-</body>
-</html>
+.drawer .name { 
+    font-size: 1.4rem; /* 藥材名稱大幅放大 */
+    font-weight: bold; 
+    color: var(--text-color); 
+}
