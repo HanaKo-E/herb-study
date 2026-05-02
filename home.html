@@ -2,64 +2,26 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中藥管理系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            --primary-color: #6B5B6B;
-            --accent-color: #8B735B;
-            --bg-color: #F7F3F0;
-        }
-        body { background-color: var(--bg-color); font-family: "PingFang TC", sans-serif; }
-        .main-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(139, 115, 91, 0.2);
-        }
-        .main-card:active { transform: scale(0.98); }
-    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-6">
-
+<body class="bg-stone-100 min-h-screen flex items-center justify-center p-6">
     <div class="max-w-md w-full space-y-6">
-        <header class="text-center mb-10">
-            <h1 class="text-3xl font-bold text-gray-800 tracking-widest mb-2">中藥管理系統</h1>
-            <p class="text-gray-500">請選擇您要執行的功能</p>
-        </header>
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-10">中藥管理系統</h1>
+        
+        <!-- 選項一 -->
+        <button onclick="location.href='index.html'" class="w-full bg-slate-700 text-white py-6 rounded-2xl shadow-lg text-xl font-bold hover:bg-slate-800 transition">
+            📖 中藥學習圖鑑
+        </button>
 
-        <!-- 選項一：中藥學習圖鑑 -->
-        <div onclick="location.href='index.html'" 
-             class="main-card bg-white p-8 rounded-3xl shadow-xl cursor-pointer flex flex-col items-center group hover:bg-stone-50">
-            <div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
-                <span class="text-3xl">📖</span>
-            </div>
-            <h2 class="text-xl font-bold text-gray-700">中藥學習圖鑑</h2>
-            <p class="text-gray-400 text-sm mt-2">瀏覽藥材詳情與測驗</p>
-        </div>
-
-        <!-- 選項二：百子櫃配置圖 -->
-        <div class="main-card bg-white p-8 rounded-3xl shadow-xl">
-            <div class="flex flex-col items-center mb-6">
-                <div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="text-3xl">🗄️</span>
-                </div>
-                <h2 class="text-xl font-bold text-gray-700">百子櫃配置圖</h2>
-                <p class="text-gray-400 text-sm mt-2">查看實體櫃位分佈</p>
-            </div>
-            
-            <!-- 百子櫃子選項 -->
+        <!-- 選項二 -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg">
+            <p class="text-center text-gray-500 mb-4">百子櫃配置圖</p>
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="location.href='cabinet.html?side=800'" 
-                        class="bg-amber-700 text-white py-3 rounded-xl font-medium shadow-md active:bg-amber-800 transition-colors">
-                    左側 (800)
-                </button>
-                <button onclick="location.href='cabinet.html?side=700'" 
-                        class="bg-amber-700 text-white py-3 rounded-xl font-medium shadow-md active:bg-amber-800 transition-colors">
-                    右側 (700)
-                </button>
+                <button onclick="location.href='cabinet.html?side=800'" class="bg-amber-700 text-white py-4 rounded-xl hover:bg-amber-800 transition">左側 (800)</button>
+                <button onclick="location.href='cabinet.html?side=700'" class="bg-amber-700 text-white py-4 rounded-xl hover:bg-amber-800 transition">右側 (700)</button>
             </div>
         </div>
     </div>
-
 </body>
 </html>
