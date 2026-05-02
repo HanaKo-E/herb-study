@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃佈局優化</title>
+    <title>百子櫃佈局 - 純展示版</title>
     <style>
         :root {
-            --wood-color: #5D4037;
             --text-white: #ffffff;
             --main-bg: #F7F3F0;
+            --title-color: #5D4037;
         }
         body { 
             font-family: sans-serif; 
@@ -20,74 +20,88 @@
         }
 
         h1.main-title {
-            color: var(--wood-color);
+            color: var(--title-color);
             margin-bottom: 30px;
-            font-size: 2rem;
-            border-bottom: 3px solid var(--wood-color);
+            font-size: 2.2rem;
+            border-bottom: 3px solid var(--title-color);
             padding-bottom: 10px;
         }
         
         .cabinet-container { 
             display: flex; 
             flex-direction: row; 
-            gap: 25px; 
+            gap: 30px; 
             flex-wrap: wrap; 
             justify-content: center; 
             width: 100%;
             max-width: 1200px;
         }
 
-        .cabinet-section { flex: 1; min-width: 320px; }
+        .cabinet-section { flex: 1; min-width: 340px; }
         
-        h3.series-title { 
-            color: var(--wood-color); 
-            text-align: center; 
+        .series-heading {
+            text-align: center;
+            color: var(--title-color);
             background: rgba(93, 64, 55, 0.1);
-            padding: 5px;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
         }
 
-        /* 每 4 格為一組的格子櫃容器 */
+        /* 格子櫃容器：每 4 格一組 */
         .lattice-unit {
             display: grid;
             grid-template-columns: repeat(2, 1fr); 
-            gap: 8px;
-            padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            gap: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
+        /* 抽屜單元：左右排列 */
         .drawer {
-            background: rgba(255, 255, 255, 0.15); /* 半透明疊加在背景色上 */
+            background: rgba(255, 255, 255, 0.15); 
             aspect-ratio: 4 / 1; 
             display: flex;
             flex-direction: row; 
             align-items: center;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: 6px;
             color: var(--text-white);
+            /* 移除 pointer 以符合無功能需求 */
+            cursor: default; 
         }
         
         .drawer .id { 
-            font-size: 1.1rem; 
+            font-size: 1.3rem; 
             font-weight: 900;
             flex: 1;
             text-align: center;
             border-right: 1px solid rgba(255, 255, 255, 0.3);
+            line-height: 1;
         }
         
         .drawer .name { 
-            font-size: 1.4rem; 
+            font-size: 1.6rem; 
             font-weight: bold; 
             flex: 2;
             text-align: center;
+            line-height: 1;
         }
         
-        .drawer.empty { opacity: 0.5; cursor: default; }
+        .drawer.empty { opacity: 0.3; }
 
-        .back-btn { margin-top: 30px; padding: 10px 25px; background: #6B5B6B; color: white; text-decoration: none; border-radius: 20px; }
+        .footer-nav { margin-top: 40px; }
+        .back-link { 
+            padding: 12px 30px; 
+            background: #6B5B6B; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 25px; 
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -96,40 +110,40 @@
 
     <div class="cabinet-container" id="mainContainer"></div>
 
-    <a href="index.html" class="back-btn">← 返回圖鑑主頁</a>
+    <div class="footer-nav">
+        <a href="index.html" class="back-link">← 返回主頁</a>
+    </div>
 
     <script src="data.js"></script>
     <script>
         const mainContainer = document.getElementById('mainContainer');
+        // 確保 800 在左，700 在右
         const displayOrder = ["800", "700"];
         
-        // 定義漸變色碼
-        const colorCodes = [
-            "#31483c", "#3e564b", "#4b645a", "#587269", 
-            "#658078", "#728e87", "#7f9c96", "#8caaa5", "#99b9b4"
-        ];
-
-        let globalUnitIndex = 0; // 用於追蹤所有格子櫃的配色索引
+        // 指定的 6 組漸變色碼
+        const colorCodes = ["#31483c", "#4b645a", "#587269", "#658078", "#728e87", "#7f9c96"];
 
         displayOrder.forEach(seriesKey => {
             if (!CABINET_DATA[seriesKey]) return;
 
             const section = document.createElement('div');
             section.className = 'cabinet-section';
-            section.innerHTML = `<h3 class="series-title">${seriesKey} 系列</h3>`;
+            section.innerHTML = `<div class="series-heading">${seriesKey} 系列</div>`;
+
+            // 重置每個系列的色彩索引，或維持全局索引
+            let colorIndex = 0; 
 
             CABINET_DATA[seriesKey].forEach((layer) => {
-                // 為每一層（4格）建立一個獨立的格子櫃容器
                 const lattice = document.createElement('div');
                 lattice.className = 'lattice-unit';
                 
-                // 分配漸變色，若超過顏色陣列長度則循環使用
-                const bgColor = colorCodes[globalUnitIndex % colorCodes.length];
-                lattice.style.backgroundColor = bgColor;
-                globalUnitIndex++;
+                // 套用漸變色
+                lattice.style.backgroundColor = colorCodes[colorIndex % colorCodes.length];
+                colorIndex++;
 
                 const items = layer.items; 
-                const customOrder = [0, 2, 1, 3]; // 交錯排序邏輯
+                // 交錯排序：上(0, 2) 下(1, 3)
+                const customOrder = [0, 2, 1, 3];
 
                 customOrder.forEach(idx => {
                     const item = items[idx];
@@ -144,11 +158,6 @@
                         <div class="name">${item.name}</div>
                     `;
 
-                    drawer.onclick = () => {
-                        if (item.name !== "無") {
-                            window.location.href = `index.html?search=${encodeURIComponent(item.name)}`;
-                        }
-                    };
                     lattice.appendChild(drawer);
                 });
                 
