@@ -21,7 +21,7 @@
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
             user-select: none;
         }
-        /* 遮罩樣式：模糊並隱藏文字 */
+        /* 遮罩樣式 */
         .answer.hidden { 
             background-color: #E0E0E0 !important; 
             color: transparent !important; 
@@ -35,7 +35,6 @@
             padding: 0 8px;
             background-color: #f2f2f2;
         }
-        /* 毒性特殊色彩 */
         .tox-small { background-color: #2E5A31 !important; color: white !important; }
         .tox-large { background-color: #A32D2D !important; color: white !important; }
         
@@ -116,8 +115,13 @@
     </div>
 
 <script>
-if (document.referrer === "" && !window.location.search.includes('dev=true')) {
-    window.location.href = "home.html";
+// --- 強制導航邏輯 ---
+// 檢查來源頁面，如果不是從 home.html 進來，強制跳轉
+if (document.referrer === "" || !document.referrer.includes("home.html")) {
+    // 排除開發測試模式
+    if (!window.location.search.includes('dev=true')) {
+        window.location.replace("home.html");
+    }
 }
 
 const medicines = [
@@ -128,7 +132,7 @@ const medicines = [
     { name: "香薷(儒)", property: "微溫", toxicity: "無毒", nature: "辛。歸肺、胃、脾經。", effect: "發汗解表，化濕和中，利水消腫。", usage: "煎服，3～10g。不宜久煎。", notice: "汗多表虛者忌用。利水退腫須濃煎。", img: "香薷.png" },
     { name: "荊芥", property: "微溫", toxicity: "無毒", nature: "辛。歸肺、肝經。", effect: "祛風解表，透疹止癢，消瘡，止血。", usage: "煎服，5～10g。", notice: "荊芥穗發汗解表力強，善散頭面風邪", img: "荊芥.png" },
     { name: "防風", property: "微溫", toxicity: "無毒", nature: "辛、甘。歸膀胱、肝、脾經。", effect: "祛風解表，勝濕止痛，止痙，止瀉。", usage: "煎服，5～10g。", notice: "凡燥熱、陰虛血虧、熱病動風者慎用或忌用。", img: "防風.png" },
-    { name: "羌活", property: "溫", toxicity: "無毒", nature: "辛、苦。歸膀胱、腎經。", effect: "解表散寒，祛風勝濕，止痛。", usage: "煎服，3～9g。", notice: "辛香溫燥性烈，陰血虧虛者慎用。量大易致嘔吐，脾胃虛弱者不宜。", img: "羌活.png" },
+    { name: "羌活", property: "溫", toxicity: "無毒", nature: "辛、苦。歸膀胱、腎經。", effect: "解表散寒，祛風勝濕，止痛。", usage: "煎服，3～9g。", notice: "辛香溫燥性烈，陰虛血虧虛者慎用。量大易致嘔吐，脾胃虛弱者不宜。", img: "羌活.png" },
     { name: "白芷", property: "溫", toxicity: "無毒", nature: "辛。歸肺、胃、大腸經。", effect: "解表散寒，祛風止痛，通鼻竅，燥濕止帶，消腫排膿。", usage: "煎服，3～9g。", notice: "辛香溫燥，陰虛血熱者忌服。", img: "白芷.png" },
     { name: "細辛", property: "溫", toxicity: "有小毒", nature: "辛。歸肺、腎、心經。", effect: "解表散寒，祛風止痛，通竅，溫肺化飲。", usage: "煎服，1～3g。", notice: "陰虛陽亢頭痛，肺燥傷陰乾咳者忌用。不宜與藜蘆同用。", img: "細辛.png" },
     { name: "藁(稿)本", property: "溫", toxicity: "無毒", nature: "辛。歸膀胱、肝經。", effect: "祛風散寒，勝濕止痛。", usage: "煎服，3～10g。", notice: "血虛頭痛及熱證均慎用。", img: "藁本.png" },
