@@ -3,223 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑系統</title>
+    <title>中藥學習圖鑑</title>
     
-    <!-- PWA 相關配置 -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#6B5B6B">
 
     <style>
+        /* --- 1. 原本圖鑑頁面的所有變數與樣式 (100% 保留) --- */
         :root {
             --primary-color: #6B5B6B;
             --accent-color: #A393A1;
             --bg-color: #F7F3F0;
             --card-bg: #FFFFFF;
             --text-color: #332D2D;
-            --cabinet-dark: #8B4513;
+            --label-width: 85px;
+            --mask-fixed-6: 6em; 
+            --inner-gap: 10px;
         }
 
         body {
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            margin: 0; background-color: var(--bg-color); color: var(--text-color);
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; padding-bottom: 70px; /* 為導覽列留空間 */
-            user-select: none;
+            margin: 0; display: flex; 
+            flex-direction: column; align-items: center; color: var(--text-color); 
+            user-select: none; padding-bottom: 80px; /* 增加底部間距給導覽列 */
+            background-color: var(--bg-color);
         }
 
-        /* 頂部標題 */
         header {
-            background-color: var(--primary-color); color: white; width: 100%;
-            padding: 15px 0; text-align: center; position: sticky; top: 0; z-index: 1000;
+            background-color: var(--primary-color); color: #FFFFFF; width: 100%;
+            padding: 15px 0; text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 2px solid var(--accent-color);
+        }
+        .header-title { font-size: 1.4rem; letter-spacing: 3px; font-weight: bold; }
+
+        .top-bar {
+            width: 90%; max-width: 550px; margin-top: 15px;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
         }
 
-        /* 分頁控制 */
-        .page-content { display: none; width: 100%; max-width: 550px; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
-        .page-content.active { display: flex; animation: fadeIn 0.3s ease; }
+        .search-container { position: relative; flex: 1; max-width: 300px; }
+        #searchInput {
+            width: 100%; padding: 10px 15px; border-radius: 20px;
+            border: 1.5px solid var(--accent-color); font-size: 0.9rem; outline: none; box-sizing: border-box;
+            background: white;
+        }
+        #searchResult {
+            position: absolute; top: 42px; left: 0; width: 100%;
+            background: white; border-radius: 10px; z-index: 100;
+            max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .result-item { padding: 10px 15px; border-bottom: 1px solid #EEE; cursor: pointer; font-size: 0.9rem; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .progress-box {
+            font-size: 1.1rem; color: var(--primary-color); font-weight: bold;
+            white-space: nowrap; flex-shrink: 0;
+        }
 
-        /* --- 分頁1：圖鑑學習樣式 --- */
-        .search-section { width: 100%; display: flex; gap: 10px; margin-bottom: 15px; position: relative; }
-        #searchInput { flex: 1; padding: 12px 15px; border-radius: 25px; border: 1.5px solid var(--accent-color); outline: none; }
-        .progress-indicator { background: white; padding: 10px; border-radius: 15px; font-weight: bold; border: 1px solid #ddd; }
+        .container { width: 95%; max-width: 550px; margin-top: 15px; }
+
+        .image-container {
+            width: 100%; height: 260px; background-color: #FFF; border-radius: 15px;
+            border: 1px solid #DDD; margin-bottom: 15px;
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        .info-card { background-color: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .info-row { display: flex; align-items: flex-start; margin-bottom: 18px; line-height: 1.6; width: 100%; }
+        .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; color: #5D4F5D; }
+
+        .answer {
+            background-color: #f2f2f2; border-radius: 4px; padding: 2px 6px;
+            transition: all 0.2s; display: inline-flex; align-items: center; 
+            justify-content: center; text-align: center; box-sizing: border-box;
+        }
+        .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
+
+        .fixed-6 { width: var(--mask-fixed-6); margin-left: var(--inner-gap); flex-shrink: 0; }
+        .split-row { display: flex; width: 100%; align-items: center; }
+        .spacer { flex: 1; }
+
+        .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; justify-content: flex-start; text-align: left; }
+
+        .tox-small { background-color: #2E5A31 !important; color: #FFFFFF !important; }
+        .tox-large { background-color: #A32D2D !important; color: #FFFFFF !important; }
+
+        .btn-group { display: flex; gap: 15px; margin-top: 20px; }
+        .nav-btn {
+            flex: 1; background-color: var(--primary-color); color: white; border: none;
+            padding: 12px; border-radius: 10px; font-size: 1rem; cursor: pointer; 
+        }
+        .nav-btn:active { opacity: 0.8; }
+
+        /* --- 2. 百子櫃專屬新增樣式 --- */
+        #cabinet-page { display: none; width: 95%; max-width: 550px; padding: 20px 0; }
+        .cabinet-search { width: 100%; padding: 12px; border-radius: 20px; border: 1.5px solid #6B5B6B; margin-bottom: 15px; box-sizing: border-box; }
         
-        #searchResult { position: absolute; top: 50px; width: 100%; background: white; border-radius: 10px; z-index: 100; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .result-item { padding: 12px; border-bottom: 1px solid #eee; }
+        .drawer-box {
+            background: #FFF; border: 1.5px solid #D4CFC4; border-radius: 8px;
+            padding: 10px; margin-bottom: 15px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .drawer-grid { display: grid; grid-cols: 2; display: flex; flex-wrap: wrap; gap: 8px; }
+        .med-tag {
+            background: #F0EDE5; border: 1px solid #D4CFC4; padding: 4px 8px;
+            border-radius: 4px; font-size: 0.85rem; display: flex; align-items: center;
+        }
+        .med-tag.match { background: #6B5B6B; color: white; border-color: #6B5B6B; }
+        .med-tag .code { font-family: monospace; font-size: 0.7rem; margin-right: 5px; opacity: 0.7; }
 
-        .image-box { width: 100%; height: 250px; background: white; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; border: 1px solid #ddd; overflow: hidden; }
-        .image-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-        .info-card { width: 100%; background: white; border-radius: 15px; padding: 20px; box-sizing: border-box; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .info-row { display: flex; margin-bottom: 15px; cursor: pointer; }
-        .label { width: 85px; font-weight: bold; color: var(--primary-color); flex-shrink: 0; }
-        .answer { background: #f0f0f0; border-radius: 4px; padding: 0 5px; flex-grow: 1; min-height: 1.2em; transition: 0.2s; }
-        .answer.hidden { background: #e0e0e0; color: transparent; filter: blur(5px); }
-
-        /* --- 分頁2：百子櫃樣式 --- */
-        .cabinet-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
-        .toggle-btn { padding: 8px 20px; border-radius: 20px; border: 2px solid var(--primary-color); background: white; font-weight: bold; }
-        .toggle-btn.active { background: var(--primary-color); color: white; }
-
-        .drawer-container { width: 100%; display: grid; gap: 12px; border-left: 5px solid var(--cabinet-dark); padding-left: 12px; }
-        .drawer-box { background: white; border: 1px solid #ccc; border-radius: 8px; padding: 10px; }
-        .drawer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-        .med-item { font-size: 0.95rem; border-bottom: 1px dashed #eee; padding: 3px 0; }
-        .med-item span { color: #999; font-size: 0.75rem; margin-right: 4px; }
-
-        /* 底部導覽列 */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: white; display: flex; border-top: 1px solid #ddd; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888; font-size: 0.8rem; }
-        .nav-tab.active { color: var(--primary-color); }
-        .nav-icon { font-size: 1.5rem; }
-
-        .action-btn { background: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 10px; flex: 1; font-weight: bold; }
+        /* --- 3. 底部導覽列樣式 --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+            background: white; display: flex; border-top: 1px solid #DDD; z-index: 1000;
+        }
+        .tab-btn {
+            flex: 1; border: none; background: none; color: #888;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 0.8rem; cursor: pointer;
+        }
+        .tab-btn.active { color: var(--primary-color); font-weight: bold; }
+        .tab-btn i { font-size: 1.2rem; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
-<header id="mainHeader">中藥學習圖鑑</header>
+<header>
+    <div class="header-title">中藥學習圖鑑</div>
+</header>
 
-<!-- 分頁 1: 圖鑑學習 -->
-<div id="page-learn" class="page-content active">
-    <div class="search-section">
-        <input type="text" id="searchInput" placeholder="搜尋藥名 (如: 麻黃)..." oninput="doSearch()">
-        <div id="searchResult"></div>
-        <div class="progress-indicator"><span id="curIdx">01</span> / <span id="totalCount">00</span></div>
+<!-- 分頁一：原本的圖鑑頁面內容 (結構保持不變) -->
+<div id="atlas-page">
+    <div class="top-bar">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
+            <div id="searchResult"></div>
+        </div>
+        <div class="progress-box"><span id="currentNum">01</span> / <span id="totalNum">59</span></div>
     </div>
 
-    <div class="image-box"><img id="displayImg" src="" alt="藥材圖"></div>
+    <div class="container">
+        <div class="image-container"><img id="medImage" src="" alt="藥材圖片"></div>
+        <div class="info-card">
+            <div class="info-row" onclick="reveal(this)">
+                <div class="label">藥名</div>
+                <span id="medName" class="answer hidden fixed-6"></span>
+            </div>
+            
+            <div class="info-row" style="border-top:1px solid #EEE; border-bottom:1px solid #EEE; padding:12px 0;">
+                <div class="split-row">
+                     <div style="display:flex; align-items:center;" onclick="reveal(this)">
+                         <div class="label">屬性</div>
+                         <span id="medProp" class="answer hidden fixed-6"></span>
+                     </div>
+                     <div class="spacer"></div>
+                     <div style="display:flex; align-items:center; transform: translateX(-10px);" onclick="reveal(this)">
+                         <div class="label" style="width:auto;">毒性</div>
+                         <span id="medTox" class="answer hidden fixed-6"></span>
+                     </div>
+                </div>
+            </div>
 
-    <div class="info-card">
-        <div class="info-row" onclick="this.children[1].classList.remove('hidden')"><div class="label">藥名</div><div id="nameBox" class="answer hidden" style="font-weight:bold; font-size:1.1rem;"></div></div>
-        <div class="info-row" onclick="this.children[1].classList.remove('hidden')"><div class="label">屬性</div><div id="propBox" class="answer hidden"></div></div>
-        <div class="info-row" onclick="this.children[1].classList.remove('hidden')"><div class="label">性味歸經</div><div id="natureBox" class="answer hidden"></div></div>
-        <div class="info-row" onclick="this.children[1].classList.remove('hidden')"><div class="label">功效</div><div id="effectBox" class="answer hidden"></div></div>
-        <div class="info-row" onclick="this.children[1].classList.remove('hidden')"><div class="label">用法用量</div><div id="usageBox" class="answer hidden"></div></div>
-        <div class="info-row" onclick="this.children[1].classList.remove('hidden')"><div class="label">使用注意</div><div id="noticeBox" class="answer hidden"></div></div>
-    </div>
+            <div class="info-row" onclick="reveal(this)"><div class="label">性味歸經</div><span id="medNature" class="answer hidden long-w"></span></div>
+            <div class="info-row" onclick="reveal(this)"><div class="label">功效</div><span id="medEffect" class="answer hidden long-w"></span></div>
+            <div class="info-row" onclick="reveal(this)"><div class="label">用法用量</div><span id="medUsage" class="answer hidden long-w"></span></div>
+            <div class="info-row" onclick="reveal(this)"><div class="label">使用注意</div><span id="medNotice" class="answer hidden long-w"></span></div>
+        </div>
 
-    <div style="display:flex; width:100%; gap:15px; margin-top:20px;">
-        <button class="action-btn" onclick="move(-1)">上一個</button>
-        <button class="action-btn" onclick="move(1)">下一個</button>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="changeMed(-1)">上一個</button>
+            <button class="nav-btn" onclick="changeMed(1)">下一個</button>
+        </div>
     </div>
 </div>
 
-<!-- 分頁 2: 百子櫃 -->
-<div id="page-cabinet" class="page-content">
-    <div class="cabinet-toggle">
-        <button id="btn-L" class="toggle-btn active" onclick="showSide('left')">左側櫃 (800)</button>
-        <button id="btn-R" class="toggle-btn" onclick="showSide('right')">右側櫃 (700)</button>
+<!-- 分頁二：新增的百子櫃頁面內容 -->
+<div id="cabinet-page">
+    <input type="text" id="cabSearchInput" class="cabinet-search" placeholder="在櫃位中搜尋藥名..." oninput="renderCabinet()">
+    <div id="cabinet-container">
+        <!-- 櫃位內容會由 JavaScript 生成 -->
     </div>
-    <div id="cabinet-display" class="drawer-container"></div>
 </div>
 
-<!-- 底部導覽 -->
+<!-- 底部導覽列 -->
 <nav class="bottom-nav">
-    <div class="nav-tab active" id="tab-learn" onclick="switchPage('learn')">
-        <span class="nav-icon">📖</span><span>學習圖鑑</span>
-    </div>
-    <div class="nav-tab" id="tab-cabinet" onclick="switchPage('cabinet')">
-        <span class="nav-icon">🗄️</span><span>百子櫃佈局</span>
-    </div>
+    <button class="tab-btn active" id="tab-atlas-btn" onclick="switchTab('atlas')">
+        <span>📖</span> 圖鑑學習
+    </button>
+    <button class="tab-btn" id="tab-cabinet-btn" onclick="switchTab('cabinet')">
+        <span>🗄️</span> 百子櫃佈局
+    </button>
 </nav>
 
 <script>
-// --- 1. 藥材數據庫 ---
-const medData = [
-    { n: "麻黃", p: "溫", t: "無毒", na: "辛、微苦。歸肺、膀胱經。", e: "發汗解表，宣肺平喘，利水消腫。", u: "2～10g。", nt: "表虛自汗及陰虛盜汗者慎用。", i: "麻黃.png" },
-    { n: "山楂", p: "微溫", t: "無毒", na: "酸、甘。歸脾、胃、肝經。", e: "消食化積，行氣散瘀。", u: "9～12g。", nt: "脾胃虛弱者慎用。", i: "山楂.png" }
+/* --- 1. 原本的圖鑑邏輯 (100% 保留) --- */
+const medicines = [
+    { name: "麻黃", property: "溫", toxicity: "無毒", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盜汗，咳喘由於腎不納氣的虛喘者慎用。", img: "麻黃.png" },
+    { name: "桂枝", property: "溫", toxicity: "無毒", nature: "辛、甘。歸肺、心、膀胱經。", effect: "發汗解肌，溫經通脈，通陽化氣。", usage: "煎服，3～10g。", notice: "辛溫助陽，傷陰耗血，外感熱病、陰虛火旺忌。孕婦慎。", img: "桂枝.png" },
+    { name: "紫蘇葉", property: "溫", toxicity: "無毒", nature: "辛。歸肺、脾經。", effect: "發汗解表，理氣寬中，解魚蟹毒。", usage: "煎服，3～10g。不宜久煎。", notice: "無", img: "紫蘇葉.png" },
+    { name: "生薑", property: "溫", toxicity: "無毒", nature: "辛。歸肺、脾、胃經。", effect: "解表散寒，溫中止嘔，溫肺止咳。", usage: "煎服，3～9g。", notice: "熱盛及陰虛內熱者忌服。", img: "生薑.png" },
+    { name: "香薷(儒)", property: "微溫", toxicity: "無毒", nature: "辛。歸肺、胃、脾經。", effect: "發汗解表，化濕和中，利水消腫。", usage: "煎服，3～10g。不宜久煎。", notice: "汗多表虛者忌用。", img: "香薷.png" },
+    { name: "荊芥", property: "微溫", toxicity: "無毒", nature: "辛。歸肺、肝經。", effect: "祛風解表，透疹止癢，消瘡，止血。", usage: "煎服，5～10g。", notice: "荊芥穗發汗解表力強。", img: "荊芥.png" },
+    { name: "防風", property: "微溫", toxicity: "無毒", nature: "辛、甘。歸膀胱、肝、脾經。", effect: "祛風解表，勝濕止痛，止痙，止瀉。", usage: "煎服，5～10g。", notice: "凡燥熱、陰虛血虧者慎用。", img: "防風.png" },
+    { name: "羌活", property: "溫", toxicity: "無毒", nature: "辛、苦。歸膀胱、腎經。", effect: "解表散寒，祛風勝濕，止痛。", usage: "煎服，3～9g。", notice: "脾胃虛弱者不宜。", img: "羌活.png" },
+    { name: "白芷", property: "溫", toxicity: "無毒", nature: "辛。歸肺、胃、大腸經。", effect: "解表散寒，祛風止痛，通鼻竅，燥濕止帶。", usage: "煎服，3～9g。", notice: "陰虛血熱者忌服。", img: "白芷.png" },
+    { name: "細辛", property: "溫", toxicity: "有小毒", nature: "辛。歸肺、腎、心經。", effect: "解表散寒，祛風止痛，通竅，溫肺化飲。", usage: "煎服，1～3g。", notice: "不宜與藜蘆同用。", img: "細辛.png" },
+    { name: "藁(稿)本", property: "溫", toxicity: "無毒", nature: "辛。歸膀胱、肝經。", effect: "祛風散寒，勝濕止痛。", usage: "煎服，3～10g。", notice: "血虛頭痛慎用。", img: "藁本.png" },
+    { name: "蒼耳子", property: "溫", toxicity: "有小毒", nature: "辛、苦。歸肺經。", effect: "祛風解表，宣通鼻竅，除濕止痛。", usage: "煎服，3～10g。", notice: "過量服用易致中毒。", img: "蒼耳子.png" },
+    { name: "蔥白", property: "溫", toxicity: "無毒", nature: "辛。歸肺、胃經。", effect: "發汗解表，散寒通陽。", usage: "煎服，3～9g。", notice: "無", img: "蔥白.png" },
+    { name: "辛夷", property: "溫", toxicity: "無毒", nature: "辛。歸肺、胃經。", effect: "發散風寒，宣通鼻竅。", usage: "煎服，3～10g。宜包煎。", notice: "陰虛火旺者忌服。", img: "辛夷.png" },
+    { name: "薄荷", property: "涼", toxicity: "無毒", nature: "辛。歸肺、肝經。", effect: "發散風熱，清利頭目，利咽，透疹。", usage: "煎服，3～6g。宜後下。", notice: "體虛多汗者不宜。", img: "薄荷.png" },
+    { name: "牛蒡子", property: "寒", toxicity: "無毒", nature: "辛、苦。歸肺、胃經。", effect: "發散風熱，宣肺透疹，利咽散結。", usage: "煎服，6～12g。宜搗碎。", notice: "脾虛腹瀉者慎用。", img: "牛蒡子.png" },
+    { name: "蟬蛻(退)", property: "寒", toxicity: "無毒", nature: "甘。歸肺、肝經。", effect: "發散風熱，透疹止癢，止痙，明目退翳。", usage: "煎服，3～6g。", notice: "孕婦慎用。", img: "蟬蛻.png" },
+    { name: "桑葉", property: "寒", toxicity: "無毒", nature: "甘、苦。歸肺、肝經。", effect: "發散風熱，清肺止咳，平肝明目。", usage: "煎服，5～10g。", notice: "炙桑葉長於潤肺止咳。", img: "桑葉.png" },
+    { name: "菊花", property: "微寒", toxicity: "無毒", nature: "辛、甘、苦。歸肺、肝經。", effect: "發散風熱，清肝明目，平抑肝陽。", usage: "煎服，5～10g。", notice: "疏散風熱多用白菊花。", img: "菊花.png" },
+    { name: "蔓荊子", property: "微寒", toxicity: "無毒", nature: "辛、苦。歸膀胱、肝、胃經。", effect: "發散風熱，清利頭目，止痛。", usage: "煎服，5～10g。", notice: "無", img: "蔓荊子.png" },
+    { name: "柴胡", property: "微寒", toxicity: "無毒", nature: "苦、辛。歸肝、膽經。", effect: "疏散退熱，疏肝解鬱，升舉陽氣。", usage: "煎服，3～10g。", notice: "肝陽上亢、陰虛火旺者忌用。", img: "柴胡.png" },
+    { name: "升麻", property: "微寒", toxicity: "無毒", nature: "辛、甘。歸肺、脾、胃、大腸經。", effect: "解表透疹，清熱解毒，升舉陽氣。", usage: "煎服，3～9g。", notice: "陰虛火旺者忌用。", img: "升麻.png" },
+    { name: "葛根", property: "涼", toxicity: "無毒", nature: "甘、辛。歸脾、胃經。", effect: "解肌退熱，透疹，生津止渴。", usage: "煎服，9～15g。", notice: "升陽止瀉宜煨用。", img: "葛根.png" },
+    { name: "浮萍", property: "寒", toxicity: "無毒", nature: "辛。歸肺、膀胱經。", effect: "發汗解表，透疹止癢，利尿消腫。", usage: "煎服，3～9g。", notice: "表虛自汗者不宜。", img: "浮萍.png" },    
+    { name: "木賊", property: "平", toxicity: "無毒", nature: "甘、苦。歸肺、肝經。", effect: "疏散風熱，明目退翳。", usage: "煎服，3～10g。", notice: "氣虛慎用。", img: "木賊.png" },
+    { name: "決明子", property: "微寒", toxicity: "無毒", nature: "甘、苦、鹹。歸肝、大腸經。", effect: "清熱明目，潤腸通便。", usage: "煎服，10～15g。", notice: "氣虛便溏者不宜。", img: "決明子.png" },
+    { name: "石膏", property: "大寒", toxicity: "無毒", nature: "甘、辛。歸肺、胃經。", effect: "生用清熱瀉火；煆用斂瘡生肌。", usage: "煎服，15～60g。宜先煎。", notice: "脾胃虛寒者忌用。", img: "石膏.png" },
+    { name: "知母", property: "寒", toxicity: "無毒", nature: "苦、甘。歸肺、胃、腎經。", effect: "清熱瀉火，生津潤燥。", usage: "煎服，6～12g。", notice: "脾虛便溏者不宜用。", img: "知母.png" },
+    { name: "天花粉", property: "微寒", toxicity: "無毒", nature: "甘、微苦。歸肺、胃經。", effect: "清熱瀉火，生津止渴，消腫排膿。", usage: "煎服，10～15g。", notice: "不宜於烏頭類藥材同用。", img: "天花粉.png" },
+    { name: "黃芩(琴)", property: "寒", toxicity: "無毒", nature: "苦。歸肺、膽、脾、胃等經。", effect: "清熱燥濕，瀉火解毒，安胎。", usage: "煎服，3～10g。", notice: "脾胃虛寒者不宜。", img: "黃芩.png" },
+    { name: "黃連", property: "寒", toxicity: "無毒", nature: "苦。歸心、脾、胃、膽經。", effect: "清熱燥濕，瀉火解毒。", usage: "煎服，2～5g。", notice: "脾胃虛寒者忌用。", img: "黃連.png" },
+    { name: "黃柏(百)", property: "寒", toxicity: "無毒", nature: "苦。歸腎、膀胱、大腸經。", effect: "清熱燥濕，瀉火除蒸。", usage: "煎服，3～12g。", notice: "脾胃虛寒者忌用。", img: "黃柏.png" },
+    { name: "龍膽", property: "寒", toxicity: "無毒", nature: "苦。歸肝、膽經。", effect: "清熱燥濕，瀉肝膽火。", usage: "煎服，3～6g。", notice: "脾胃虛寒者慎用。", img: "龍膽.png" },
+    { name: "金銀花", property: "寒", toxicity: "無毒", nature: "甘。歸肺、心、胃經。", effect: "清熱解毒，疏散風熱。", usage: "煎服，6～15g。", notice: "脾胃虛寒者忌用。", img: "金銀花.png" },
+    { name: "連翹(橋)", property: "微寒", toxicity: "無毒", nature: "苦。歸肺、心、小腸經。", effect: "清熱解毒，消腫散結。", usage: "煎服，6～15g。", notice: "脾胃虛寒者不宜用。", img: "連翹.png" },
+    { name: "板藍根", property: "寒", toxicity: "無毒", nature: "苦。歸心、胃經。", effect: "清熱解毒，涼血，利咽。", usage: "煎服，9～15g。", notice: "脾胃虛寒者慎用。", img: "板藍根.png" },
+    { name: "土茯苓", property: "平", toxicity: "無毒", nature: "甘、淡。歸肝、胃經。", effect: "解毒，除濕，通利關節。", usage: "煎服，15～60g。", notice: "服藥時忌茶。", img: "土茯苓.png" },
+    { name: "射干", property: "寒", toxicity: "無毒", nature: "苦。歸肺經。", effect: "清熱解毒，消痰，利咽。", usage: "煎服，3～9g。", notice: "孕婦忌用或慎用。", img: "射干.png" },
+    { name: "玄參", property: "微寒", toxicity: "無毒", nature: "甘、苦、鹹。歸肺、胃、腎經。", effect: "清熱涼血，瀉火解毒，滋陰。", usage: "煎服，10～15g。", notice: "不宜與藜蘆同用。", img: "玄參.png" },
+    { name: "大黃", property: "寒", toxicity: "無毒", nature: "苦。歸脾、胃、大腸、肝經。", effect: "瀉下攻積，清熱瀉火，涼血解毒。", usage: "煎服，5～15g。後下。", notice: "孕婦、哺乳期慎用。", img: "大黃.png" },
+    { name: "芒硝(消)", property: "寒", toxicity: "無毒", nature: "鹹、苦。歸胃、大腸經。", effect: "瀉下通便，潤燥軟堅。", usage: "沖入藥汁，10～15g。", notice: "孕婦慎用。", img: "芒硝.png" },
+    { name: "獨活", property: "微溫", toxicity: "無毒", nature: "辛、苦。歸腎、膀胱經。", effect: "祛風勝濕，止痛。", usage: "煎服，3～10g。", notice: "陰虛血燥者慎用。", img: "獨活.png" },
+    { name: "威靈仙", property: "溫", toxicity: "無毒", nature: "辛、鹹。歸膀胱經。", effect: "祛風除濕，通絡止痛。", usage: "煎服，6～10g。", notice: "氣血虧虛者慎用。", img: "威靈仙.png" },
+    { name: "烏梢(消)蛇", property: "平", toxicity: "無毒", nature: "甘。歸肝經。", effect: "祛風，通絡，止痙。", usage: "煎服，9～12g。", notice: "無", img: "烏梢蛇.png" },
+    { name: "木瓜", property: "溫", toxicity: "無毒", nature: "酸。歸肝、脾經。", effect: "舒筋活絡，和胃化濕。", usage: "煎服，6～12g。", notice: "無", img: "木瓜.png" },
+    { name: "路路通", property: "平", toxicity: "無毒", nature: "苦。歸肝、腎經。", effect: "祛風活絡，利水通經。", usage: "煎服，5～10g。", notice: "孕婦忌用。", img: "路路通.png" },
+    { name: "秦艽", property: "平", toxicity: "無毒", nature: "苦、辛。歸胃、肝、膽經。", effect: "祛風濕，止痹痛，清虛熱。", usage: "煎服，3～10g。", notice: "無", img: "秦艽.png" },
+    { name: "漢防己", property: "寒", toxicity: "無毒", nature: "苦、辛。歸膀胱、肺經。", effect: "祛風濕，止痛，利水消腫。", usage: "煎服，5～10g。", notice: "陰虛無濕者慎用。", img: "漢防己.png" },
+    { name: "桑枝", property: "平", toxicity: "無毒", nature: "微苦。歸肝經。", effect: "祛風濕，通經絡，利關節。", usage: "煎服，9～15g。", notice: "無", img: "桑枝.png" },
+    { name: "絡石藤", property: "微寒", toxicity: "無毒", nature: "苦。歸心、肝、腎經。", effect: "祛風通絡，涼血消腫。", usage: "煎服，6～15g。", notice: "無", img: "絡石藤.png" },
+    { name: "雷公藤", property: "寒", toxicity: "有大毒", nature: "苦、辛。歸肝、腎經。", effect: "祛風除濕，活血通絡。", usage: "煎服，10～20g。宜久煎。", notice: "毒性大，不可過量。", img: "雷公藤.png" },
+    { name: "昆布", property: "寒", toxicity: "無毒", nature: "鹹。歸肝、腎經。", effect: "軟堅散結，消痰，利水。", usage: "煎服，6～12g。", notice: "脾胃虛寒者忌用。", img: "昆布.png" },
+    { name: "當歸", property: "溫", toxicity: "無毒", nature: "甘、辛。歸肝、心、脾經。", effect: "補血調經，活血止痛。", usage: "煎服，5～15g。", notice: "大便泄瀉者忌服。", img: "當歸.png" },
+    { name: "西洋參", property: "涼", toxicity: "無毒", nature: "甘、微苦。歸肺、心、腎等經。", effect: "補氣養陰，清熱生津。", usage: "另煎，3～6g。", notice: "痰濕中阻者慎用。", img: "西洋參.png" },
+    { name: "石斛(酷)", property: "微寒", toxicity: "無毒", nature: "甘。歸胃、腎經。", effect: "養陰清熱，益胃生津。", usage: "煎服，6～12g。宜先煎。", notice: "溫熱病不宜早用。", img: "石斛.png" },
+    { name: "百合", property: "微寒", toxicity: "無毒", nature: "甘。歸心、肺、腎經。", effect: "養陰潤肺，清心安神。", usage: "煎服，6～12g。", notice: "風寒咳嗽者忌用。", img: "百合.png" },
+    { name: "鹿茸", property: "溫", toxicity: "無毒", nature: "甘、鹹。歸腎、肝經。", effect: "補腎陽，益精血，強筋骨。", usage: "研粉沖服，1～2g。", notice: "陰虛陽亢者忌用。", img: "鹿茸.png" },
+    { name: "巴戟天", property: "微溫", toxicity: "無毒", nature: "甘、辛。歸腎、肝經。", effect: "補腎助陽，祛風除濕。", usage: "煎服，6～10g。", notice: "陰虛火旺者慎用。", img: "巴戟天.png" },
+    { name: "山楂", property: "微溫", toxicity: "無毒", nature: "酸、甘。歸脾、胃、肝經。", effect: "消食化積，行氣散瘀。", usage: "煎服，9～12g。", notice: "脾胃虛弱者慎用。", img: "山楂.png" }
 ];
 
-// --- 2. 藥櫃數據庫 ---
-const cabData = {
-    left: [
-        { id: 1, items: [{c:801, n:"山藥"}, {c:803, n:"金銀花"}, {c:802, n:"連翹"}, {c:804, n:"桃仁"}] },
-        { id: 2, items: [{c:805, n:"赤芍"}, {c:807, n:"牡丹皮"}, {c:806, n:"細辛"}, {c:808, n:"黃芪"}] }
-    ],
-    right: [
-        { id: 1, items: [{c:701, n:"當歸"}, {c:703, n:"炙甘草"}, {c:702, n:"獨活"}, {c:704, n:"川芎"}] }
-    ]
-};
+let currentIndex = 0;
 
-let currentIdx = 0;
-
-// --- 3. 頁面切換邏輯 ---
-function switchPage(pageId) {
-    document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    
-    document.getElementById('page-' + pageId).classList.add('active');
-    document.getElementById('tab-' + pageId).classList.add('active');
-    document.getElementById('mainHeader').innerText = pageId === 'learn' ? '中藥學習圖鑑' : '百子櫃實體佈局';
-
-    if(pageId === 'cabinet') renderCab('left');
+function updateUI() {
+    const med = medicines[currentIndex];
+    if (!med) return;
+    document.getElementById('medName').innerText = med.name;
+    document.getElementById('medProp').innerText = med.property;
+    document.getElementById('medTox').innerText = med.toxicity;
+    document.getElementById('medNature').innerText = med.nature;
+    document.getElementById('medEffect').innerText = med.effect;
+    document.getElementById('medUsage').innerText = med.usage;
+    document.getElementById('medNotice').innerText = med.notice;
+    document.getElementById('currentNum').innerText = (currentIndex + 1).toString().padStart(2, '0');
+    document.getElementById('totalNum').innerText = medicines.length.toString().padStart(2, '0');
+    const toxEl = document.getElementById('medTox');
+    toxEl.className = 'answer hidden fixed-6';
+    if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
+    if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
+    document.getElementById('medImage').src = encodeURIComponent(med.img);
+    document.querySelectorAll('.answer').forEach(el => el.classList.add('hidden'));
 }
 
-// --- 4. 圖鑑功能 ---
-function updateDisplay() {
-    const m = medData[currentIdx];
-    document.getElementById('nameBox').innerText = m.n;
-    document.getElementById('propBox').innerText = m.p;
-    document.getElementById('natureBox').innerText = m.na;
-    document.getElementById('effectBox').innerText = m.e;
-    document.getElementById('usageBox').innerText = m.u;
-    document.getElementById('noticeBox').innerText = m.nt;
-    document.getElementById('displayImg').src = encodeURIComponent(m.i);
-    document.getElementById('curIdx').innerText = (currentIdx + 1).toString().padStart(2, '0');
-    document.getElementById('totalCount').innerText = medData.length.toString().padStart(2, '0');
-    document.querySelectorAll('#page-learn .answer').forEach(a => a.classList.add('hidden'));
+function reveal(el) {
+    const target = el.querySelector('.answer');
+    if(target) target.classList.remove('hidden');
 }
 
-function move(step) {
-    currentIdx = (currentIdx + step + medData.length) % medData.length;
-    updateDisplay();
+function changeMed(step) {
+    currentIndex = (currentIndex + step + medicines.length) % medicines.length;
+    updateUI();
 }
 
-function doSearch() {
-    const val = document.getElementById('searchInput').value.trim();
-    const res = document.getElementById('searchResult');
-    res.innerHTML = "";
-    if(!val) { res.style.display = 'none'; return; }
-    
-    const matched = medData.filter(m => m.n.includes(val));
-    matched.forEach(m => {
-        const d = document.createElement('div');
-        d.className = 'result-item';
-        d.innerText = m.n;
-        d.onclick = () => { 
-            currentIdx = medData.findIndex(x => x.n === m.n); 
-            updateDisplay(); 
-            res.style.display='none'; 
-            document.getElementById('searchInput').value=''; 
+function handleSearch() {
+    const input = document.getElementById('searchInput').value.trim();
+    const resultBox = document.getElementById('searchResult');
+    resultBox.innerHTML = "";
+    if (!input) { resultBox.style.display = "none"; return; }
+    const filtered = medicines.map((m, i) => ({...m, idx: i})).filter(m => m.name.includes(input));
+    filtered.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'result-item';
+        div.innerText = m.name;
+        div.onclick = () => { 
+            currentIndex = m.idx; 
+            updateUI();
+            resultBox.style.display = "none";
+            document.getElementById('searchInput').value = ""; 
         };
-        res.appendChild(d);
+        resultBox.appendChild(div);
     });
-    res.style.display = matched.length ? 'block' : 'none';
+    resultBox.style.display = filtered.length ? "block" : "none";
 }
 
-// --- 5. 藥櫃功能 ---
-function renderCab(side) {
-    const container = document.getElementById('cabinet-display');
-    container.innerHTML = cabData[side].map(d => `
-        <div class="drawer-box">
-            <div class="drawer-grid">
-                ${d.items.map(item => `<div class="med-item"><span>${item.c}</span>${item.n}</div>`).join('')}
-            </div>
-        </div>
-    `).join('');
+/* --- 2. 新增的切換與百子櫃邏輯 --- */
+const cabinetData = [
+    { series: "700 左側櫃", layers: [
+        { name: "第一層", items: [{c:"701", n:"山藥"}, {c:"702", n:"連翹"}, {c:"703", n:"金銀花"}, {c:"704", n:"桃仁"}] },
+        { name: "第二層", items: [{c:"705", n:"赤芍"}, {c:"706", n:"細辛"}, {c:"707", n:"牡丹皮"}, {c:"708", n:"黃芪"}] }
+    ]},
+    { series: "800 右側櫃", layers: [
+        { name: "第一層", items: [{c:"801", n:"川芎"}, {c:"802", n:"丹參"}, {c:"803", n:"地黃"}, {c:"804", n:"冬蟲夏草"}] }
+    ]}
+];
+
+function switchTab(tab) {
+    document.getElementById('atlas-page').style.display = (tab === 'atlas') ? 'block' : 'none';
+    document.getElementById('cabinet-page').style.display = (tab === 'cabinet') ? 'block' : 'none';
+    document.getElementById('tab-atlas-btn').classList.toggle('active', tab === 'atlas');
+    document.getElementById('tab-cabinet-btn').classList.toggle('active', tab === 'cabinet');
+    if(tab === 'cabinet') renderCabinet();
 }
 
-function showSide(side) {
-    document.getElementById('btn-L').classList.toggle('active', side === 'left');
-    document.getElementById('btn-R').classList.toggle('active', side === 'right');
-    renderCab(side);
+function renderCabinet() {
+    const searchTerm = document.getElementById('cabSearchInput').value.trim();
+    const container = document.getElementById('cabinet-container');
+    container.innerHTML = "";
+
+    cabinetData.forEach(section => {
+        const sectionEl = document.createElement('div');
+        sectionEl.innerHTML = `<h3 style="color:var(--primary-color); margin-bottom:5px;">${section.series}</h3>`;
+        
+        section.layers.forEach(layer => {
+            const layerBox = document.createElement('div');
+            layerBox.className = 'drawer-box';
+            layerBox.innerHTML = `<div style="font-size:0.75rem; color:#888; margin-bottom:5px;">${layer.name}</div>`;
+            
+            const grid = document.createElement('div');
+            grid.className = 'drawer-grid';
+            
+            layer.items.forEach(item => {
+                const isMatch = searchTerm && item.n.includes(searchTerm);
+                const tag = document.createElement('div');
+                tag.className = `med-tag ${isMatch ? 'match' : ''}`;
+                tag.innerHTML = `<span class="code">${item.c}</span> ${item.n}`;
+                grid.appendChild(tag);
+            });
+            
+            layerBox.appendChild(grid);
+            sectionEl.appendChild(layerBox);
+        });
+        container.appendChild(sectionEl);
+    });
 }
 
-// 初始化
-window.onload = updateDisplay;
+document.addEventListener('click', (e) => {
+    if (!document.querySelector('.search-container').contains(e.target)) {
+        document.getElementById('searchResult').style.display = "none";
+    }
+});
+
+window.onload = () => {
+    updateUI();
+    renderCabinet();
+};
 </script>
 </body>
 </html>
