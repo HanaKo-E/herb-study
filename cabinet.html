@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃佈局 - 800系列居左</title>
+    <title>百子櫃佈局 - 極致壓縮版</title>
     <style>
         :root {
             --wood-color: #5D4037;
@@ -13,93 +13,89 @@
         body { 
             font-family: sans-serif; 
             background-color: #F7F3F0; 
-            padding: 15px; 
+            padding: 10px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
         }
         
-        /* 確保櫃子由左至右排列 */
         .cabinet-container { 
             display: flex; 
             flex-direction: row; 
-            gap: 20px; 
+            gap: 15px; 
             flex-wrap: wrap; 
             justify-content: center; 
             width: 100%;
             max-width: 1200px;
         }
 
-        .cabinet-section { 
-            flex: 1; 
-            min-width: 320px; 
-        }
-
-        h3 { 
-            color: var(--wood-color); 
-            text-align: center; 
-            border-bottom: 2px solid var(--wood-color); 
-            margin-bottom: 15px;
-        }
+        .cabinet-section { flex: 1; min-width: 300px; }
+        h3 { color: var(--wood-color); text-align: center; border-bottom: 2px solid var(--wood-color); margin-bottom: 10px; font-size: 1.1rem; }
 
         .cabinet-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr); 
-            gap: 10px;
+            gap: 6px;
             background: var(--wood-color);
-            padding: 12px;
+            padding: 8px;
             border-radius: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .drawer {
             background: var(--drawer-bg);
-            aspect-ratio: 3 / 1; 
+            /* 關鍵：極致扁平化 */
+            aspect-ratio: 4 / 1; 
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            flex-direction: row; /* 左右排列 */
+            justify-content: space-around;
             align-items: center;
             border: 1px solid #5d4037;
             cursor: pointer;
-            transition: background 0.2s;
+            padding: 0 5px;
         }
-        .drawer:active { background: #c19a6b; }
         
-        .drawer .id { font-size: 0.75rem; color: #5d4037; opacity: 0.8; }
+        /* 數字加大 */
+        .drawer .id { 
+            font-size: 1.1rem; 
+            font-weight: 800;
+            color: #5d4037;
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid rgba(93, 64, 55, 0.2);
+        }
         
+        /* 文字加大 */
         .drawer .name { 
-            font-size: 1.5rem; 
+            font-size: 1.4rem; 
             font-weight: bold; 
             color: var(--text-color); 
+            flex: 2;
+            text-align: center;
+            padding-left: 4px;
         }
         
         .drawer.empty { background: #e0d7cc; cursor: default; }
         .drawer.empty .name { color: #999; }
 
         .back-btn { 
-            margin-top: 30px; 
-            padding: 12px 30px; 
+            margin-top: 20px; 
+            padding: 10px 25px; 
             background: #6B5B6B; 
             color: white; 
             text-decoration: none; 
-            border-radius: 25px; 
-            font-weight: bold;
+            border-radius: 20px; 
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <div class="cabinet-container" id="mainContainer">
-        <!-- JS 將依序在此生成 800 與 700 櫃位 -->
-    </div>
-
+    <div class="cabinet-container" id="mainContainer"></div>
     <a href="index.html" class="back-btn">← 返回圖鑑主頁</a>
 
     <script src="data.js"></script>
     <script>
         const mainContainer = document.getElementById('mainContainer');
-
-        // 指定顯示順序，確保 800 在左，700 在右
         const displayOrder = ["800", "700"];
 
         displayOrder.forEach(seriesKey => {
@@ -114,11 +110,7 @@
 
             CABINET_DATA[seriesKey].forEach(layer => {
                 const items = layer.items; 
-
-                // 排序邏輯：
-                // 第一排呈現 items[0] | items[2] (例如 801 | 803)
-                // 第二排呈現 items[1] | items[3] (例如 802 | 804)
-                const customOrder = [0, 2, 1, 3];
+                const customOrder = [0, 2, 1, 3]; // 達成 801|803, 802|804 排列
 
                 customOrder.forEach(idx => {
                     const item = items[idx];
@@ -129,8 +121,8 @@
                     if (item.name === "無") drawer.classList.add('empty');
                     
                     drawer.innerHTML = `
-                        <span class="id">${item.id}</span>
-                        <span class="name">${item.name}</span>
+                        <div class="id">${item.id}</div>
+                        <div class="name">${item.name}</div>
                     `;
 
                     drawer.onclick = () => {
