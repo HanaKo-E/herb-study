@@ -6,52 +6,54 @@
     <title>中藥學習系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 墨綠色配色定義 */
-        :root {
-            --dark-green: #2D3A3A; /* 墨綠背景色 */
-            --forest-green: #3D5A45; /* 深森林綠 */
-            --sage-green: #5C7A67; /* 鼠尾草綠 */
-            --emerald-deep: #1E4D2B; /* 深翡翠綠 */
+        /* 導入自定義顏色 */
+        .bg-custom-left { background-color: #31483c; }
+        .bg-custom-right { background-color: #587269; }
+        
+        body { 
+            background-color: #f4f7f4; 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
         }
-        body { background-color: #F0F2F0; font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-6">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="max-w-md w-full space-y-8">
-        <!-- 系統標題 -->
+    <div class="max-w-4xl w-full space-y-12">
+        <!-- 標題區域 -->
         <header class="text-center">
-            <h1 class="text-3xl font-extrabold text-[#2D3A3A] tracking-[0.2em]">中藥學習系統</h1>
-            <div class="h-1 w-16 bg-[#3D5A45] mx-auto mt-4 rounded-full"></div>
+            <h1 class="text-4xl font-extrabold text-[#31483c] tracking-widest uppercase">
+                中藥學習系統
+            </h1>
+            <div class="h-1.5 w-24 bg-[#587269] mx-auto mt-4 rounded-full"></div>
         </header>
 
-        <!-- 選項一：中藥學習圖鑑 (長方大按鈕) -->
-        <button onclick="location.href='index.html'" 
-                class="w-full bg-[#2D3A3A] text-white py-8 rounded-2xl shadow-xl flex flex-col items-center justify-center group hover:bg-[#1E2727] transition-all transform active:scale-95">
-            <span class="text-4xl mb-2">📖</span>
-            <span class="text-xl font-bold tracking-widest">中藥學習圖鑑</span>
-        </button>
-
-        <!-- 選項二：百子櫃配置 (左右四方大按鈕) -->
-        <div class="grid grid-cols-2 gap-4">
-            <!-- 左側按鈕 (深綠) -->
-            <button onclick="location.href='cabinet.html?side=800'" 
-                    class="aspect-square bg-[#3D5A45] text-white rounded-3xl shadow-lg flex flex-col items-center justify-center hover:bg-[#2F4535] transition-all transform active:scale-95">
-                <span class="text-3xl mb-3">🗄️</span>
-                <span class="font-bold">左側百子櫃</span>
-                <span class="text-xs opacity-75 mt-1">(800 系列)</span>
+        <!-- 主要導覽按鈕區域 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
+            
+            <!-- 左側：中藥學習圖鑑 -->
+            <button onclick="location.href='index.html'" 
+                    class="bg-custom-left aspect-square rounded-3xl shadow-2xl flex flex-col items-center justify-center group hover:opacity-90 transition-all transform active:scale-95">
+                <div class="text-white text-center">
+                    <span class="text-6xl mb-6 block">📖</span>
+                    <span class="text-2xl font-bold tracking-widest">中藥學習圖鑑</span>
+                </div>
             </button>
 
-            <!-- 右側按鈕 (稍淺的綠色作區分) -->
-            <button onclick="location.href='cabinet.html?side=700'" 
-                    class="aspect-square bg-[#5C7A67] text-white rounded-3xl shadow-lg flex flex-col items-center justify-center hover:bg-[#4A6353] transition-all transform active:scale-95">
-                <span class="text-3xl mb-3">🗄️</span>
-                <span class="font-bold">右側百子櫃</span>
-                <span class="text-xs opacity-75 mt-1">(700 系列)</span>
+            <!-- 右側：百子櫃配置圖 -->
+            <button onclick="location.href='cabinet.html'" 
+                    class="bg-custom-right aspect-square rounded-3xl shadow-2xl flex flex-col items-center justify-center group hover:opacity-90 transition-all transform active:scale-95">
+                <div class="text-white text-center">
+                    <span class="text-6xl mb-6 block">🗄️</span>
+                    <span class="text-2xl font-bold tracking-widest">百子櫃配置圖</span>
+                </div>
             </button>
+
         </div>
 
-        <p class="text-center text-stone-400 text-xs tracking-widest uppercase mt-8">Herb Learning System v2.0</p>
+        <!-- 頁尾版本提示 -->
+        <p class="text-center text-stone-400 text-sm tracking-tighter">
+            HERB LEARNING SYSTEM v3.0
+        </p>
     </div>
 
 </body>
