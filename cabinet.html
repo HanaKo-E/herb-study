@@ -1,96 +1,32 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃配置圖 - 中藥學習系統</title>
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { 
-            background-color: #F3F4F1; 
-            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
-        }
-        .cabinet-border { border: 2px solid #31483c; }
-        .drawer { background-color: #ffffff; border: 1px solid #e5e7eb; transition: all 0.2s; }
-        .drawer:hover { background-color: #f0fdf4; border-color: #587269; }
-    </style>
-</head>
-<body class="pb-10">
+// 修改後的生成函式
+function createCabinet(containerId, start, end) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ""; // 清空容器
 
-    <!-- 頂部導航欄 -->
-    <nav class="bg-[#31483c] text-white p-4 shadow-lg sticky top-0 z-50 flex justify-between items-center">
-        <h1 class="text-xl font-bold tracking-widest">百 子 櫃 配 置 圖</h1>
-        <button onclick="location.href='home.html'" class="bg-[#587269] px-4 py-1 rounded-full text-sm hover:bg-[#4a6159]">
-            返回首頁
-        </button>
-    </nav>
-
-    <div class="container mx-auto px-4 max-w-2xl mt-8">
+    for (let i = start; i <= end; i++) {
+        const id = i.toString();
+        const name = medicineMap[id];
         
-        <!-- 左側百子櫃區域 (800) -->
-        <section id="section-800" class="mb-12">
-            <div class="flex items-center mb-4">
-                <div class="w-2 h-8 bg-[#31483c] mr-3 rounded-full"></div>
-                <h2 class="text-2xl font-bold text-[#31483c]">左側百子櫃 (800 系列)</h2>
-            </div>
-            <div id="drawers-800" class="cabinet-border rounded-3xl p-4 bg-stone-50 space-y-6 shadow-inner">
-                <!-- 由 JS 動態生成 -->
-            </div>
-        </section>
-
-        <!-- 右側百子櫃區域 (700) -->
-        <section id="section-700">
-            <div class="flex items-center mb-4">
-                <div class="w-2 h-8 bg-[#587269] mr-3 rounded-full"></div>
-                <h2 class="text-2xl font-bold text-[#587269]">右側百子櫃 (700 系列)</h2>
-            </div>
-            <div id="drawers-700" class="cabinet-border rounded-3xl p-4 bg-stone-50 space-y-6 shadow-inner" style="border-color: #587269;">
-                <!-- 由 JS 動態生成 -->
-            </div>
-        </section>
-
-    </div>
-
-    <!-- 導入資料中心 -->
-    <script src="data.js"></script>
-    <script>
-        // 1. 強制進入首頁保險邏輯
-        // 如果不是從系統內部跳轉且網址不含特定參數，則強制回首頁
-        if (document.referrer === "" && !window.location.search.includes('force=true')) {
-            window.location.href = "home.html";
+        const div = document.createElement('div');
+        // 如果是空號，套用 gray-50 背景；若有藥材，套用白色背景
+        div.className = `drawer ${name ? 'bg-white' : 'bg-gray-50 border-dashed text-gray-400'}`;
+        
+        // 核心邏輯：若 name 為空、undefined 或為空字串，則顯示 " - "
+        const displayName = (name && name.trim() !== "") ? name : " - ";
+        
+        div.innerHTML = `
+            <span class="id-tag text-xs text-gray-400 mb-1">${id}</span>
+            <span class="med-name font-bold text-sm">${displayName}</span>
+        `;
+        
+        // 僅在有藥材時才綁定點擊跳轉事件
+        if (name && name !== " - ") {
+            div.onclick = () => {
+                location.href = `index.html?search=${encodeURIComponent(name)}`;
+            };
+            div.classList.add('cursor-pointer', 'hover:bg-green-50');
         }
 
-        // 2. 渲染櫃位函式
-        function renderCabinet(series, targetId) {
-            const container = document.getElementById(targetId);
-            const data = MEDICINE_DATABASE[series];
-
-            if (!data) {
-                container.innerHTML = `<p class="text-gray-400 text-center py-4">暫無資料</p>`;
-                return;
-            }
-
-            container.innerHTML = data.map(layer => `
-                <div>
-                    <p class="text-xs font-bold text-stone-400 mb-2 uppercase tracking-tighter">${layer.layer}</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        ${layer.items.map(item => `
-                            <div class="drawer rounded-xl p-3 flex justify-between items-center shadow-sm">
-                                <span class="text-[10px] font-mono text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">${item.code}</span>
-                                <span class="font-bold text-[#2D3A3A]">${item.name}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // 3. 初始化頁面
-        window.onload = () => {
-            renderCabinet("800", "drawers-800");
-            renderCabinet("700", "drawers-700");
-        };
-    </script>
-</body>
-</html>
+        container.appendChild(div);
+    }
+}
