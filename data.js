@@ -1,6 +1,5 @@
 /**
  * CABINET_DATA 僅作為位置對應。
- * 修改藥材資訊請至 index.html。
  */
 const CABINET_DATA = {
     "800": [
@@ -8,8 +7,9 @@ const CABINET_DATA = {
         { layer: "第二層 (805-808)", items: [{ id: "805", name: "赤芍" }, { id: "806", name: "細辛" }, { id: "807", name: "牡丹皮" }, { id: "808", name: "黃芪" }] },
         { layer: "第三層 (809-812)", items: [{ id: "809", name: "桔梗" }, { id: "810", name: "竹葉" }, { id: "811", name: "蘆根" }, { id: "812", name: "淡豆豉" }] },
         { layer: "第四層 (813-816)", items: [{ id: "813", name: "紫蘇葉" }, { id: "814", name: "牡蠣" }, { id: "815", name: "生地黃" }, { id: "816", name: "甘草" }] },
-        { layer: "第五層 (817-819)", items: [{ id: "817", name: "牛膝" }, { id: "818", name: "牛蒡子" }, { id: "819", name: "前胡" }, { id: "無", name: "熟地" }] },
-        { layer: "第六層 (820-821)", items: [{ id: "820", name: "澤瀉" }, { id: "821", name: "陳皮" }, { id: "無", name: "黨參" }, { id: "無", name: "菊花" }] }
+        // 微調：將原先 ID 為「無」的項目統一樣式
+        { layer: "第五層 (817-819)", items: [{ id: "817", name: "牛膝" }, { id: "818", name: "牛蒡子" }, { id: "819", name: "前胡" }, { id: "無", name: "無" }] },
+        { layer: "第六層 (820-821)", items: [{ id: "820", name: "澤瀉" }, { id: "821", name: "陳皮" }, { id: "無", name: "無" }, { id: "無", name: "無" }] }
     ],
     "700": [
         { layer: "第一層 (701-704)", items: [{ id: "701", name: "當歸" }, { id: "702", name: "獨活" }, { id: "703", name: "炙甘草" }, { id: "704", name: "川芎" }] },
