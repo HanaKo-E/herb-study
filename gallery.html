@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>藥材圖鑑總覽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
+        body { font-family: 'Noto Serif TC', serif; background-color: #fdfaf5; }
+        .card { background: white; border: 1px solid #d4cfc4; transition: all 0.3s; }
+        .card:hover { border-color: #8b2a2a; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .badge-800 { background: #8b2a2a; color: white; }
+        .badge-700 { background: #b68d40; color: white; }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-6xl mx-auto">
+        <nav class="flex justify-between items-center mb-12">
+            <h1 class="text-3xl font-bold text-amber-900 italic">中藥材全圖鑑</h1>
+            <a href="cabinet.html" class="px-6 py-2 bg-amber-800 text-white rounded-full hover:bg-amber-900 transition">返回百子櫃佈局</a>
+        </nav>
+
+        <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- 動態生成內容 -->
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        function initGallery() {
+            const container = document.getElementById('galleryContainer');
+            let allItems = [];
+
+            // 整合資料
+            Object.keys(MEDICINE_DATABASE).forEach(series => {
+                MEDICINE_DATABASE[series].forEach(layer => {
+                    layer.items.forEach(item => {
+                        allItems.push({ ...item, series, layerName: layer.layer });
+                    });
+                });
+            });
+
+            // 按編號排序
+            allItems.sort((a, b) => parseInt(a.code) - parseInt(b.code));
+
+            container.innerHTML = allItems.map(item => `
+                <div class="card p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 px-3 py-1 text-xs font-bold ${item.series === '800' ? 'badge-800' : 'badge-700'}">
+                        ${item.series} 系列
+                    </div>
+                    <div class="text-gray-400 font-mono text-sm mb-2">#${item.code}</div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">${item.name}</h2>
+                    <div class="text-sm text-amber-700 font-medium">位置：${item.series === '800' ? '左櫃' : '右櫃'} - ${item.layerName}</div>
+                </div>
+            `).join('');
+        }
+        window.onload = initGallery;
+    </script>
+</body>
+</html>
