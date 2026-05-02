@@ -1,31 +1,115 @@
-/* 調整抽屜比例與字體 */
-.cabinet-grid {
-    display: grid;
-    /* 這裡改為 2 欄，配合 JS 的重組邏輯 */
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 12px;
-    background: var(--wood-color);
-    padding: 15px;
-}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百子櫃佈局優化</title>
+    <style>
+        :root {
+            --wood-color: #5D4037;
+            --drawer-bg: #D2B48C;
+            --text-color: #3e2723;
+        }
+        body { font-family: sans-serif; background-color: #F7F3F0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        
+        .cabinet-container { 
+            display: flex; 
+            gap: 20px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            width: 100%;
+            max-width: 1000px;
+        }
 
-.drawer {
-    background: var(--drawer-bg);
-    /* 高度減半：寬高比改為 2.5:1，看起來會扁平許多 */
-    aspect-ratio: 2.5 / 1; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #5d4037;
-    cursor: pointer;
-}
+        .cabinet-section { flex: 1; min-width: 320px; }
+        h3 { color: var(--wood-color); text-align: center; border-bottom: 2px solid var(--wood-color); }
 
-.drawer .id { 
-    font-size: 0.8rem; /* 編號稍微放大 */
-}
+        .cabinet-grid {
+            display: grid;
+            /* 關鍵：改為兩欄 */
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px;
+            background: var(--wood-color);
+            padding: 12px;
+            border-radius: 4px;
+        }
 
-.drawer .name { 
-    font-size: 1.4rem; /* 藥材名稱大幅放大 */
-    font-weight: bold; 
-    color: var(--text-color); 
-}
+        .drawer {
+            background: var(--drawer-bg);
+            /* 關鍵：高度減半，寬度是高度的 3 倍 */
+            aspect-ratio: 3 / 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #5d4037;
+            cursor: pointer;
+        }
+        
+        .drawer .id { font-size: 0.75rem; color: #5d4037; }
+        
+        /* 關鍵：字體變大 */
+        .drawer .name { 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: var(--text-color); 
+        }
+        
+        .drawer.empty { background: #e0d7cc; cursor: default; }
+        .drawer.empty .name { color: #999; }
+
+        .back-btn { margin-top: 30px; padding: 12px 25px; background: #6B5B6B; color: white; text-decoration: none; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="cabinet-container" id="mainContainer"></div>
+    <a href="index.html" class="back-btn">← 返回圖鑑主頁</a>
+
+    <script src="data.js"></script>
+    <script>
+        const mainContainer = document.getElementById('mainContainer');
+
+        Object.keys(CABINET_DATA).forEach(seriesKey => {
+            const section = document.createElement('div');
+            section.className = 'cabinet-section';
+            section.innerHTML = `<h3>${seriesKey} 系列</h3>`;
+
+            const grid = document.createElement('div');
+            grid.className = 'cabinet-grid';
+
+            CABINET_DATA[seriesKey].forEach(layer => {
+                const items = layer.items; 
+
+                // 關鍵排序邏輯：將 [801, 802, 803, 804] 轉換為 [801, 803, 802, 804]
+                // 這樣在 2 欄 Grid 中，第一排會是 801|803，第二排會是 802|804
+                const customOrder = [0, 2, 1, 3];
+
+                customOrder.forEach(idx => {
+                    const item = items[idx];
+                    if (!item) return;
+
+                    const drawer = document.createElement('div');
+                    drawer.className = 'drawer';
+                    if (item.name === "無") drawer.classList.add('empty');
+                    
+                    drawer.innerHTML = `
+                        <span class="id">${item.id}</span>
+                        <span class="name">${item.name}</span>
+                    `;
+
+                    drawer.onclick = () => {
+                        if (item.name !== "無") {
+                            window.location.href = `index.html?search=${encodeURIComponent(item.name)}`;
+                        }
+                    };
+                    grid.appendChild(drawer);
+                });
+            });
+
+            section.appendChild(grid);
+            mainContainer.appendChild(section);
+        });
+    </script>
+</body>
+</html>
