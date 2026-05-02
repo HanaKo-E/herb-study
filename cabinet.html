@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃佈局 - 純展示版</title>
+    <title>百子櫃佈局 - 雙色優化版</title>
     <style>
         :root {
             --text-white: #ffffff;
@@ -13,7 +13,7 @@
         body { 
             font-family: sans-serif; 
             background-color: var(--main-bg); 
-            padding: 20px; 
+            padding: 10px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -21,61 +21,59 @@
 
         h1.main-title {
             color: var(--title-color);
-            margin-bottom: 30px;
-            font-size: 2.2rem;
+            margin: 10px 0 20px 0;
+            font-size: 1.8rem;
             border-bottom: 3px solid var(--title-color);
-            padding-bottom: 10px;
+            padding-bottom: 5px;
         }
         
         .cabinet-container { 
             display: flex; 
             flex-direction: row; 
-            gap: 30px; 
+            gap: 15px; 
             flex-wrap: wrap; 
             justify-content: center; 
             width: 100%;
             max-width: 1200px;
         }
 
-        .cabinet-section { flex: 1; min-width: 340px; }
+        .cabinet-section { flex: 1; min-width: 320px; }
         
         .series-heading {
             text-align: center;
             color: var(--title-color);
             background: rgba(93, 64, 55, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
+            padding: 5px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
 
-        /* 格子櫃容器：每 4 格一組 */
         .lattice-unit {
             display: grid;
             grid-template-columns: repeat(2, 1fr); 
-            gap: 10px;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            gap: 5px;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* 抽屜單元：左右排列 */
         .drawer {
             background: rgba(255, 255, 255, 0.15); 
-            aspect-ratio: 4 / 1; 
+            aspect-ratio: 5 / 1; 
             display: flex;
             flex-direction: row; 
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
             color: var(--text-white);
-            /* 移除 pointer 以符合無功能需求 */
             cursor: default; 
         }
         
         .drawer .id { 
-            font-size: 1.3rem; 
+            font-size: 1.1rem; 
             font-weight: 900;
             flex: 1;
             text-align: center;
@@ -84,7 +82,7 @@
         }
         
         .drawer .name { 
-            font-size: 1.6rem; 
+            font-size: 1.3rem; 
             font-weight: bold; 
             flex: 2;
             text-align: center;
@@ -93,14 +91,14 @@
         
         .drawer.empty { opacity: 0.3; }
 
-        .footer-nav { margin-top: 40px; }
+        .footer-nav { margin-top: 20px; }
         .back-link { 
-            padding: 12px 30px; 
+            padding: 8px 20px; 
             background: #6B5B6B; 
             color: white; 
             text-decoration: none; 
-            border-radius: 25px; 
-            font-weight: bold;
+            border-radius: 20px; 
+            font-size: 0.8rem;
         }
     </style>
 </head>
@@ -117,11 +115,12 @@
     <script src="data.js"></script>
     <script>
         const mainContainer = document.getElementById('mainContainer');
-        // 確保 800 在左，700 在右
         const displayOrder = ["800", "700"];
-        
-        // 指定的 6 組漸變色碼
-        const colorCodes = ["#31483c", "#4b645a", "#587269", "#658078", "#728e87", "#7f9c96"];
+
+        // 800 系列綠色系
+        const greenColors = ["#31483c", "#4b645a", "#587269", "#658078", "#728e87", "#7f9c96"];
+        // 700 系列藍色系
+        const blueColors = ["#313c48", "#4b5a64", "#586972", "#657880", "#72878e", "#7f969c"];
 
         displayOrder.forEach(seriesKey => {
             if (!CABINET_DATA[seriesKey]) return;
@@ -130,19 +129,19 @@
             section.className = 'cabinet-section';
             section.innerHTML = `<div class="series-heading">${seriesKey} 系列</div>`;
 
-            // 重置每個系列的色彩索引，或維持全局索引
+            // 根據系列選擇對應顏色陣列
+            const currentPalette = (seriesKey === "700") ? blueColors : greenColors;
             let colorIndex = 0; 
 
             CABINET_DATA[seriesKey].forEach((layer) => {
                 const lattice = document.createElement('div');
                 lattice.className = 'lattice-unit';
                 
-                // 套用漸變色
-                lattice.style.backgroundColor = colorCodes[colorIndex % colorCodes.length];
+                // 套用對應系列的漸變色
+                lattice.style.backgroundColor = currentPalette[colorIndex % currentPalette.length];
                 colorIndex++;
 
                 const items = layer.items; 
-                // 交錯排序：上(0, 2) 下(1, 3)
                 const customOrder = [0, 2, 1, 3];
 
                 customOrder.forEach(idx => {
