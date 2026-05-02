@@ -51,7 +51,22 @@
         .info-card { background-color: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .info-row { display: flex; align-items: flex-start; margin-bottom: 18px; line-height: 1.6; width: 100%; }
         .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; color: #5D4F5D; }
-        .answer { background-color: #f2f2f2; border-radius: 4px; padding: 2px 6px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+        
+        /* 基礎答案樣式：預設改為靠左對齊 */
+        .answer { 
+            background-color: #f2f2f2; 
+            border-radius: 4px; 
+            padding: 2px 8px; 
+            transition: all 0.2s; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: flex-start; /* 預設靠左 */
+            text-align: left;
+        }
+        
+        /* 特定欄位居中對齊 */
+        .text-center { justify-content: center; text-align: center; }
+        
         .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
         .fixed-6 { width: var(--mask-fixed-6); margin-left: var(--inner-gap); }
         .long-w { flex-grow: 1; margin-left: var(--inner-gap); min-height: 1.4em; }
@@ -63,38 +78,45 @@
 </head>
 <body>
 <header>
-   <a href="cabinet_800.html" class="cabinet-btn">百子櫃</a>
-   <div class="header-title">中藥學習圖鑑</div>
+    <a href="cabinet_800.html" class="cabinet-btn">百子櫃</a>
+    <div class="header-title">中藥學習圖鑑</div>
 </header>
 <div class="top-bar">
-   <div class="search-container">
-       <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
-       <div id="searchResult"></div>
-   </div>
-   <div class="progress-box"><span id="currentNum">01</span> / <span id="totalNum">59</span></div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="搜尋藥名..." oninput="handleSearch()">
+        <div id="searchResult"></div>
+    </div>
+    <div class="progress-box"><span id="currentNum">01</span> / <span id="totalNum">59</span></div>
 </div>
 <div class="container">
-   <div class="image-container"><img id="medImage" src="" alt="藥材圖片"></div>
-   <div class="info-card">
-       <div class="info-row" onclick="reveal(this)"><div class="label">藥名</div><span id="medName" class="answer hidden fixed-6"></span></div>
-       <div class="info-row" style="border-top:1px solid #EEE; border-bottom:1px solid #EEE; padding:12px 0;">
-           <div style="display:flex; width:100%; align-items:center;">
-                <div style="display:flex; align-items:center;" onclick="reveal(this)"><div class="label">屬性</div><span id="medProp" class="answer hidden fixed-6"></span></div>
+    <div class="image-container"><img id="medImage" src="" alt="藥材圖片"></div>
+    <div class="info-card">
+        <!-- 藥名：居中 -->
+        <div class="info-row" onclick="reveal(this)"><div class="label">藥名</div><span id="medName" class="answer hidden fixed-6 text-center"></span></div>
+        
+        <div class="info-row" style="border-top:1px solid #EEE; border-bottom:1px solid #EEE; padding:12px 0;">
+            <div style="display:flex; width:100%; align-items:center;">
+                <!-- 屬性：居中 -->
+                <div style="display:flex; align-items:center;" onclick="reveal(this)"><div class="label">屬性</div><span id="medProp" class="answer hidden fixed-6 text-center"></span></div>
                 <div style="flex:1"></div>
-                <div style="display:flex; align-items:center;" onclick="reveal(this)"><div class="label" style="width:auto;">毒性</div><span id="medTox" class="answer hidden fixed-6"></span></div>
-           </div>
-       </div>
-       <div class="info-row" onclick="reveal(this)"><div class="label">性味歸經</div><span id="medNature" class="answer hidden long-w"></span></div>
-       <div class="info-row" onclick="reveal(this)"><div class="label">功效</div><span id="medEffect" class="answer hidden long-w"></span></div>
-       <div class="info-row" onclick="reveal(this)"><div class="label">用法用量</div><span id="medUsage" class="answer hidden long-w"></span></div>
-       <div class="info-row" onclick="reveal(this)"><div class="label">使用注意</div><span id="medNotice" class="answer hidden long-w"></span></div>
-   </div>
-   <div class="btn-group">
-       <button class="nav-btn" onclick="changeMed(-1)">上一個</button>
-       <button class="nav-btn" onclick="changeMed(1)">下一個</button>
-   </div>
+                <!-- 毒性：居中 -->
+                <div style="display:flex; align-items:center;" onclick="reveal(this)"><div class="label" style="width:auto;">毒性</div><span id="medTox" class="answer hidden fixed-6 text-center"></span></div>
+            </div>
+        </div>
+        
+        <!-- 其餘欄位：靠左 (預設) -->
+        <div class="info-row" onclick="reveal(this)"><div class="label">性味歸經</div><span id="medNature" class="answer hidden long-w"></span></div>
+        <div class="info-row" onclick="reveal(this)"><div class="label">功效</div><span id="medEffect" class="answer hidden long-w"></span></div>
+        <div class="info-row" onclick="reveal(this)"><div class="label">用法用量</div><span id="medUsage" class="answer hidden long-w"></span></div>
+        <div class="info-row" onclick="reveal(this)"><div class="label">使用注意</div><span id="medNotice" class="answer hidden long-w"></span></div>
+    </div>
+    <div class="btn-group">
+        <button class="nav-btn" onclick="changeMed(-1)">上一個</button>
+        <button class="nav-btn" onclick="changeMed(1)">下一個</button>
+    </div>
 </div>
 <script>
+// (medicines 資料陣列保持不變)
 const medicines = [
     { name: "麻黃", property: "溫", toxicity: "無毒", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盜汗，咳喘由於腎不納氣的虛喘者慎用。", img: "麻黃.png" },
     { name: "桂枝", property: "溫", toxicity: "無毒", nature: "辛、甘。歸肺、心、膀胱經。", effect: "發汗解肌，溫經通脈，通陽化氣。", usage: "煎服，3～10g。", notice: "辛溫助陽，易傷陰耗血，故外感熱病、陰虛火旺、血熱妄行之出血證忌。孕婦及月經過多者慎。", img: "桂枝.png" },
@@ -174,7 +196,8 @@ function updateUI() {
     document.getElementById('totalNum').innerText = medicines.length.toString().padStart(2, '0');
 
     const toxEl = document.getElementById('medTox');
-    toxEl.className = 'answer hidden fixed-6';
+    // 重置 class 並保留居中樣式
+    toxEl.className = 'answer hidden fixed-6 text-center';
     if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
     if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
 
