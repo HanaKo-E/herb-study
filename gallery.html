@@ -1,24 +1,112 @@
-// 僅列出核心修改邏輯
-function initGallery() {
-    allMedicines = [];
-    Object.keys(MEDICINE_DATABASE).forEach(seriesKey => {
-        MEDICINE_DATABASE[seriesKey].forEach(layer => {
-            layer.items.forEach(item => {
-                allMedicines.push({ ...item, series: seriesKey, location: layer.layer });
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中藥圖鑑系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .medicine-card { transition: transform 0.2s; }
+        .medicine-card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">中藥圖鑑系統</h1>
+            <button onclick="location.href='cabinet.html'" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300">返回藥櫃</button>
+        </div>
+
+        <!-- 搜尋欄 -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋藥材名稱、功效或屬性..." 
+                class="w-full p-4 rounded-xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-amber-500 outline-none">
+        </div>
+
+        <!-- 卡片容器 -->
+        <div id="galleryContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 由 JS 動態生成 -->
+        </div>
+    </div>
+
+    <!-- 導入核心資料 -->
+    <script src="data.js"></script>
+    <script>
+        let allMedicines = [];
+
+        // 1. 初始化資料：將巢狀的 MEDICINE_DATABASE 轉為一維陣列
+        function initData() {
+            allMedicines = [];
+            // 遍歷所有系列 (800, 700...)
+            Object.keys(MEDICINE_DATABASE).forEach(series => {
+                // 遍歷每一層
+                MEDICINE_DATABASE[series].forEach(layer => {
+                    // 遍歷每個藥材並加入位置資訊
+                    layer.items.forEach(item => {
+                        allMedicines.push({
+                            ...item,
+                            locationInfo: `${series} 櫃 - ${layer.layer}`
+                        });
+                    });
+                });
             });
-        });
-    });
+            
+            // 檢查 URL 是否有搜尋參數 (來自 cabinet.html)
+            const params = new URLSearchParams(window.location.search);
+            const query = params.get('search');
+            if (query) {
+                document.getElementById('searchInput').value = query;
+                handleSearch();
+            } else {
+                renderCards(allMedicines);
+            }
+        }
 
-    allMedicines.sort((a, b) => parseInt(a.code) - parseInt(b.code));
+        // 2. 渲染卡片到畫面上
+        function renderCards(data) {
+            const container = document.getElementById('galleryContainer');
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">找不到相關藥材</p>';
+                return;
+            }
 
-    // 檢查是否有從藥櫃傳來的搜尋參數
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchParam = urlParams.get('search');
-    if (searchParam) {
-        document.getElementById('searchInput').value = searchParam;
-        const filtered = allMedicines.filter(m => m.name.includes(searchParam));
-        renderCards(filtered);
-    } else {
-        renderCards(allMedicines);
-    }
-}
+            container.innerHTML = data.map(item => `
+                <div class="medicine-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="bg-amber-50 p-4 flex justify-between items-center border-b border-amber-100">
+                        <span class="text-amber-800 font-bold">#${item.code}</span>
+                        <span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded">${item.locationInfo}</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">${item.name}</h3>
+                        <div class="space-y-3 text-sm text-gray-600">
+                            <p><strong class="text-gray-800">性味：</strong>${item.nature || '暫無資料'}</p>
+                            <p><strong class="text-gray-800">功效：</strong>${item.effect || '暫無資料'}</p>
+                            <p><strong class="text-gray-800">用法：</strong>${item.usage || '暫無資料'}</p>
+                            <div class="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
+                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs">${item.property}</span>
+                                <span class="px-3 py-1 ${item.toxicity === '無毒' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'} rounded-full text-xs">
+                                    ${item.toxicity}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 3. 處理搜尋邏輯
+        function handleSearch() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allMedicines.filter(item => 
+                item.name.toLowerCase().includes(term) || 
+                item.effect.toLowerCase().includes(term) ||
+                item.nature.toLowerCase().includes(term)
+            );
+            renderCards(filtered);
+        }
+
+        // 頁面啟動
+        window.onload = initData;
+    </script>
+</body>
+</html>
