@@ -1,95 +1,31 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百子櫃佈局 - 中藥管理系統</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
-        body { font-family: 'Noto Serif TC', serif; background: #f4f1ea; color: #333; }
-        .cabinet-frame { border-left: 8px solid #6d4c41; padding-left: 1.5rem; }
-        .drawer { 
-            background: linear-gradient(145deg, #ffffff, #f0ede5); 
-            border: 2px solid #d4cfc4; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-        .drawer:hover { border-color: #8b2a2a; transform: translateY(-3px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
-        .medicine-tag { border-bottom: 1px solid #eee; padding: 4px 0; display: flex; align-items: center; }
-        .code-num { font-family: 'Courier New', monospace; font-weight: bold; color: #8b6f47; width: 35px; font-size: 0.8rem; }
-        .med-name { font-weight: 600; color: #2d2d2d; }
-    </style>
-</head>
-<body class="p-4 md:p-10">
-    <div class="max-w-7xl mx-auto">
-        <!-- 頁面標題與導覽 -->
-        <header class="flex justify-between items-end mb-12 border-b-2 border-amber-900 pb-6">
-            <div>
-                <h1 class="text-4xl font-bold text-amber-900">中藥百子櫃佈局</h1>
-                <p class="text-amber-700 mt-2">實體位置對照系統</p>
-            </div>
-            <a href="gallery.html" class="bg-amber-800 text-white px-6 py-2 rounded-lg hover:bg-amber-900 transition shadow-md">
-                進入全藥材圖鑑 →
-            </a>
-        </header>
+<!-- 僅列出修改後的 script 部分 -->
+<script src="data.js"></script>
+<script>
+    function renderCabinet(seriesKey, targetId) {
+        const container = document.getElementById(targetId);
+        const data = MEDICINE_DATABASE[seriesKey];
+        if (!data) return;
 
-        <!-- 櫃體並列容器 -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            
-            <!-- 左側櫃 (800 系列) -->
-            <div class="cabinet-frame">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="bg-amber-900 text-white px-3 py-1 rounded text-sm font-bold">左側櫃</span>
-                    <h2 class="text-2xl font-bold text-amber-900">800 系列</h2>
-                </div>
-                <div id="left-cabinet-root" class="space-y-6"></div>
-            </div>
-
-            <!-- 右側櫃 (700 系列) -->
-            <div class="cabinet-frame">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="bg-amber-700 text-white px-3 py-1 rounded text-sm font-bold">右側櫃</span>
-                    <h2 class="text-2xl font-bold text-amber-900">700 系列</h2>
-                </div>
-                <div id="right-cabinet-root" class="space-y-6"></div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- 導入資料腳本 -->
-    <script src="data.js"></script>
-    <script>
-        // 通用渲染函數
-        function renderCabinet(seriesKey, targetId) {
-            const container = document.getElementById(targetId);
-            const data = MEDICINE_DATABASE[seriesKey];
-
-            if (!data) return;
-
-            container.innerHTML = data.map(layer => `
-                <div class="layer-group">
-                    <div class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">${layer.layer}</div>
-                    <div class="drawer p-4 rounded-xl">
-                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
-                            ${layer.items.map(item => `
-                                <div class="medicine-tag">
-                                    <span class="code-num">${item.code}</span>
-                                    <span class="med-name">${item.name}</span>
-                                </div>
-                            `).join('')}
-                        </div>
+        container.innerHTML = data.map(layer => `
+            <div class="layer-group">
+                <div class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">${layer.layer}</div>
+                <div class="drawer p-4 rounded-xl">
+                    <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                        ${layer.items.map(item => `
+                            <div class="medicine-tag cursor-pointer hover:text-amber-700" 
+                                 onclick="location.href='gallery.html?search=${encodeURIComponent(item.name)}'">
+                                <span class="code-num">${item.code}</span>
+                                <span class="med-name">${item.name}</span>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
-            `).join('');
-        }
+            </div>
+        `).join('');
+    }
 
-        // 當頁面載入完成後執行
-        window.onload = () => {
-            renderCabinet("800", "left-cabinet-root");
-            renderCabinet("700", "right-cabinet-root");
-        };
-    </script>
-</body>
-</html>
+    window.onload = () => {
+        renderCabinet("800", "left-cabinet-root");
+        renderCabinet("700", "right-cabinet-root");
+    };
+</script>
