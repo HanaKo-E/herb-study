@@ -1,114 +1,24 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>藥材圖鑑 - 中藥管理系統</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
-        body { font-family: 'Noto Serif TC', serif; background-color: #fdfaf5; }
-        .gallery-card { background: white; border: 1px solid #d4cfc4; transition: all 0.2s; }
-        .gallery-card:hover { border-color: #8b2a2a; transform: translateY(-5px); box-shadow: 0 12px 20px rgba(0,0,0,0.05); }
-        .series-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 99px; font-weight: bold; }
-    </style>
-</head>
-<body class="p-6 md:p-12">
-    <div class="max-w-6xl mx-auto">
-        <!-- 頂部功能列 -->
-        <header class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 border-b border-amber-200 pb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-amber-900">藥材全圖鑑</h1>
-                <p class="text-gray-500 text-sm mt-1">快速搜尋與完整清單展示</p>
-            </div>
-            
-            <div class="flex items-center gap-4 w-full md:w-auto">
-                <input type="text" id="searchInput" placeholder="輸入藥名或編號搜尋..." 
-                    class="w-full md:w-64 px-4 py-2 rounded-full border border-amber-200 focus:outline-none focus:border-amber-800 focus:ring-2 focus:ring-amber-100 transition">
-                <a href="cabinet.html" class="whitespace-nowrap px-6 py-2 border-2 border-amber-800 text-amber-800 rounded-lg hover:bg-amber-800 hover:text-white transition font-bold">
-                    返回藥櫃佈局
-                </a>
-            </div>
-        </header>
-
-        <!-- 圖鑑展示區 -->
-        <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- 由 JavaScript 動態生成 -->
-        </div>
-
-        <!-- 查無結果提示 -->
-        <div id="emptyState" class="hidden text-center py-24 text-gray-400">
-            <p class="text-xl">找不到相關藥材，請嘗試其他關鍵字</p>
-        </div>
-    </div>
-
-    <!-- 導入資料腳本 -->
-    <script src="data.js"></script>
-    <script>
-        let allMedicines = [];
-
-        // 初始化：處理資料並渲染
-        function initGallery() {
-            // 1. 攤平資料
-            Object.keys(MEDICINE_DATABASE).forEach(seriesKey => {
-                MEDICINE_DATABASE[seriesKey].forEach(layer => {
-                    layer.items.forEach(item => {
-                        allMedicines.push({
-                            ...item,
-                            series: seriesKey,
-                            location: layer.layer
-                        });
-                    });
-                });
+// 僅列出核心修改邏輯
+function initGallery() {
+    allMedicines = [];
+    Object.keys(MEDICINE_DATABASE).forEach(seriesKey => {
+        MEDICINE_DATABASE[seriesKey].forEach(layer => {
+            layer.items.forEach(item => {
+                allMedicines.push({ ...item, series: seriesKey, location: layer.layer });
             });
-
-            // 2. 排序 (依編號數字大小)
-            allMedicines.sort((a, b) => parseInt(a.code) - parseInt(b.code));
-
-            // 3. 初次渲染
-            renderCards(allMedicines);
-        }
-
-        // 渲染函數
-        function renderCards(data) {
-            const container = document.getElementById('galleryContainer');
-            const emptyState = document.getElementById('emptyState');
-            
-            if (data.length === 0) {
-                container.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            container.innerHTML = data.map(item => `
-                <div class="gallery-card p-6 rounded-2xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-3">
-                        <span class="series-badge ${item.series === '800' ? 'bg-amber-900 text-white' : 'bg-amber-600 text-white'}">
-                            ${item.series} 系列
-                        </span>
-                    </div>
-                    <div class="text-amber-800 font-mono text-sm mb-1">#${item.code}</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.name}</h2>
-                    <div class="text-xs text-gray-500">
-                        <span class="block">所屬櫃體：${item.series === '800' ? '左側櫃' : '右側櫃'}</span>
-                        <span class="block">所在層級：${item.location}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // 搜尋監聽
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.trim().toLowerCase();
-            const filtered = allMedicines.filter(m => 
-                m.name.toLowerCase().includes(term) || 
-                m.code.toString().includes(term)
-            );
-            renderCards(filtered);
         });
+    });
 
-        window.onload = initGallery;
-    </script>
-</body>
-</html>
+    allMedicines.sort((a, b) => parseInt(a.code) - parseInt(b.code));
+
+    // 檢查是否有從藥櫃傳來的搜尋參數
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    if (searchParam) {
+        document.getElementById('searchInput').value = searchParam;
+        const filtered = allMedicines.filter(m => m.name.includes(searchParam));
+        renderCards(filtered);
+    } else {
+        renderCards(allMedicines);
+    }
+}
