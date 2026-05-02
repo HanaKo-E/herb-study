@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>百子櫃 - 700系列 (對照表)</title>
     <style>
-        :root { --text-white: #ffffff; --main-bg: #F7F3F0; --title-color: #5D4037; --btn-color: #6B5B6B; }
+        /* 1. 更新 CSS 變數以符合紫色系主題 */
+        :root { 
+            --text-white: #ffffff; 
+            --main-bg: #F7F3F0; 
+            --title-color: #433e56; /* 改為紫色系主色 */
+            --btn-color: #5a546e;   /* 改為紫色系次色 */
+        }
         body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .cabinet-section { width: 100%; max-width: 500px; }
-        .series-heading { text-align: center; color: var(--title-color); background: rgba(93, 64, 55, 0.1); padding: 8px; border-radius: 6px; margin: 10px 0; font-size: 1.2rem; font-weight: bold; }
+        .series-heading { text-align: center; color: var(--title-color); background: rgba(67, 62, 86, 0.1); padding: 8px; border-radius: 6px; margin: 10px 0; font-size: 1.2rem; font-weight: bold; }
         .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
         
         /* 純文字格子樣式 */
@@ -40,7 +46,7 @@
     </div>
 
     <script>
-        // 修正並補完後的 700 系列資料
+        // 修正並補完後的 700 系列資料 (保持 100% 一致)
         const CABINET_DATA_700 = [
             { layer: "第一層 (701-704)", items: [{ id: "701", name: "當歸" }, { id: "702", name: "獨活" }, { id: "703", name: "炙甘草" }, { id: "704", name: "川芎" }] },
             { layer: "第二層 (705-708)", items: [{ id: "705", name: "白芷" }, { id: "706", name: "柴胡" }, { id: "707", name: "荊芥" }, { id: "708", name: "白芍" }] },
@@ -50,13 +56,15 @@
             { layer: "第六層 (721-724)", items: [{ id: "721", name: "香附" }, { id: "722", name: "羌活" }, { id: "723", name: "肉桂皮" }, { id: "724", name: "附子" }] }
         ];
 
-        const greenColors = ["#31483c", "#4b645a", "#587269", "#658078", "#728e87", "#7f9c96"];
+        // 2. 更新為 700 系指定的紫色碼
+        const purpleColors = ["#433e56", "#5a546e", "#68627c", "#76708a", "#847e98", "#928ca6"];
         const container = document.getElementById('container');
 
         CABINET_DATA_700.forEach((layer, i) => {
             const unit = document.createElement('div');
             unit.className = 'lattice-unit';
-            unit.style.backgroundColor = greenColors[i % greenColors.length];
+            // 使用更新後的紫色陣列
+            unit.style.backgroundColor = purpleColors[i % purpleColors.length];
             
             layer.items.forEach(item => {
                 const div = document.createElement('div');
