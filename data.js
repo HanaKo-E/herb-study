@@ -2,20 +2,21 @@
 const MEDICINE_DATABASE = {
     // 左側櫃子 (800 系列)
     "800": [
-        { "layer": "第一層", "items": [{ "code": "801", "name": "山藥" }, { "code": "803", "name": "金銀花" }, { "code": "802", "name": "連翹" }, { "code": "804", "name": "桃仁" }] },
-        { "layer": "第二層", "items": [{ "code": "805", "name": "赤芍" }, { "code": "807", "name": "牡丹皮" }, { "code": "806", "name": "細辛" }, { "code": "808", "name": "黃芪" }] },
-        { "layer": "第三層", "items": [{ "code": "809", "name": "桔梗" }, { "code": "811", "name": "蘆根" }, { "code": "810", "name": "竹葉" }, { "code": "812", "name": "淡豆豉" }] },
-        { "layer": "第四層", "items": [{ "code": "813", "name": "紫蘇" }, { "code": "815", "name": "生地黃" }, { "code": "814", "name": "牡蠣" }, { "code": "816", "name": "甘草" }] },
-        { "layer": "第五層", "items": [{ "code": "817", "name": "牛膝" }, { "code": "819", "name": "前胡" }, { "code": "818", "name": "牛蒡子" }, { "code": "819-2", "name": "熟地" }] },
-        { "layer": "第六層", "items": [{ "code": "820", "name": "澤瀉" }, { "code": "820-2", "name": "黨參" }, { "code": "821", "name": "陳皮" }, { "code": "821-2", "name": "菊花" }] }
+        { "layer": "第一層", "items": [
+            { "code": "801", "name": "山藥", "property": "平", "toxicity": "無毒", "nature": "甘。歸脾、肺、腎經。", "effect": "益氣養陰，補脾肺腎，固精止帶。", "usage": "煎服，15～30g。", "notice": "濕盛中滿、大便泄瀉者忌服。", "img": "山藥.png" },
+            { "code": "803", "name": "金銀花", "property": "寒", "toxicity": "無毒", "nature": "甘。歸肺、心、胃經。", "effect": "清熱解毒，疏散風熱。", "usage": "煎服，6～15g。", "notice": "脾胃虛寒者忌用。", "img": "金銀花.png" },
+            { "code": "802", "name": "連翹", "property": "微寒", "toxicity": "無毒", "nature": "苦。歸肺、心、小腸經。", "effect": "清熱解毒，消腫散結，疏散風熱。", "usage": "煎服，6～15g。", "notice": "脾胃虛寒及氣虛膿清者不宜用。", "img": "連翹.png" },
+            { "code": "804", "name": "桃仁", "property": "平", "toxicity": "無毒", "nature": "苦、甘。歸心、肝、大腸經。", "effect": "活血祛瘀，潤腸通便，止咳平喘。", "usage": "煎服，5～10g。", "notice": "孕婦慎用。", "img": "桃仁.png" }
+        ]},
+        // ... (以此類推，將 index.html 中的資訊填入對應的 items)
+        { "layer": "第二層", "items": [
+            { "code": "806", "name": "細辛", "property": "溫", "toxicity": "有小毒", "nature": "辛。歸肺、腎、心經。", "effect": "解表散寒，祛風止痛，通竅，溫肺化飲。", "usage": "煎服，1～3g。", "notice": "不宜與藜蘆同用。", "img": "細辛.png" },
+            { "code": "808", "name": "黃芪", "property": "溫", "toxicity": "無毒", "nature": "甘。歸脾、肺經。", "effect": "補氣升陽，固表止汗，利水消腫。", "usage": "煎服，9～30g。", "notice": "凡氣滯濕阻、食積停滯者慎用。", "img": "黃芪.png" }
+        ]}
     ],
-    // 右側櫃子 (700 系列)
     "700": [
-        { "layer": "第一層", "items": [{ "code": "701", "name": "當歸" }, { "code": "703", "name": "炙甘草" }, { "code": "702", "name": "獨活" }, { "code": "704", "name": "川芎" }] },
-        { "layer": "第二層", "items": [{ "code": "705", "name": "白芷" }, { "code": "707", "name": "荊芥" }, { "code": "706", "name": "柴胡" }, { "code": "708", "name": "白芍" }] },
-        { "layer": "第三層", "items": [{ "code": "709", "name": "生薑" }, { "code": "711", "name": "大棗" }, { "code": "710", "name": "茯苓" }, { "code": "712", "name": "茶葉" }] },
-        { "layer": "第四層", "items": [{ "code": "713", "name": "薄荷" }, { "code": "715", "name": "防風" }, { "code": "714", "name": "枳殼" }, { "code": "716", "name": "土茯苓" }] },
-        { "layer": "第五層", "items": [{ "code": "717", "name": "山茱萸" }, { "code": "719", "name": "北杏" }, { "code": "718", "name": "製半夏" }, { "code": "720", "name": "紅花" }] },
-        { "layer": "第六層", "items": [{ "code": "721", "name": "香附" }, { "code": "723", "name": "肉桂皮" }, { "code": "722", "name": "薑活" }, { "code": "724", "name": "附子" }] }
+        { "layer": "第一層", "items": [
+            { "code": "701", "name": "當歸", "property": "溫", "toxicity": "無毒", "nature": "甘、辛。歸肝、心、脾經。", "effect": "補血調經，活血止痛，潤腸通便。", "usage": "煎服，5～15g。", "notice": "濕盛中滿者忌服。", "img": "當歸.png" }
+        ]}
     ]
 };
