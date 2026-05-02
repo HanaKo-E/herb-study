@@ -5,48 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>百子櫃 - 700系列 (對照表)</title>
     <style>
-        :root { --text-white: #ffffff; --main-bg: #F7F3F0; --title-color: #5D4037; --btn-color: #4b5a64; }
+        :root { --text-white: #ffffff; --main-bg: #F7F3F0; --title-color: #5D4037; --btn-color: #6B5B6B; }
         body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .cabinet-section { width: 100%; max-width: 500px; }
         .series-heading { text-align: center; color: var(--title-color); background: rgba(93, 64, 55, 0.1); padding: 8px; border-radius: 6px; margin: 10px 0; font-size: 1.2rem; font-weight: bold; }
         .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
-        .drawer { background: rgba(255, 255, 255, 0.15); aspect-ratio: 5 / 1; display: flex; align-items: center; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 4px; color: var(--text-white); text-decoration: none; }
-        .drawer .id { font-size: 1rem; font-weight: 900; flex: 1; text-align: center; border-right: 1px solid rgba(255, 255, 255, 0.3); }
-        .drawer .name { font-size: 1.2rem; font-weight: bold; flex: 2; text-align: center; }
-        .drawer.empty { opacity: 0.3; pointer-events: none; }
+        
+        /* 純文字格子樣式 */
+        .drawer-text { 
+            background: rgba(255, 255, 255, 0.15); 
+            aspect-ratio: 5 / 1; 
+            display: flex; 
+            align-items: center; 
+            border: 1px solid rgba(255, 255, 255, 0.25); 
+            border-radius: 4px; 
+            color: var(--text-white); 
+            cursor: default; 
+            pointer-events: none;
+        }
+        .drawer-text .id { font-size: 0.9rem; font-weight: 900; flex: 1; text-align: center; border-right: 1px solid rgba(255, 255, 255, 0.3); }
+        .drawer-text .name { font-size: 1.1rem; font-weight: bold; flex: 2; text-align: center; }
+        
         .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
         .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--btn-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="cabinet-section" id="container">
-        <div class="series-heading">700 系列</div>
+        <div class="series-heading">700 系列 (純文字對照)</div>
     </div>
     <div class="nav-footer">
         <a href="index.html" class="nav-btn">← 返回圖鑑</a>
         <a href="cabinet_800.html" class="nav-btn">切換 800 系 →</a>
     </div>
-    <script src="data.js"></script>
+
     <script>
-        const purpleColors = ["#423148", "#5a4b64", "#695872", "#786580", "#87728e", "#967f9c"];
+        // 修正並補完後的 700 系列資料
+        const CABINET_DATA_700 = [
+            { layer: "第一層 (701-704)", items: [{ id: "701", name: "當歸" }, { id: "702", name: "獨活" }, { id: "703", name: "炙甘草" }, { id: "704", name: "川芎" }] },
+            { layer: "第二層 (705-708)", items: [{ id: "705", name: "白芷" }, { id: "706", name: "柴胡" }, { id: "707", name: "荊芥" }, { id: "708", name: "白芍" }] },
+            { layer: "第三層 (709-712)", items: [{ id: "709", name: "生薑" }, { id: "710", name: "茯苓" }, { id: "711", name: "大棗" }, { id: "712", name: "茶葉" }] },
+            { layer: "第四層 (713-716)", items: [{ id: "713", name: "薄荷" }, { id: "714", name: "枳殼" }, { id: "715", name: "防風" }, { id: "716", name: "土茯苓" }] },
+            { layer: "第五層 (717-720)", items: [{ id: "717", name: "山茱萸" }, { id: "718", name: "製半夏" }, { id: "719", name: "北杏" }, { id: "720", name: "紅花" }] },
+            { layer: "第六層 (721-724)", items: [{ id: "721", name: "香附" }, { id: "722", name: "羌活" }, { id: "723", name: "肉桂皮" }, { id: "724", name: "附子" }] }
+        ];
+
+        const greenColors = ["#31483c", "#4b645a", "#587269", "#658078", "#728e87", "#7f9c96"];
         const container = document.getElementById('container');
-        if (CABINET_DATA["700"]) {
-            CABINET_DATA["700"].forEach((layer, i) => {
-                const unit = document.createElement('div');
-                unit.className = 'lattice-unit';
-                unit.style.backgroundColor = blueColors[i % blueColors.length];
-                [0, 2, 1, 3].forEach(idx => {
-                    const item = layer.items[idx];
-                    if (!item) return;
-                    const a = document.createElement('a');
-                    a.href = `index.html?search=${encodeURIComponent(item.name)}`;
-                    a.className = `drawer ${item.name === "無" ? 'empty' : ''}`;
-                    a.innerHTML = `<div class="id">${item.id}</div><div class="name">${item.name}</div>`;
-                    unit.appendChild(a);
-                });
-                container.appendChild(unit);
+
+        CABINET_DATA_700.forEach((layer, i) => {
+            const unit = document.createElement('div');
+            unit.className = 'lattice-unit';
+            unit.style.backgroundColor = greenColors[i % greenColors.length];
+            
+            layer.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'drawer-text';
+                div.innerHTML = `<div class="id">${item.id}</div><div class="name">${item.name}</div>`;
+                unit.appendChild(div);
             });
-        }
+            container.appendChild(unit);
+        });
     </script>
 </body>
 </html>
