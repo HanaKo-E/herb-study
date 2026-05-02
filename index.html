@@ -3,61 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中藥學習圖鑑</title>
+    <title>中藥學習圖鑑 - 中藥學習系統</title>
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --dark-green: #31483c; --sage-green: #587269; --bg-light: #F3F4F1; }
+        body { background-color: var(--bg-light); font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; }
+        .info-card { background: white; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .label { color: var(--sage-green); font-weight: bold; width: 85px; flex-shrink: 0; font-size: 0.875rem; }
+        .value { color: #2D3A3A; font-size: 0.95rem; line-height: 1.6; }
+    </style>
 </head>
-<body class="bg-[#F7F3F0] pb-10">
-    <nav class="bg-[#6B5B6B] text-white p-4 text-center sticky top-0 z-50 shadow-md">
-        <h1 class="text-xl font-bold tracking-widest">中 藥 學 習 圖 鑑</h1>
+<body class="pb-10">
+
+    <!-- 頂部導覽欄 -->
+    <nav class="bg-[#31483c] text-white p-4 shadow-lg sticky top-0 z-50 flex justify-between items-center">
+        <h1 class="text-xl font-bold tracking-widest text-center flex-grow">中 藥 學 習 圖 鑑</h1>
+        <button onclick="location.href='home.html'" class="absolute left-4 bg-white/10 px-3 py-1 rounded-lg text-sm">返回</button>
     </nav>
 
     <div class="container mx-auto px-4 max-w-md mt-6">
-        <div class="flex justify-between items-center mb-4">
-            <input type="text" id="search" placeholder="搜尋藥名..." class="border rounded-full px-4 py-2 w-2/3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6B5B6B]">
-            <div id="counter" class="text-gray-500 font-mono text-sm">01 / 00</div>
+        
+        <!-- 搜尋與進度 -->
+        <div class="flex justify-between items-center mb-6 gap-4">
+            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋藥名..." 
+                   class="border-none rounded-full px-5 py-2.5 w-full shadow-inner bg-white focus:ring-2 focus:ring-[#31483c] outline-none text-sm">
+            <div id="counter" class="text-[#587269] font-mono font-bold whitespace-nowrap">01 / 59</div>
         </div>
 
-        <div class="bg-white rounded-3xl p-4 shadow-sm mb-6 flex justify-center items-center h-64 overflow-hidden">
-            <img id="medImg" src="" alt="藥材圖片" class="max-h-full object-contain">
+        <!-- 圖片展示區 -->
+        <div class="bg-white rounded-[2.5rem] p-4 mb-6 shadow-sm flex justify-center items-center overflow-hidden h-72 border-4 border-white">
+            <img id="medImage" src="" alt="載入中..." class="max-h-full object-contain">
         </div>
 
-        <div class="bg-white rounded-3xl p-6 shadow-sm space-y-4 mb-8 text-sm">
-            <div class="flex border-b pb-2"><span class="w-20 font-bold text-stone-500">藥名</span><span id="name" class="font-bold text-lg">---</span></div>
-            <div class="flex border-b pb-2">
-                <div class="w-1/2 flex"><span class="w-20 font-bold text-stone-500">屬性</span><span id="prop">---</span></div>
-                <div class="w-1/2 flex"><span class="w-12 font-bold text-stone-500">毒性</span><span id="tox">---</span></div>
+        <!-- 詳細資訊卡片 -->
+        <div class="info-card p-6 space-y-4 mb-8">
+            <div class="flex border-b border-gray-100 pb-3">
+                <span class="label">藥名</span>
+                <span id="medName" class="value font-bold text-xl text-[#31483c]">---</span>
             </div>
-            <div class="flex flex-col border-b pb-2"><span class="font-bold text-stone-500">性味歸經</span><span id="nature" class="mt-1">---</span></div>
-            <div class="flex flex-col border-b pb-2"><span class="font-bold text-stone-500">功效</span><span id="effect" class="mt-1">---</span></div>
-            <div class="flex flex-col"><span class="font-bold text-stone-500">使用注意</span><span id="notice" class="mt-1 text-red-700">---</span></div>
+            <div class="flex justify-between border-b border-gray-100 pb-3">
+                <div class="flex items-center">
+                    <span class="label">屬性</span>
+                    <span id="medProperty" class="value">---</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="label" style="width: 50px;">毒性</span>
+                    <span id="medToxicity" class="value">---</span>
+                </div>
+            </div>
+            <div class="flex flex-col border-b border-gray-100 pb-3">
+                <span class="label mb-1">性味歸經</span>
+                <span id="medNature" class="value">---</span>
+            </div>
+            <div class="flex flex-col border-b border-gray-100 pb-3">
+                <span class="label mb-1">功效</span>
+                <span id="medEffect" class="value">---</span>
+            </div>
+            <div class="flex flex-col border-b border-gray-100 pb-3">
+                <span class="label mb-1">用法用量</span>
+                <span id="medUsage" class="value">---</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="label mb-1">使用注意</span>
+                <span id="medNotice" class="value text-red-800 italic">---</span>
+            </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="changeMed(-1)" class="bg-[#6B5B6B] text-white py-4 rounded-xl font-bold shadow-md active:scale-95">上一個</button>
-            <button onclick="changeMed(1)" class="bg-[#6B5B6B] text-white py-4 rounded-xl font-bold shadow-md active:scale-95">下一個</button>
+        <!-- 主切換按鈕 -->
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <button onclick="prevMed()" class="bg-[#31483c] text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition">上一個</button>
+            <button onclick="nextMed()" class="bg-[#31483c] text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition">下一個</button>
         </div>
-        <button onclick="location.href='home.html'" class="w-full mt-6 text-stone-400 underline text-sm">返回首頁</button>
+
+        <!-- 底部功能按鈕 -->
+        <div class="flex flex-col gap-3">
+            <button onclick="location.href='cabinet.html'" 
+                    class="w-full bg-[#587269] text-white py-3 rounded-xl font-bold shadow-md hover:bg-[#4a6159] transition">
+                進入百子櫃配置圖
+            </button>
+        </div>
+
     </div>
 
+    <!-- 載入資料中心 -->
     <script src="data.js"></script>
     <script>
-        let index = 0;
-        function update() {
-            const m = medicines[index];
-            document.getElementById('name').innerText = m.name;
-            document.getElementById('prop').innerText = m.property;
-            document.getElementById('tox').innerText = m.toxicity;
-            document.getElementById('nature').innerText = m.nature;
-            document.getElementById('effect').innerText = m.effect;
-            document.getElementById('notice').innerText = m.notice;
-            document.getElementById('medImg').src = m.img;
-            document.getElementById('counter').innerText = `${(index + 1).toString().padStart(2, '0')} / ${medicines.length}`;
+        // 1. 強制進入首頁檢查
+        if (document.referrer === "" && !window.location.search.includes('dev=true')) {
+            window.location.href = "home.html";
         }
-        function changeMed(step) {
-            index = (index + step + medicines.length) % medicines.length;
-            update();
+
+        let currentIndex = 0;
+        let filteredList = [];
+
+        function updateDisplay() {
+            const list = filteredList.length > 0 ? filteredList : medicines;
+            const m = list[currentIndex];
+            
+            if (!m) return;
+
+            document.getElementById('medName').textContent = m.name;
+            document.getElementById('medProperty').textContent = m.property;
+            document.getElementById('medToxicity').textContent = m.toxicity;
+            document.getElementById('medNature').textContent = m.nature;
+            document.getElementById('medEffect').textContent = m.effect;
+            document.getElementById('medUsage').textContent = m.usage;
+            document.getElementById('medNotice').textContent = m.notice;
+            document.getElementById('medImage').src = m.img || 'placeholder.png';
+            
+            document.getElementById('counter').textContent = 
+                `${(currentIndex + 1).toString().padStart(2, '0')} / ${list.length.toString().padStart(2, '0')}`;
         }
-        window.onload = update;
+
+        function handleSearch() {
+            const term = document.getElementById('searchInput').value.trim();
+            if (term === "") {
+                filteredList = [];
+            } else {
+                filteredList = medicines.filter(m => m.name.includes(term));
+            }
+            currentIndex = 0;
+            updateDisplay();
+        }
+
+        function nextMed() {
+            const list = filteredList.length > 0 ? filteredList : medicines;
+            if (currentIndex < list.length - 1) {
+                currentIndex++;
+                updateDisplay();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function prevMed() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateDisplay();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        window.onload = () => {
+            if (typeof medicines !== 'undefined') {
+                updateDisplay();
+            } else {
+                console.error("無法載入 medicines 資料，請檢查 data.js 是否正確引用");
+            }
+        };
     </script>
 </body>
 </html>
