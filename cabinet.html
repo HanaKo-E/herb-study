@@ -1,30 +1,41 @@
-// 修改後的生成函式
+/**
+ * 修改後的生成函式：createCabinet
+ * 功能：根據編號範圍生成藥櫃抽屜，並處理跳轉邏輯
+ * 
+ * @param {string} containerId - HTML 容器的 ID (如 'cabinet-grid')
+ * @param {number} start - 起始編號
+ * @param {number} end - 結束編號
+ */
 function createCabinet(containerId, start, end) {
     const container = document.getElementById(containerId);
+    if (!container) return; // 安全檢查
+
     container.innerHTML = ""; // 清空容器
 
     for (let i = start; i <= end; i++) {
         const id = i.toString();
         const name = medicineMap[id];
-        
         const div = document.createElement('div');
-        // 如果是空號，套用 gray-50 背景；若有藥材，套用白色背景
-        div.className = `drawer ${name ? 'bg-white' : 'bg-gray-50 border-dashed text-gray-400'}`;
+
+        // 1. 樣式處理：區分有藥材與空位
+        // bg-white: 白色背景 (有藥) / bg-gray-50: 灰色背景 (無藥)
+        const hasMedicine = name && name.trim() !== "" && name !== "-";
+        div.className = `drawer ${hasMedicine ? 'bg-white shadow-sm' : 'bg-gray-50 border-dashed text-gray-400'}`;
         
-        // 核心邏輯：若 name 為空、undefined 或為空字串，則顯示 " - "
-        const displayName = (name && name.trim() !== "") ? name : " - ";
-        
+        // 2. 顯示內容：核心邏輯，無藥名則顯示 " - "
+        const displayName = hasMedicine ? name : " - ";
         div.innerHTML = `
-            <span class="id-tag text-xs text-gray-400 mb-1">${id}</span>
-            <span class="med-name font-bold text-sm">${displayName}</span>
+            <span class="drawer-id">${id}</span>
+            <span class="drawer-name">${displayName}</span>
         `;
-        
-        // 僅在有藥材時才綁定點擊跳轉事件
-        if (name && name !== " - ") {
+
+        // 3. 事件綁定：僅在有藥材時才啟用跳轉與懸停效果
+        if (hasMedicine) {
+            div.classList.add('cursor-pointer', 'hover:bg-green-50', 'transition-colors');
             div.onclick = () => {
+                // 使用 URL 參數傳遞藥名至學習圖鑑頁面
                 location.href = `index.html?search=${encodeURIComponent(name)}`;
             };
-            div.classList.add('cursor-pointer', 'hover:bg-green-50');
         }
 
         container.appendChild(div);
