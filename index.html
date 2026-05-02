@@ -5,123 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中藥學習圖鑑</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root { --primary-color: #6B5B6B; --bg-color: #F7F3F0; }
-        body { background-color: var(--bg-color); font-family: "PingFang TC", sans-serif; }
-        .info-card { background: white; border-radius: 24px; shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .label { color: #8B735B; font-weight: bold; width: 80px; flex-shrink: 0; }
-        .value { color: #4A4A4A; }
-    </style>
 </head>
-<body class="pb-20">
-
-    <!-- 頂部導覽 -->
-    <nav class="bg-[#6B5B6B] text-white p-4 shadow-md text-center sticky top-0 z-50">
+<body class="bg-[#F7F3F0] pb-10">
+    <nav class="bg-[#6B5B6B] text-white p-4 text-center sticky top-0 z-50 shadow-md">
         <h1 class="text-xl font-bold tracking-widest">中 藥 學 習 圖 鑑</h1>
     </nav>
 
-    <div class="container mx-auto px-4 max-w-md">
-        
-        <!-- 搜尋與計數 -->
-        <div class="flex justify-between items-center my-6">
-            <input type="text" id="searchInput" placeholder="搜尋藥名..." 
-                   class="border border-gray-300 rounded-full px-4 py-2 w-2/3 focus:outline-none focus:ring-2 focus:ring-[#6B5B6B]">
-            <div id="counter" class="text-gray-500 font-mono">01 / 00</div>
+    <div class="container mx-auto px-4 max-w-md mt-6">
+        <div class="flex justify-between items-center mb-4">
+            <input type="text" id="search" placeholder="搜尋藥名..." class="border rounded-full px-4 py-2 w-2/3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6B5B6B]">
+            <div id="counter" class="text-gray-500 font-mono text-sm">01 / 00</div>
         </div>
 
-        <!-- 圖片展示區 -->
-        <div class="bg-white rounded-3xl p-4 mb-6 shadow-sm flex justify-center items-center overflow-hidden h-64">
-            <img id="medImage" src="" alt="藥材圖片" class="max-h-full object-contain">
+        <div class="bg-white rounded-3xl p-4 shadow-sm mb-6 flex justify-center items-center h-64 overflow-hidden">
+            <img id="medImg" src="" alt="藥材圖片" class="max-h-full object-contain">
         </div>
 
-        <!-- 詳細資訊區 -->
-        <div class="info-card p-6 space-y-4 mb-8">
-            <div class="flex border-b border-gray-100 pb-2">
-                <span class="label">藥名</span>
-                <span id="medName" class="value font-bold text-lg text-slate-700">---</span>
+        <div class="bg-white rounded-3xl p-6 shadow-sm space-y-4 mb-8 text-sm">
+            <div class="flex border-b pb-2"><span class="w-20 font-bold text-stone-500">藥名</span><span id="name" class="font-bold text-lg">---</span></div>
+            <div class="flex border-b pb-2">
+                <div class="w-1/2 flex"><span class="w-20 font-bold text-stone-500">屬性</span><span id="prop">---</span></div>
+                <div class="w-1/2 flex"><span class="w-12 font-bold text-stone-500">毒性</span><span id="tox">---</span></div>
             </div>
-            <div class="flex justify-between border-b border-gray-100 pb-2">
-                <div class="flex">
-                    <span class="label">屬性</span>
-                    <span id="medProperty" class="value">---</span>
-                </div>
-                <div class="flex">
-                    <span class="label" style="width: 50px;">毒性</span>
-                    <span id="medToxicity" class="value">---</span>
-                </div>
-            </div>
-            <div class="flex flex-col border-b border-gray-100 pb-2">
-                <span class="label">性味歸經</span>
-                <span id="medNature" class="value mt-1">---</span>
-            </div>
-            <div class="flex flex-col border-b border-gray-100 pb-2">
-                <span class="label">功效</span>
-                <span id="medEffect" class="value mt-1">---</span>
-            </div>
-            <div class="flex flex-col border-b border-gray-100 pb-2">
-                <span class="label">用法用量</span>
-                <span id="medUsage" class="value mt-1">---</span>
-            </div>
-            <div class="flex flex-col">
-                <span class="label">使用注意</span>
-                <span id="medNotice" class="value mt-1 italic text-red-700">---</span>
-            </div>
+            <div class="flex flex-col border-b pb-2"><span class="font-bold text-stone-500">性味歸經</span><span id="nature" class="mt-1">---</span></div>
+            <div class="flex flex-col border-b pb-2"><span class="font-bold text-stone-500">功效</span><span id="effect" class="mt-1">---</span></div>
+            <div class="flex flex-col"><span class="font-bold text-stone-500">使用注意</span><span id="notice" class="mt-1 text-red-700">---</span></div>
         </div>
 
-        <!-- 切換按鈕 -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <button onclick="prevMed()" class="bg-[#6B5B6B] text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition">上一個</button>
-            <button onclick="nextMed()" class="bg-[#6B5B6B] text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition">下一個</button>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="changeMed(-1)" class="bg-[#6B5B6B] text-white py-4 rounded-xl font-bold shadow-md active:scale-95">上一個</button>
+            <button onclick="changeMed(1)" class="bg-[#6B5B6B] text-white py-4 rounded-xl font-bold shadow-md active:scale-95">下一個</button>
         </div>
-
-        <!-- 返回與百子櫃連動 -->
-        <div class="flex justify-center gap-4">
-            <button onclick="location.href='cabinet.html?side=800'" class="bg-[#8B735B] text-white px-6 py-2 rounded-full text-sm shadow-md">左側百子櫃</button>
-            <button onclick="location.href='cabinet.html?side=700'" class="bg-[#8B735B] text-white px-6 py-2 rounded-full text-sm shadow-md">右側百子櫃</button>
-        </div>
-        <button onclick="location.href='home.html'" class="w-full mt-6 text-gray-400 underline text-sm">返回系統首頁</button>
-
+        <button onclick="location.href='home.html'" class="w-full mt-6 text-stone-400 underline text-sm">返回首頁</button>
     </div>
 
-    <!-- 導入資料庫 -->
     <script src="data.js"></script>
     <script>
-        let currentIndex = 0;
-        
-        function updateDisplay() {
-            // 檢查 data.js 的資料是否載入
-            if (!window.medicines || medicines.length === 0) return;
-
-            const m = medicines[currentIndex];
-            document.getElementById('medName').textContent = m.name;
-            document.getElementById('medProperty').textContent = m.property;
-            document.getElementById('medToxicity').textContent = m.toxicity;
-            document.getElementById('medNature').textContent = m.nature;
-            document.getElementById('medEffect').textContent = m.effect;
-            document.getElementById('medUsage').textContent = m.usage;
-            document.getElementById('medNotice').textContent = m.notice;
-            document.getElementById('medImage').src = m.img || 'placeholder.png';
-            
-            document.getElementById('counter').textContent = 
-                `${(currentIndex + 1).toString().padStart(2, '0')} / ${medicines.length.toString().padStart(2, '0')}`;
+        let index = 0;
+        function update() {
+            const m = medicines[index];
+            document.getElementById('name').innerText = m.name;
+            document.getElementById('prop').innerText = m.property;
+            document.getElementById('tox').innerText = m.toxicity;
+            document.getElementById('nature').innerText = m.nature;
+            document.getElementById('effect').innerText = m.effect;
+            document.getElementById('notice').innerText = m.notice;
+            document.getElementById('medImg').src = m.img;
+            document.getElementById('counter').innerText = `${(index + 1).toString().padStart(2, '0')} / ${medicines.length}`;
         }
-
-        function nextMed() {
-            if (currentIndex < medicines.length - 1) {
-                currentIndex++;
-                updateDisplay();
-            }
+        function changeMed(step) {
+            index = (index + step + medicines.length) % medicines.length;
+            update();
         }
-
-        function prevMed() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateDisplay();
-            }
-        }
-
-        // 初始化
-        window.onload = updateDisplay;
+        window.onload = update;
     </script>
 </body>
 </html>
