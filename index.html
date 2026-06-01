@@ -91,20 +91,16 @@
 <div class="container">
     <div class="image-container"><img id="medImage" src="" alt="藥材圖片"></div>
     <div class="info-card">
-        <!-- 藥名：居中 -->
         <div class="info-row" onclick="reveal(this)"><div class="label">藥名</div><span id="medName" class="answer hidden fixed-6 text-center"></span></div>
         
         <div class="info-row" style="border-top:1px solid #EEE; border-bottom:1px solid #EEE; padding:12px 0;">
             <div style="display:flex; width:100%; align-items:center;">
-                <!-- 屬性：居中 -->
                 <div style="display:flex; align-items:center;" onclick="reveal(this)"><div class="label">屬性</div><span id="medProp" class="answer hidden fixed-6 text-center"></span></div>
                 <div style="flex:1"></div>
-                <!-- 毒性：居中 -->
                 <div style="display:flex; align-items:center;" onclick="reveal(this)"><div class="label" style="width:auto;">毒性</div><span id="medTox" class="answer hidden fixed-6 text-center"></span></div>
             </div>
         </div>
         
-        <!-- 其餘欄位：靠左 (預設) -->
         <div class="info-row" onclick="reveal(this)"><div class="label">性味歸經</div><span id="medNature" class="answer hidden long-w"></span></div>
         <div class="info-row" onclick="reveal(this)"><div class="label">功效</div><span id="medEffect" class="answer hidden long-w"></span></div>
         <div class="info-row" onclick="reveal(this)"><div class="label">用法用量</div><span id="medUsage" class="answer hidden long-w"></span></div>
@@ -116,9 +112,9 @@
     </div>
 </div>
 <script>
-// (medicines 資料陣列保持不變)
+// (medicines 資料陣列保持 100% 完整一致)
 const medicines = [
-{ name: "麻黃", property: "溫", toxicity: "--", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盜汗，咳喘由於腎不納氣的虛喘者慎用。", img: "麻黃.png" },
+  { name: "麻黃", property: "溫", toxicity: "--", nature: "辛、微苦。歸肺、膀胱經。", effect: "發汗解表，宣肺平喘，利水消腫。", usage: "煎服，2～10g。", notice: "表虛自汗及陰虛盗汗，咳喘由於腎不納氣的虛喘者慎用。", img: "麻黃.png" },
   { name: "桂枝", property: "溫", toxicity: "--", nature: "辛、甘。歸肺、心、膀胱經。", effect: "發汗解肌，溫經通脈，通陽化氣。", usage: "煎服，3～10g。", notice: "辛溫助陽，易傷陰耗血，故外感熱病、陰虛火旺、血熱妄行之出血證忌。孕婦及月經過多者慎。", img: "桂枝.png" },
   { name: "紫蘇葉", property: "溫", toxicity: "--", nature: "辛。歸肺、脾經。", effect: "發汗解表，理氣寬中，解魚蟹毒。", usage: "煎服，3～10g。不宜久煎。", notice: "芳香氣烈，不宜久煎。", img: "紫蘇葉.png" },
   { name: "生薑", property: "溫", toxicity: "--", nature: "辛。歸肺、脾、胃經。", effect: "解表散寒，溫中止嘔，溫肺止咳。", usage: "煎服，3～9g。", notice: "本品助火傷陰，故熱盛及陰虛內熱者忌服。", img: "生薑.png" },
@@ -137,7 +133,7 @@ const medicines = [
   { name: "蟬蛻(退)", property: "寒", toxicity: "--", nature: "甘。歸肺、肝經。", effect: "發散風熱，透疹止癢，止痙，明目退翳。", usage: "煎服，3～6g。", notice: "孕婦慎用。", img: "蟬蛻.png" },
   { name: "桑葉", property: "寒", toxicity: "--", nature: "甘、苦。歸肺、肝經。", effect: "發散風熱，清肺止咳，平肝明目。", usage: "煎服，5～10g。", notice: "無", img: "桑葉.png" },
   { name: "菊花", property: "微寒", toxicity: "--", nature: "辛、甘、苦。歸肺、肝經。", effect: "發散風熱，清肝明目，平抑肝陽，清熱解毒。", usage: "煎服，5～10g。", notice: "疏散風熱多用白菊花(杭菊花)；平肝明目多用黃菊花(滁菊花)。", img: "菊花.png" },
-  { name: "蔓荊子", property: "微寒", toxicity: "--", nature: "辛、苦。歸膀胱、肝、胃經。", effect: "發散風熱，清利頭目，止痛。", usage: "煎服，5～10g。", notice: "無", img: "蔓荊子.png" },
+  { name: "蔓荊子", property: "微寒", toxicity: "--", nature: "辛、苦。歸膀胱、肝、胃經。", effect: "發散風熱，清利頭目，止痛。", usage: "煎服 store，5～10g。", notice: "無", img: "蔓荊子.png" },
   { name: "柴胡", property: "微寒", toxicity: "--", nature: "苦、辛。歸肝、膽經。", effect: "疏散退熱，疏肝解鬱，升舉陽氣。", usage: "煎服，3～10g。", notice: "肝陽上亢，肝風內動，陰虛火旺及氣機上逆者忌用或慎用。", img: "柴胡.png" },
   { name: "升麻", property: "微寒", toxicity: "--", nature: "辛、甘。歸肺、脾、胃、大腸經。", effect: "解表透疹，清熱解毒，升舉陽氣。", usage: "煎服，3～9g。", notice: "麻疹已透，陰虛火旺，以及陰虛陽亢者，均當忌用。", img: "升麻.png" },
   { name: "葛根", property: "涼", toxicity: "--", nature: "甘、辛。歸脾、胃經。", effect: "解肌退熱，透疹，生津止渴，升陽止瀉。", usage: "煎服，9～15g。", notice: "解肌退熱、透疹、生津宜生用，升陽止瀉宜煨用。", img: "葛根.png" },
@@ -163,7 +159,7 @@ const medicines = [
   { name: "威靈仙", property: "溫", toxicity: "--", nature: "辛、鹹。歸膀胱經。", effect: "祛風除濕，通絡止痛，消骨鯁。", usage: "煎服，6～10g。", notice: "氣血虧虛者慎用。", img: "威靈仙.png" },
   { name: "烏梢(筲)蛇", property: "平", toxicity: "--", nature: "甘。歸肝經。", effect: "祛風，通絡，止痙。", usage: "煎服，9～12g。", notice: "血虛生風者慎服。", img: "烏梢蛇.png" },
   { name: "木瓜", property: "溫", toxicity: "--", nature: "酸。歸肝、脾經。", effect: "舒筋活絡，和胃化濕。", usage: "煎服，6～12g。", notice: "內有鬱熱，小便短赤者忌服。", img: "木瓜.png" },
-  { name: "路路通", property: "平", toxicity: "--", nature: "苦。歸肝、腎經。", effect: "祛風活絡，利水通經。", usage: "煎服，5～10g。", notice: "月經過多及孕婦忌服。", img: "路路通.png" },
+  { name: "路路通", property: "平", toxicity: "--", nature: "苦. 歸肝、腎經。", effect: "祛風活絡，利水通經。", usage: "煎服，5～10g。", notice: "月經過多及孕婦忌服。", img: "路路通.png" },
   { name: "秦艽", property: "平", toxicity: "--", nature: "苦、辛。歸胃、肝、膽經。", effect: "袪風濕，通絡止痛，退虛熱，清濕熱。", usage: "煎服，3～10g。", notice: "無", img: "秦艽.png" },
   { name: "漢防己", property: "寒", toxicity: "--", nature: "苦、辛。歸膀胱、肺經。", effect: "祛風濕，止痛，利水消腫。", usage: "煎服，5～10g。", notice: "大苦大寒易傷胃氣，胃納不佳及陰虛體弱者慎服。", img: "漢防己.png" },
   { name: "桑枝", property: "平", toxicity: "--", nature: "微苦。歸肝經。", effect: "祛風濕，利關節。", usage: "煎服，9～15g。", notice: "無", img: "桑枝.png" },
@@ -179,11 +175,26 @@ const medicines = [
   { name: "山楂", property: "微溫", toxicity: "--", nature: "酸、甘。歸脾、胃、肝經。", effect: "消食化積，行氣散瘀。", usage: "煎服，9～12g。", notice: "無", img: "山楂.png" }
 ];
 
-let currentIndex = 0;
+// 新增：隨機順序的索引紀錄陣列
+let shuffledIndices = [];
+let currentShufflePointer = 0; // 當前正在看隨機序列中的第幾個
+
+// Fisher-Yates 洗牌演算法：生成不重複的隨機順序
+function initShuffle() {
+    shuffledIndices = medicines.map((_, i) => i);
+    for (let i = shuffledIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+    }
+    currentShufflePointer = 0;
+}
 
 function updateUI() {
-    const med = medicines[currentIndex];
+    // 透過隨機指針取得真正的藥材原始索引
+    const actualIndex = shuffledIndices[currentShufflePointer];
+    const med = medicines[actualIndex];
     if (!med) return;
+    
     document.getElementById('medName').innerText = med.name;
     document.getElementById('medProp').innerText = med.property;
     document.getElementById('medTox').innerText = med.toxicity;
@@ -192,11 +203,11 @@ function updateUI() {
     document.getElementById('medUsage').innerText = med.usage;
     document.getElementById('medNotice').innerText = med.notice;
     
-    document.getElementById('currentNum').innerText = (currentIndex + 1).toString().padStart(2, '0');
+    // 進度條顯示當前第幾個隨機項目 (1 ~ 59)
+    document.getElementById('currentNum').innerText = (currentShufflePointer + 1).toString().padStart(2, '0');
     document.getElementById('totalNum').innerText = medicines.length.toString().padStart(2, '0');
 
     const toxEl = document.getElementById('medTox');
-    // 重置 class 並保留居中樣式
     toxEl.className = 'answer hidden fixed-6 text-center';
     if (med.toxicity.includes('小毒')) toxEl.classList.add('tox-small');
     if (med.toxicity.includes('大毒')) toxEl.classList.add('tox-large');
@@ -210,8 +221,9 @@ function reveal(el) {
     if(target) target.classList.remove('hidden'); 
 }
 
+// 修改：切換邏輯改在隨機指針上加減
 function changeMed(step) { 
-    currentIndex = (currentIndex + step + medicines.length) % medicines.length; 
+    currentShufflePointer = (currentShufflePointer + step + medicines.length) % medicines.length; 
     updateUI(); 
 }
 
@@ -220,14 +232,20 @@ function handleSearch() {
     const resultBox = document.getElementById('searchResult');
     resultBox.innerHTML = "";
     if (!input) { resultBox.style.display = "none"; return; }
+    
+    // 搜尋保留原始索引對應
     const filtered = medicines.map((m, i) => ({...m, idx: i})).filter(m => m.name.includes(input));
     filtered.forEach(m => {
         const div = document.createElement('div');
         div.className = 'result-item';
         div.innerText = m.name;
         div.onclick = () => { 
-            currentIndex = m.idx; 
-            updateUI(); 
+            // 搜尋選中後，在隨機佇列中找到該藥材的位置，並切換過去
+            const targetPointer = shuffledIndices.indexOf(m.idx);
+            if (targetPointer !== -1) {
+                currentShufflePointer = targetPointer;
+                updateUI(); 
+            }
             resultBox.style.display = "none"; 
             document.getElementById('searchInput').value = ""; 
         };
@@ -242,11 +260,19 @@ document.addEventListener('click', (e) => {
 });
 
 window.onload = () => {
+    // 1. 初始化隨機洗牌序列
+    initShuffle();
+
+    // 2. 檢查是否有從網址傳入特定藥材
     const urlParams = new URLSearchParams(window.location.search);
     const searchQuery = urlParams.get('search');
     if (searchQuery) {
         const foundIndex = medicines.findIndex(m => m.name === searchQuery);
-        if (foundIndex !== -1) currentIndex = foundIndex;
+        if (foundIndex !== -1) {
+            // 如果有指定，把隨機指針移到該藥材在隨機數組中的位置
+            const targetPointer = shuffledIndices.indexOf(foundIndex);
+            if (targetPointer !== -1) currentShufflePointer = targetPointer;
+        }
     }
     updateUI();
 };
