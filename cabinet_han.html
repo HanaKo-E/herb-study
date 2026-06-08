@@ -18,24 +18,23 @@
        
        .bg-han { background-color: var(--color-han); }
 
-       /* 🟢 核心修改區塊：字形改為文鼎飛鳥圓體 🟢 */
        .drawer-text { 
-           background: rgba(255, 255, 255, 0.15); /* 格子底色：保持原本半透明白 */
-           aspect-ratio: 4 / 1; 
+           background: rgba(255, 255, 255, 0.15); 
+           aspect-ratio: 4 / 1; /* 🟢 關鍵：維持此比例可確保格子尺寸完全不變 🟢 */
            display: flex; 
            align-items: center; 
            justify-content: center; 
            
-           border: 1px solid rgba(255, 255, 255, 0.25); /* 格子邊框：保持原本淡淡半透明白 */
+           border: 1px solid rgba(255, 255, 255, 0.25); 
            border-radius: 4px; 
            
-           /* 1. 核心修改：指定格子內文字使用文鼎飛鳥圓體 */
+           /* 指定格子內文字使用文鼎飛鳥圓體 */
            font-family: "文鼎飛鳥圓體", "AR Asuka Maru", sans-serif;
            
-           /* 2. 字體顏色：維持 #A4C2A3 */
+           /* 字體顏色：維持 #A4C2A3 */
            color: #A4C2A3; 
            
-           /* 3. 文字外層的純白邊效果 */
+           /* 文字外層的純白邊效果 */
            text-shadow: 
                -1px -1px 0 #ffffff,  
                 1px -1px 0 #ffffff,
@@ -45,7 +44,16 @@
            cursor: default; 
            pointer-events: none;
        }
-       .drawer-text .name { font-size: 1.4rem; font-weight: bold; width: 100%; text-align: center; }
+       
+       /* 🟢 核心修改區塊：將字體大小從 1.4rem 加大到 1.7rem 🟢 */
+       .drawer-text .name { 
+           font-size: 1.7rem; 
+           font-weight: bold; 
+           width: 100%; 
+           text-align: center; 
+           line-height: 1; /* 確保大字體在格子內垂直居中不跑位 */
+       }
+       
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
        .nav-btn { flex: 1; text-align: center; padding: 12px; background: #889F8B; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
    </style>
