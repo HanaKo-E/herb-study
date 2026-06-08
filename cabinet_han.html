@@ -9,8 +9,6 @@
            --text-white: #ffffff; 
            --main-bg: #F7F3F0; 
            --title-color: #31483c; 
-           
-           /* 核心修改點：寒藥性的專屬新色碼 */
            --color-han: #A4C2A3;
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
@@ -18,25 +16,33 @@
        .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        
-       /* 套用寒區塊底色 */
        .bg-han { background-color: var(--color-han); }
 
+       /* 🟢 核心修改點：文字顏色與文字白邊 🟢 */
        .drawer-text { 
-           background: rgba(255, 255, 255, 0.15); 
+           background: rgba(255, 255, 255, 0.15); /* 保持原本格子背景不變 */
            aspect-ratio: 4 / 1; 
            display: flex; 
            align-items: center; 
            justify-content: center; 
-           border: 1px solid rgba(255, 255, 255, 0.25); 
+           border: 1px solid rgba(255, 255, 255, 0.25); /* 保持原本格子邊框不變 */
            border-radius: 4px; 
-           color: var(--text-white); 
+           
+           /* 1. 將文字顏色改為與邊框相同的半透明白 */
+           color: rgba(255, 255, 255, 0.6); 
+           
+           /* 2. 利用文字陰影技術，幫文字加上 1px 的純白外邊 */
+           text-shadow: 
+               -1px -1px 0 #ffffff,  
+                1px -1px 0 #ffffff,
+               -1px  1px 0 #ffffff,
+                1px  1px 0 #ffffff;
+                
            cursor: default; 
            pointer-events: none;
        }
        .drawer-text .name { font-size: 1.4rem; font-weight: bold; width: 100%; text-align: center; }
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
-       
-       /* 核心修改點：將下方按鈕的顏色統一定義為 #889F8B */
        .nav-btn { flex: 1; text-align: center; padding: 12px; background: #889F8B; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
    </style>
 </head>
