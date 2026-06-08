@@ -18,21 +18,21 @@
        
        .bg-han { background-color: var(--color-han); }
 
-       /* 🟢 核心修改區塊：格子與文字樣式 🟢 */
+       /* 🟢 核心修改區塊：字改為 #A4C2A3 加白邊 🟢 */
        .drawer-text { 
-           background: rgba(255, 255, 255, 0.15); /* 1. 格子底色：保持原本的半透明白，不作更改 */
+           background: rgba(255, 255, 255, 0.15); /* 格子底色：保持原本半透明白，不作更改 */
            aspect-ratio: 4 / 1; 
            display: flex; 
            align-items: center; 
            justify-content: center; 
            
-           border: 1px solid rgba(255, 255, 255, 0.25); /* 2. 格子邊框：保持原本的淡淡半透明白，不作更改 */
+           border: 1px solid rgba(255, 255, 255, 0.25); /* 格子邊框：保持原本淡淡半透明白，不作更改 */
            border-radius: 4px; 
            
-           /* 3. 解決字體變黑：直接指定與格子邊框視覺效果相同的銀白灰色 */
-           color: #e6eee8; 
+           /* 1. 核心修改：字體顏色改為您指定的 #A4C2A3 */
+           color: #A4C2A3; 
            
-           /* 4. 文字外層的純白邊效果 */
+           /* 2. 核心修改：利用文字陰影技術，幫文字加上精確的 1px 純白邊框 */
            text-shadow: 
                -1px -1px 0 #ffffff,  
                 1px -1px 0 #ffffff,
