@@ -5,12 +5,28 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>藥性 - 溫 與 微溫</title>
    <style>
-       :root { --text-white: #ffffff; --main-bg: #F7F3F0; --title-color: #433e56; --btn-color: #5a546e; }
+       :root { 
+           --text-white: #ffffff; 
+           --main-bg: #F7F3F0; 
+           --title-color: #433e56; 
+           --btn-color: #5a546e;   
+       }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
        .series-heading { text-align: center; color: var(--title-color); background: rgba(67, 62, 86, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
-       .drawer-text { background: rgba(255, 255, 255, 0.15); aspect-ratio: 4 / 1; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 4px; color: var(--text-white); cursor: default; pointer-events: none; }
+       .drawer-text { 
+           background: rgba(255, 255, 255, 0.15); 
+           aspect-ratio: 4 / 1; 
+           display: flex; 
+           align-items: center; 
+           justify-content: center; 
+           border: 1px solid rgba(255, 255, 255, 0.25); 
+           border-radius: 4px; 
+           color: var(--text-white); 
+           cursor: default; 
+           pointer-events: none;
+       }
        .drawer-text .name { font-size: 1.4rem; font-weight: bold; width: 100%; text-align: center; }
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
        .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--btn-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
@@ -20,13 +36,13 @@
    <div class="cabinet-section" id="container"></div>
 
    <div class="nav-footer">
-       <a href="index.html" class="nav-btn">← 返回圖鑑</a>
+       <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
        <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
            <option value="">切換其他藥性 ↓</option>
-           <option value="cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
-           <option value="cabinet_han.html">藥性 - 寒</option>
-           <option value="cabinet_wen_wei_wen.html" selected>藥性 - 溫 / 微溫</option>
-           <option value="cabinet_ping_liang.html">藥性 - 平 / 涼</option>
+           <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
+           <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
+           <option value="/herb-study/cabinet_wen_wei_wen.html" selected>藥性 - 溫 / 微溫</option>
+           <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
        </select>
    </div>
  
@@ -37,21 +53,25 @@
            { layer: "第三層", items: [{ name: "白芷" }, { name: "藁本" }, { name: "蔥白" }, { name: "當歸" }] },
            { layer: "第四層", items: [{ name: "紫蘇葉" }, { name: "蒼耳子" }, { name: "威靈仙" }] }
        ];
+
        const DATA_微溫 = [
            { layer: "第五層", items: [{ name: "香薷" }, { name: "荊芥" }, { name: "防風" }, { name: "獨活" }] },
            { layer: "第六層", items: [{ name: "巴戟天" }, { name: "山楂" }] }
        ];
  
        const container = document.getElementById('container');
+ 
        function renderSection(titleText, layerData, bgColor) {
            const heading = document.createElement('div');
            heading.className = 'series-heading';
            heading.innerText = titleText;
            container.appendChild(heading);
+
            layerData.forEach(layer => {
                const unit = document.createElement('div');
                unit.className = 'lattice-unit';
                unit.style.backgroundColor = bgColor;
+               
                layer.items.forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'drawer-text';
@@ -61,6 +81,7 @@
                container.appendChild(unit);
            });
        }
+
        renderSection("藥性 – 溫", DATA_溫, "#C09D9B");
        renderSection("藥性 – 微溫", DATA_微溫, "#E2C6C4");
    </script>
