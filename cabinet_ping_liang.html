@@ -7,7 +7,7 @@
    <style>
        :root { 
            --text-white: #ffffff; 
-           --main-bg: #F7F3F0; 
+           --main-bg: #F7F3F0;
            --title-color: #31483c; 
            --heading-bg: rgba(82, 171, 163, 0.1); /* 置頂標題的底色 */
            
@@ -24,7 +24,7 @@
        
        .bg-ping { background-color: var(--color-ping); }
        .bg-liang { background-color: var(--color-liang); }
-
+ 
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
            
@@ -35,7 +35,7 @@
            align-items: center; 
            justify-content: center; 
            border: 1px solid rgba(255, 255, 255, 0.25); 
-           border-radius: 4px; 
+           border-radius: 4px;
            
            font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
            
@@ -52,7 +52,7 @@
            font-size: 1.5rem; 
            font-weight: bold; 
            width: 100%; 
-           text-align: center; 
+           text-align: center;
            line-height: 1; 
        }
        
@@ -61,7 +61,7 @@
        /* 🟢 修改點 3：保留 appearance: none; 徹底拔除系統內建多餘箭頭 🟢 */
        .nav-btn { 
            flex: 1; 
-           text-align: center; 
+           text-align: center;
            padding: 12px; 
            background: var(--heading-bg); 
            color: var(--title-color); 
@@ -77,13 +77,13 @@
 </head>
 <body>
    <div class="cabinet-section" id="container"></div>
-
+ 
    <div class="nav-footer">
        <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
-       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
+       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; -moz-appearance: none; appearance: none; cursor: pointer;">
            <option value="">切換其他藥性 ↓</option>
            <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
-          <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
+           <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
            <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
            <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
        </select>
@@ -105,7 +105,7 @@
            heading.className = 'series-heading';
            heading.innerText = titleText;
            container.appendChild(heading);
-
+ 
            layerData.forEach(layer => {
                const unit = document.createElement('div');
                unit.className = `lattice-unit ${className}`;
@@ -119,7 +119,7 @@
                container.appendChild(unit);
            });
        }
-
+ 
        renderSection("藥性 – 平", DATA_平, "bg-ping");
        renderSection("藥性 – 涼", DATA_涼, "bg-liang");
    </script>
