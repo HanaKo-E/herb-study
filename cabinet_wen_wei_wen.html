@@ -3,17 +3,17 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>藥性 - 溫 與 微溫</title>
+   <title>藥性 - 溫 / 微溫</title>
    <style>
        :root { 
            --text-white: #ffffff; 
            --main-bg: #F7F3F0; 
-           --title-color: #433e56; 
-           --btn-color: #5a546e;   
+           --title-color: #31483c; 
+           --btn-color: #597A69;   
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
-       .series-heading { text-align: center; color: var(--title-color); background: rgba(67, 62, 86, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+       .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
@@ -41,22 +41,21 @@
            <option value="">切換其他藥性 ↓</option>
            <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
            <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
-           <option value="/herb-study/cabinet_wen_wei_wen.html" selected>藥性 - 溫 / 微溫</option>
+           <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
            <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
        </select>
    </div>
  
    <script>
        const DATA_溫 = [
-           { layer: "第一層", items: [{ name: "香薷" }, { name: "荊芥" }, { name: "防風" }, { name: "獨活" }] },
-           { layer: "第二層", items: [{ name: "巴戟天" }, { name: "山楂" }] },
-           { layer: "第三層", items: [{ name: "白芷" }, { name: "藁本" }, { name: "蔥白" }, { name: "當歸" }] },
-           { layer: "第四層", items: [{ name: "紫蘇葉" }, { name: "蒼耳子" }, { name: "威靈仙" }] }
+           { layer: "第一層", items: [{ name: "麻黃" }, { name: "桂枝" }, { name: "生薑" }, { name: "羌活" }] },
+           { layer: "第二層", items: [{ name: "白芷" }, { name: "細辛" }, { name: "藁(稿)本" }, { name: "蒼耳子" }] },
+           { layer: "第三層", items: [{ name: "蔥白" }, { name: "辛夷" }, { name: "當歸" }, { name: "鹿茸" }] },
+           { layer: "第四層", items: [{ name: "紫蘇葉" }, { name: "威靈仙" }, { name: "木瓜" }] }
        ];
-
        const DATA_微溫 = [
-           { layer: "第五層", items: [{ name: "香薷" }, { name: "荊芥" }, { name: "防風" }, { name: "獨活" }] },
-           { layer: "第六層", items: [{ name: "巴戟天" }, { name: "山楂" }] }
+           { layer: "第一層", items: [{ name: "香薷(儒)" }, { name: "荊芥" }, { name: "防風" }, { name: "獨活" }] },
+           { layer: "第二層", items: [{ name: "巴戟天" }, { name: "山楂" }] }
        ];
  
        const container = document.getElementById('container');
@@ -82,8 +81,8 @@
            });
        }
 
-       renderSection("藥性 – 溫", DATA_溫, "#C09D9B");
-       renderSection("藥性 – 微溫", DATA_微溫, "#E2C6C4");
+       renderSection("藥性 – 溫", DATA_溫, "#C49A88");
+       renderSection("藥性 – 微溫", DATA_微溫, "#D9BBAE");
    </script>
 </body>
 </html>
