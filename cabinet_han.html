@@ -9,11 +9,14 @@
            --text-white: #ffffff; 
            --main-bg: #F7F3F0; 
            --title-color: #31483c; 
-           --color-han: #A4C2A3;
+           --heading-bg: rgba(82, 171, 163, 0.1); /* 置頂標題的底色 */
+           
+           /* 根據最新指示更新：寒的獨立底色 */
+           --color-han: #9CAF88;
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
-       .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+       .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        
        .bg-han { background-color: var(--color-han); }
@@ -24,22 +27,14 @@
            display: flex; 
            align-items: center; 
            justify-content: center; 
-           
            border: 1px solid rgba(255, 255, 255, 0.25); 
            border-radius: 4px; 
            
-           /* 🟢 核心修改：指定格子內文字使用文鼎飛鳥圓體（含中英文標準名稱宣告與圓體後備） 🟢 */
            font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
            
-           /* 字體顏色：維持 #A4C2A3 */
-           color: #A4C2A3; 
-           
-           /* 文字外層的純白邊效果 */
-           text-shadow: 
-               -1px -1px 0 #ffffff,  
-                1px -1px 0 #ffffff,
-               -1px  1px 0 #ffffff,
-                1px  1px 0 #ffffff;
+           /* 核心修改點：藥材名字用純白色，無白邊 */
+           color: #ffffff; 
+           text-shadow: none;
                 
            cursor: default; 
            pointer-events: none;
@@ -54,7 +49,9 @@
        }
        
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
-       .nav-btn { flex: 1; text-align: center; padding: 12px; background: #889F8B; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
+       
+       /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
+       .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--heading-bg); color: var(--title-color); text-decoration: none; border-radius: 25px; font-weight: bold; }
    </style>
 </head>
 <body>
