@@ -1,3 +1,7 @@
+將「← 返回圖鑑」和「切換其他藥性 ↓」這兩個按鈕的顏色改成置頂標題的「藥性 – 寒」的底色及字體顏色, 
+不同藥性區塊（Section）賦予了各自獨立的底色,藥材名字用純白色,
+寒 - #9CAF88, 其他內容完全不改.
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -50,22 +54,8 @@
        
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
        
-       /* ⚙️ 核心修改：按鈕顏色精準改為「藥性 – 寒」的實體底色及字體顏色 ⚙️ */
-       .nav-btn { 
-           flex: 1; 
-           text-align: center; 
-           padding: 12px; 
-           background: var(--color-han);     /* 改為寒的獨立底色 #9CAF88 */
-           color: var(--title-color);        /* 改為置頂標題的字體顏色 #31483c */
-           text-decoration: none; 
-           border-radius: 25px; 
-           font-weight: bold; 
-           
-           /* 確保跨瀏覽器 select 預設外觀清除 */
-           appearance: none;
-           -webkit-appearance: none;
-           -moz-appearance: none;
-       }
+       /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
+       .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--heading-bg); color: var(--title-color); text-decoration: none; border-radius: 25px; font-weight: bold; }
    </style>
 </head>
 <body>
@@ -73,7 +63,7 @@
 
    <div class="nav-footer">
        <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
-       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; cursor: pointer;">
+       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
            <option value="">切換其他藥性 ↓</option>
            <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
            <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
@@ -116,4 +106,5 @@
        renderSection("藥性 – 寒", DATA_寒, "bg-han");
    </script>
 </body>
-</html>
+</html> 
+
