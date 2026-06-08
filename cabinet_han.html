@@ -1,91 +1,100 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>藥性 - 寒</title>
-   <style>
-       :root { 
-           --text-white: #ffffff; 
-           --main-bg: #F7F3F0; 
-           --title-color: #31483c; 
-           --heading-bg: rgba(82, 171, 163, 0.1); /* 置頂標題的底色 */
-           
-           /* 根據最新指示更新：寒的獨立底色 */
-           --color-han: #9CAF88;
-       }
-       body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
-       .cabinet-section { width: 100%; max-width: 500px; }
-       .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
-       .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
-       
-       .bg-han { background-color: var(--color-han); }
-
-       .drawer-text { 
-           background: rgba(255, 255, 255, 0.15); 
-           aspect-ratio: 4 / 1; 
-           display: flex; 
-           align-items: center; 
-           justify-content: center; 
-           border: 1px solid rgba(255, 255, 255, 0.25); 
-           border-radius: 4px; 
-           
-           font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
-           
-           /* 核心修改點：藥材名字用純白色，無白邊 */
-           color: #ffffff; 
-           text-shadow: none;
-                
-           cursor: default; 
-           pointer-events: none;
-       }
-       
-       .drawer-text .name { 
-           font-size: 1.7rem; 
-           font-weight: bold; 
-           width: 100%; 
-           text-align: center; 
-           line-height: 1; 
-       }
-       
-       .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
-       
-       /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
-       .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--heading-bg); color: var(--title-color); text-decoration: none; border-radius: 25px; font-weight: bold; }
-   </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>藥性 - 寒</title>
+  <style>
+      :root { 
+          --text-white: #ffffff; 
+          --main-bg: #F7F3F0; 
+          --title-color: #31483c; 
+          --heading-bg: rgba(82, 171, 163, 0.1); /* 置頂標題的底色 */
+          
+          /* 根據最新指示更新：寒的獨立底色 */
+          --color-han: #9CAF88;
+      }
+      body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
+      .cabinet-section { width: 100%; max-width: 500px; }
+      .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+      .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
+      
+      .bg-han { background-color: var(--color-han); }
+ 
+      .drawer-text { 
+          background: rgba(255, 255, 255, 0.15); 
+          aspect-ratio: 4 / 1; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          border: 1px solid rgba(255, 255, 255, 0.25); 
+          border-radius: 4px; 
+          
+          font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
+          
+          /* 核心修改點：藥材名字用純白色，無白邊 */
+          color: #ffffff; 
+          text-shadow: none;
+               
+          cursor: default; 
+          pointer-events: none;
+      }
+      
+      .drawer-text .name { 
+          font-size: 1.7rem; 
+          font-weight: bold; 
+          width: 100%; 
+          text-align: center; 
+          line-height: 1; 
+      }
+      
+      .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
+      
+      /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
+      .nav-btn { 
+         flex: 1; 
+         text-align: center; 
+         padding: 12px; 
+         background: var(--heading-bg); /* 這裡決定了按鈕的底色為 rgba(82, 171, 163, 0.1) */
+         color: var(--title-color);      /* 這裡決定了按鈕的字體顏色為 #31483c */
+         text-decoration: none; 
+         border-radius: 25px; 
+         font-weight: bold; 
+      }
+  </style>
 </head>
 <body>
-   <div class="cabinet-section" id="container"></div>
-
-   <div class="nav-footer">
-       <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
-       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
-           <option value="">切換其他藥性 ↓</option>
-           <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
-           <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
-           <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
-           <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
-       </select>
-   </div>
+  <div class="cabinet-section" id="container"></div>
  
-   <script>
-       const DATA_寒 = [
-           { layer: "第一層", items: [{ name: "桑葉" }, { name: "知母" }, { name: "黃連" }, { name: "龍膽" }] },
-           { layer: "第二層", items: [{ name: "大黃" }, { name: "昆布" }, { name: "蟬蛻" }, { name: "浮萍" }] },
-           { layer: "第三層", items: [{ name: "黃芩" }, { name: "黃柏" }, { name: "射干" }, { name: "芒硝" }] },
-           { layer: "第四層", items: [{ name: "牛蒡子" }, { name: "板藍根" }, { name: "漢防己" }, { name: "金銀花" }] },
-           { layer: "第五層", items: [{ name: "雷公藤" }] }
-       ];
+  <div class="nav-footer">
+      <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
+      <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
+          <option value="">切換其他藥性 ↓</option>
+          <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
+          <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
+          <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
+          <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
+      </select>
+  </div>
  
-       const container = document.getElementById('container');
+  <script>
+      const DATA_寒 = [
+          { layer: "第一層", items: [{ name: "桑葉" }, { name: "知母" }, { name: "黃連" }, { name: "龍膽" }] },
+          { layer: "第二層", items: [{ name: "大黃" }, { name: "昆布" }, { name: "蟬蛻" }, { name: "浮萍" }] },
+          { layer: "第三層", items: [{ name: "黃芩" }, { name: "黃柏" }, { name: "射干" }, { name: "芒硝" }] },
+          { layer: "第四層", items: [{ name: "牛蒡子" }, { name: "板藍根" }, { name: "漢防己" }, { name: "金銀花" }] },
+          { layer: "第五層", items: [{ name: "雷公藤" }] }
+      ];
  
-       function renderSection(titleText, layerData, className) {
-           const heading = document.createElement('div');
-           heading.className = 'series-heading';
-           heading.innerText = titleText;
-           container.appendChild(heading);
-
-           layerData.forEach(layer => {
+      const container = document.getElementById('container');
+ 
+      function renderSection(titleText, layerData, className) {
+          const heading = document.createElement('div');
+          heading.className = 'series-heading';
+          heading.innerText = titleText;
+          container.appendChild(heading);
+ 
+          layerData.forEach(layer => {
                const unit = document.createElement('div');
                unit.className = `lattice-unit ${className}`;
                
@@ -96,10 +105,10 @@
                     unit.appendChild(div);
                });
                container.appendChild(unit);
-           });
-       }
-
-       renderSection("藥性 – 寒", DATA_寒, "bg-han");
-   </script>
+          });
+      }
+ 
+      renderSection("藥性 – 寒", DATA_寒, "bg-han");
+  </script>
 </body>
 </html>
