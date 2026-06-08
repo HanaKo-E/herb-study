@@ -11,9 +11,10 @@
            --title-color: #31483c; 
            --heading-bg: rgba(82, 171, 163, 0.1); /* 置頂標題的底色 */
            
-           /* 根據最新指示更新：平與涼的獨立底色 */
-           --color-ping: #9CAF88;
-           --color-liang: #789262;
+           /* 各藥性區塊獨立底色變數 */
+           --color-ping: #9CAF88;   /* 平專屬色碼 */
+           --color-liang: #789262;  /* 涼專屬色碼 */
+           --color-button-bg: #9CAF88; /* ⚙️ 按鈕底色精準指定為「微寒」底色 ⚙️ */
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
@@ -34,7 +35,7 @@
            
            font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
            
-           /* 核心修改點：藥材名字用純白色，無白邊 */
+           /* 藥材名字用純白色，無白邊 */
            color: #ffffff; 
            text-shadow: none;
                 
@@ -52,17 +53,32 @@
        
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
        
-       /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
-       .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--heading-bg); color: var(--title-color); text-decoration: none; border-radius: 25px; font-weight: bold; }
+       /* ⚙️ 核心修改：按鈕顏色改成置頂「藥性 – 微寒」的底色及字體顏色，並優化下拉選單外觀 ⚙️ */
+       .nav-btn { 
+           flex: 1; 
+           text-align: center; 
+           padding: 12px; 
+           background: var(--color-button-bg); /* 改用指定微寒底色 */
+           color: var(--title-color);          /* 改用指定深藥草綠字體 */
+           text-decoration: none; 
+           border-radius: 25px; 
+           font-weight: bold; 
+           
+           /* 清除跨瀏覽器下 select 的預設原生箭頭，確保版面一體化 */
+           appearance: none;
+           -webkit-appearance: none;
+           -moz-appearance: none;
+       }
    </style>
 </head>
 <body>
    <div class="cabinet-section" id="container"></div>
 
    <div class="nav-footer">
-       <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
-       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
-           <option value="">切換其他藥性 ↓</option>
+       <a href="/herb-study/index.html" class="nav-btn">← 📖 返回圖鑑</a>
+       
+       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; cursor: pointer;">
+           <option value="">⚱️ 切換其他藥性 ↓</option>
            <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
            <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
            <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
