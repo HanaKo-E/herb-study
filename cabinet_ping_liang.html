@@ -9,58 +9,51 @@
            --text-white: #ffffff; 
            --main-bg: #F7F3F0; 
            --title-color: #31483c; 
-           --btn-color: #597A69;   
+           --heading-bg: rgba(82, 171, 163, 0.1); /* 置頂標題的底色 */
            
-           /* 核心修改點：在此定義平與涼的專屬色碼 */
-           --color-ping: #A8B2AA;
-           --color-liang: #CADBD4;
+           /* 根據最新指示更新：平與涼的獨立底色 */
+           --color-ping: #9CAF88;
+           --color-liang: #789262;
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
-       .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+       .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        
        .bg-ping { background-color: var(--color-ping); }
        .bg-liang { background-color: var(--color-liang); }
 
-       /* 🟢 核心修改區塊：字形、字體與格子尺寸鎖定 🟢 */
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
-           aspect-ratio: 4 / 1; /* 🟢 關鍵：維持 4/1 比例，確保格子 size 完全不變 🟢 */
+           aspect-ratio: 4 / 1; 
            display: flex; 
            align-items: center; 
            justify-content: center; 
            border: 1px solid rgba(255, 255, 255, 0.25); 
            border-radius: 4px; 
            
-           /* 1. 指定格子內文字使用文鼎飛鳥圓體系列宣告 */
            font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
            
-           /* 2. 字體顏色設定為典雅的深藥草綠，在平/涼兩種底色下搭配白邊皆能清晰顯色 */
-           color: #31483c; 
-           
-           /* 3. 利用文字陰影，幫加大後的飛鳥圓體加上精確的 1px 純白立體外邊框 */
-           text-shadow: 
-               -1px -1px 0 #ffffff,  
-                1px -1px 0 #ffffff,
-               -1px  1px 0 #ffffff,
-                1px  1px 0 #ffffff;
+           /* 核心修改點：藥材名字用純白色，無白邊 */
+           color: #ffffff; 
+           text-shadow: none;
                 
            cursor: default; 
            pointer-events: none;
        }
        
-       /* 🟢 核心修改區塊：字體尺寸精準放大 🟢 */
        .drawer-text .name { 
-           font-size: 1.7rem; /* 從原本的 1.4rem 加大至 1.7rem */
+           font-size: 1.7rem; 
            font-weight: bold; 
            width: 100%; 
            text-align: center; 
-           line-height: 1; /* 確保字體加大後，完全在格子中心垂直居中 */
+           line-height: 1; 
        }
        
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
-       .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--btn-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
+       
+       /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
+       .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--heading-bg); color: var(--title-color); text-decoration: none; border-radius: 25px; font-weight: bold; }
    </style>
 </head>
 <body>
