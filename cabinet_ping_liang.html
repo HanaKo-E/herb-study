@@ -10,11 +10,19 @@
            --main-bg: #F7F3F0; 
            --title-color: #31483c; 
            --btn-color: #597A69;   
+           
+           /* 核心修改點：在此定義平與涼的專屬色碼 */
+           --color-ping: #A8B2AA;
+           --color-liang: #CADBD4;
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
        .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
+       
+       .bg-ping { background-color: var(--color-ping); }
+       .bg-liang { background-color: var(--color-liang); }
+
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
            aspect-ratio: 4 / 1; 
@@ -57,7 +65,7 @@
  
        const container = document.getElementById('container');
  
-       function renderSection(titleText, layerData, bgColor) {
+       function renderSection(titleText, layerData, className) {
            const heading = document.createElement('div');
            heading.className = 'series-heading';
            heading.innerText = titleText;
@@ -65,8 +73,7 @@
 
            layerData.forEach(layer => {
                const unit = document.createElement('div');
-               unit.className = 'lattice-unit';
-               unit.style.backgroundColor = bgColor;
+               unit.className = `lattice-unit ${className}`;
                
                layer.items.forEach(item => {
                     const div = document.createElement('div');
@@ -78,8 +85,8 @@
            });
        }
 
-       renderSection("藥性 – 平", DATA_平, "#BDB7A9");
-       renderSection("藥性 – 涼", DATA_涼, "#A6B5AD");
+       renderSection("藥性 – 平", DATA_平, "bg-ping");
+       renderSection("藥性 – 涼", DATA_涼, "bg-liang");
    </script>
 </body>
 </html>
