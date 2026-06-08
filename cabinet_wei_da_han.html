@@ -9,18 +9,16 @@
            --text-white: #ffffff; 
            --main-bg: #F7F3F0; 
            --title-color: #31483c; 
-           --btn-color: #597A69;   
            
-           /* 核心修改點：在此定義微寒與大寒的專屬色碼 */
-           --color-wei-han: #BFD1C4;
-           --color-da-han: #889F8B;
+           /* 核心修改點：微寒與大寒的新色碼 */
+           --color-wei-han: #9CAF88;
+           --color-da-han: #789262;
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
        .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        
-       /* 透過類別名稱（Class）來直接控制每一層抽屜的底色 */
        .bg-wei-han { background-color: var(--color-wei-han); }
        .bg-da-han { background-color: var(--color-da-han); }
 
@@ -38,7 +36,9 @@
        }
        .drawer-text .name { font-size: 1.4rem; font-weight: bold; width: 100%; text-align: center; }
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
-       .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--btn-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
+       
+       /* 核心修改點：將下方按鈕的顏色統一定義為 #889F8B */
+       .nav-btn { flex: 1; text-align: center; padding: 12px; background: #889F8B; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
    </style>
 </head>
 <body>
@@ -66,7 +66,6 @@
  
        const container = document.getElementById('container');
  
-       // 優化後的渲染函式：傳入對應的 CSS 類別名稱
        function renderSection(titleText, layerData, className) {
            const heading = document.createElement('div');
            heading.className = 'series-heading';
@@ -75,7 +74,7 @@
 
            layerData.forEach(layer => {
                const unit = document.createElement('div');
-               unit.className = `lattice-unit ${className}`; // 自動綁定樣式類別
+               unit.className = `lattice-unit ${className}`;
                
                layer.items.forEach(item => {
                     const div = document.createElement('div');
@@ -87,7 +86,6 @@
            });
        }
 
-       // 傳入對應的樣式類別名稱，而非死板的色碼
        renderSection("藥性 – 微寒", DATA_微寒, "bg-wei-han");
        renderSection("藥性 – 大寒", DATA_大寒, "bg-da-han");
    </script>
