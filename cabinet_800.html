@@ -8,13 +8,15 @@
        :root { --text-white: #ffffff; --main-bg: #F7F3F0; --title-color: #5D4037; --btn-color: #6B5B6B; }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
-       .series-heading { text-align: center; color: var(--title-color); background: rgba(93, 64, 55, 0.1); padding: 8px; border-radius: 6px; margin: 10px 0; font-size: 1.2rem; font-weight: bold; }
+       
+       /* 1. 加大頂部大標題字體 (1.2rem -> 1.5rem) */
+       .series-heading { text-align: center; color: var(--title-color); background: rgba(93, 64, 55, 0.1); padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        
        /* 純文字格子樣式 */
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
-           aspect-ratio: 5 / 1; 
+           aspect-ratio: 4 / 1; /* 微調比例從 5/1 到 4/1，讓大字體上下留白更舒適 */
            display: flex; 
            align-items: center; 
            justify-content: center; /* 讓文字在格子中水平垂直置中 */
@@ -24,8 +26,8 @@
            cursor: default; 
            pointer-events: none;
        }
-       /* 移除 .id 樣式，並調整 .name 填滿寬度置中 */
-       .drawer-text .name { font-size: 1.1rem; font-weight: bold; width: 100%; text-align: center; }
+       /* 2. 加大藥材名稱字體 (1.1rem -> 1.4rem) */
+       .drawer-text .name { font-size: 1.4rem; font-weight: bold; width: 100%; text-align: center; }
        
        .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
        .nav-btn { flex: 1; text-align: center; padding: 12px; background: var(--btn-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
@@ -41,7 +43,7 @@
    </div>
  
    <script>
-       // 更新後的資料矩陣：保留五層、移除 ID、套用新藥材名單
+       // 資料矩陣：五層、無 ID、全新藥材名單
        const CABINET_DATA_800 = [
            { layer: "第一層", items: [{ name: "桑葉" }, { name: "知母" }, { name: "黃連" }, { name: "龍膽" }] },
            { layer: "第二層", items: [{ name: "大黃" }, { name: "昆布" }, { name: "蟬蛻" }, { name: "浮萍" }] },
@@ -56,13 +58,12 @@
            const unit = document.createElement('div');
            unit.className = 'lattice-unit';
            
-           // 修改：統一將所有五層的背景顏色設為指定的 "#587269"
-           unit.style.backgroundColor = "#587269";
+           // 修改：統一將所有五層的背景顏色設為您指定的 "#C09D9B"
+           unit.style.backgroundColor = "#C09D9B";
            
            layer.items.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'drawer-text';
-                // 修改：僅生成名稱區塊，不生成 ID 欄位
                 div.innerHTML = `<div class="name">${item.name}</div>`;
                 unit.appendChild(div);
            });
