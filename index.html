@@ -17,7 +17,6 @@
             --label-width: 85px;
             --mask-fixed-6: 6em; 
             --inner-gap: 10px;
-            /* 新增一個紅色變數，方便未來統一維護 */
             --danger-color: #A32D2D; 
         }
         body {
@@ -36,22 +35,24 @@
         }
         .header-title { font-size: 1.4rem; letter-spacing: 3px; font-weight: bold; }
         
-        /* 藥材屬性按鈕樣式修改（改為紅色底色） */
+        /* 藥材屬性按鈕樣式修改（紅色底 + 醒目白邊） */
         .cabinet-btn {
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            background-color: var(--danger-color); /* 使用設定好的紅色 */
+            background-color: var(--danger-color);
             color: white; text-decoration: none;
-            padding: 5px 12px; border-radius: 15px; font-size: 0.9rem;
-            border: 1px solid rgba(255,255,255,0.4); transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            /* 關鍵修改點：改為 2px 寬度的純白邊框 */
+            padding: 4px 10px; border-radius: 15px; font-size: 0.9rem;
+            border: 2px solid #FFFFFF; transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
-        /* 增加按鈕的滑鼠懸停與點擊視覺回饋 */
+        /* 滑鼠懸停與點擊視覺回饋（維持白邊） */
         .cabinet-btn:hover {
-            background-color: #C23B3B; /* 稍微變亮的紅色 */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            background-color: #C23B3B;
+            border: 2px solid #FFFFFF; /* 確保懸停時白邊依然清晰 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .cabinet-btn:active {
-            transform: translateY(-50%) scale(0.95); /* 點擊時微縮小 */
+            transform: translateY(-50%) scale(0.95);
         }
 
         .top-bar { width: 90%; max-width: 550px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -67,7 +68,6 @@
         .info-row { display: flex; align-items: flex-start; margin-bottom: 18px; line-height: 1.6; width: 100%; }
         .label { font-weight: bold; width: var(--label-width); flex-shrink: 0; color: #5D4F5D; }
         
-        /* 基礎答案樣式：預設改為靠左對齊 */
         .answer { 
             background-color: #f2f2f2; 
             border-radius: 4px; 
@@ -75,11 +75,10 @@
             transition: all 0.2s; 
             display: inline-flex; 
             align-items: center; 
-            justify-content: flex-start; /* 預設靠左 */
+            justify-content: flex-start;
             text-align: left;
         }
         
-        /* 特定欄位居中對齊 */
         .text-center { justify-content: center; text-align: center; }
         
         .answer.hidden { background-color: #E0E0E0 !important; color: transparent !important; filter: blur(5px); cursor: pointer; }
@@ -139,13 +138,13 @@ const medicines = [
   { name: "白芷", property: "溫", toxicity: "--", nature: "辛。歸肺、胃、大腸經。", effect: "解表散寒，祛風止痛，通鼻竅，燥濕止帶，消腫排膿。", usage: "煎服，3～9g。", notice: "辛香溫燥，陰虛血熱者忌服。", img: "白芷.png" },
   { name: "細辛", property: "溫", toxicity: "小毒", nature: "辛。歸肺、腎、心經。", effect: "解表散寒，祛風止痛，通竅，溫肺化飲。", usage: "煎服，1～3g。", notice: "陰虛陽亢頭痛，肺燥傷陰乾咳者忌用。不宜與藜蘆同用。", img: "細辛.png" },
   { name: "藁(稿)本", property: "溫", toxicity: "--", nature: "辛。歸膀胱、肝經。", effect: "祛風散寒，勝濕止痛。", usage: "煎服，3～10g。", notice: "血虛頭痛及熱證均慎用。", img: "藁本.png" },
-  { name: "蒼耳子", property: "溫", toxicity: "小毒", nature: "辛、苦。歸肺經。", effect: "祛風解表，宣通鼻竅，除濕止痛。", usage: "煎服，3～10g。", notice: "血虛頭痛不宜用。過量服用易致中毒。", img: "蒼耳子.png" },
+  { name: "蒼耳子", property: "溫", toxicity: "小毒", nature: "辛、苦. 歸肺經。", effect: "祛風解表，宣通鼻竅，除濕止痛。", usage: "煎服，3～10g。", notice: "血虛頭痛不宜用。過量服用易致中毒。", img: "蒼耳子.png" },
   { name: "蔥白", property: "溫", toxicity: "--", nature: "辛。歸肺、胃經。", effect: "發汗解表，散寒通陽。", usage: "煎服，3～9g。", notice: "無", img: "蔥白.png" },
   { name: "辛夷", property: "溫", toxicity: "--", nature: "辛。歸肺、胃經。", effect: "發散風寒，宣通鼻竅。", usage: "煎服，3～10g。宜包煎。", notice: "陰虛火旺者忌服。", img: "辛夷.png" },
   { name: "薄荷", property: "涼", toxicity: "--", nature: "辛。歸肺、肝經。", effect: "發散風熱，清利頭目，利咽，透疹，疏肝解鬱。", usage: "煎服，3～6g。宜後下。", notice: "體虛多汗者不宜，陰虛血燥者慎用。", img: "薄荷.png" },
   { name: "牛蒡子", property: "寒", toxicity: "--", nature: "辛、苦。歸肺、胃經。", effect: "發散風熱，宣肺透疹，利咽散結，解毒消腫。", usage: "煎服，6～12g。宜搗碎。", notice: "有滑腸通便之弊，脾虛腹瀉者慎用。", img: "牛蒡子.png" },
   { name: "蟬蛻(退)", property: "寒", toxicity: "--", nature: "甘。歸肺、肝經。", effect: "發散風熱，透疹止癢，止痙，明目退翳。", usage: "煎服，3～6g。", notice: "孕婦慎用。", img: "蟬蛻.png" },
-  { name: "桑葉", property: "寒", toxicity: "--", nature: "甘、苦. 歸肺、肝經。", effect: "發散風熱，清肺止咳，平肝明目。", usage: "煎服，5～10g。", notice: "無", img: "桑葉.png" },
+  { name: "桑葉", property: "寒", toxicity: "--", nature: "甘、苦。歸肺、肝經。", effect: "發散風熱，清肺止咳，平肝明目。", usage: "煎服 store，5～10g。", notice: "無", img: "桑葉.png" },
   { name: "菊花", property: "微寒", toxicity: "--", nature: "辛、甘、苦。歸肺、肝經。", effect: "發散風熱，清肝明目，平抑肝陽，清熱解毒。", usage: "煎服，5～10g。", notice: "疏散風熱多用白菊花(杭菊花)；平肝明目多用黃菊花(滁菊花)。", img: "菊花.png" },
   { name: "蔓荊子", property: "微寒", toxicity: "--", nature: "辛、苦。歸膀胱、肝、胃經。", effect: "發散風熱，清利頭目，止痛。", usage: "煎服，5～10g。", notice: "無", img: "蔓荊子.png" },
   { name: "柴胡", property: "微寒", toxicity: "--", nature: "苦、辛。歸肝、膽經。", effect: "疏散退熱，疏肝解鬱，升舉陽氣。", usage: "煎服，3～10g。", notice: "肝陽上亢，肝風內動，陰虛火旺及氣機上逆者忌用或慎用。", img: "柴胡.png" },
@@ -175,15 +174,15 @@ const medicines = [
   { name: "木瓜", property: "溫", toxicity: "--", nature: "酸。歸肝、脾經。", effect: "舒筋活絡，和胃化濕。", usage: "煎服，6～12g。", notice: "內有鬱熱，小便短赤者忌服。", img: "木瓜.png" },
   { name: "路路通", property: "平", toxicity: "--", nature: "苦。歸肝、腎經。", effect: "祛風活絡，利水通經。", usage: "煎服，5～10g。", notice: "月經過多及孕婦忌服。", img: "路路通.png" },
   { name: "秦艽", property: "平", toxicity: "--", nature: "苦、辛。歸胃、肝、膽經。", effect: "袪風濕，通絡止痛，退虛熱，清濕熱。", usage: "煎服，3～10g。", notice: "無", img: "秦艽.png" },
-  { name: "漢防己", property: "寒", toxicity: "--", nature: "苦、辛。歸膀胱、肺經。", effect: "祛風濕，止痛，利水消腫。", usage: "煎服，5～10g。", notice: "大苦大寒易傷胃氣，胃納不佳及陰虛體弱者慎服。", img: "漢防己.png" },
+  { name: "漢防己", property: "寒", toxicity: "--", nature: "苦、辛。歸膀胱、肺經。", effect: "祛風濕，止痛，利水消腫。", usage: "煎服 store，5～10g。", notice: "大苦大寒易傷胃氣，胃納不佳及陰虛體弱者慎服。", img: "漢防己.png" },
   { name: "桑枝", property: "平", toxicity: "--", nature: "微苦。歸肝經。", effect: "祛風濕，利關節。", usage: "煎服，9～15g。", notice: "無", img: "桑枝.png" },
   { name: "絡石藤", property: "微寒", toxicity: "--", nature: "苦。歸心、肝、腎經。", effect: "祛風通絡，涼血消腫。", usage: "煎服，6～15g。", notice: "無", img: "絡石藤.png" },
   { name: "雷公藤", property: "寒", toxicity: "大毒", nature: "苦、辛。歸肝、腎經。", effect: "祛風濕，活血通絡，消腫止痛，殺蟲解毒。", usage: "煎服，10～20g。宜久煎。", notice: "內臟有器質性病變及白細胞減少者慎服；孕婦忌用。", img: "雷公藤.png" },
   { name: "昆布", property: "寒", toxicity: "--", nature: "鹹。歸肝、胃、腎經。", effect: "消痰軟堅，利水消腫。", usage: "煎服，6～12g。", notice: "同海藻，常與海藻相須而用。", img: "昆布.png" },
-  { name: "當歸", property: "溫", toxicity: "--", nature: "甘、辛。歸肝、心、脾經。", effect: "補血調經，活血止痛，潤腸通便。", usage: "煎服 store，5～15g。", notice: "濕盛中滿、大便泄瀉者忌服。", img: "當歸.png" },
+  { name: "當歸", property: "溫", toxicity: "--", nature: "甘、辛。歸肝、心、脾經。", effect: "補血調經，活血止痛，潤腸通便。", usage: "煎服，5～15g。", notice: "濕盛中滿、大便泄瀉者忌服。", img: "當歸.png" },
   { name: "西洋參", property: "涼", toxicity: "--", nature: "甘、微苦。歸肺、心、腎、脾經。", effect: "補氣養陰，清熱生津。", usage: "另煎，3～6g。", notice: "不宜與藜蘆同用。", img: "西洋參.png" },
-  { name: "石斛(酷)", property: "微寒", toxicity: "--", nature: "甘。歸胃、腎經。", effect: "益胃生津，滋陰清熱。", usage: "煎服，6～12g。宜先煎。", notice: "無", img: "石斛.png" },
-  { name: "百合", property: "微寒", toxicity: "--", nature: "甘。歸肺、心、胃經。", effect: "養陰潤肺，清心安神。", usage: "煎服 store，6～12g。", notice: "無", img: "百合.png" },
+  { name: "石斛(酷)", property: "微寒", toxicity: "--", nature: "甘。歸胃、腎經。", effect: "益胃生津，滋陰清熱。", usage: "煎服，6～12g Clyde。宜先煎。", notice: "無", img: "石斛.png" },
+  { name: "百合", property: "微寒", toxicity: "--", nature: "甘。歸肺、心、胃經。", effect: "養陰潤肺，清心安神。", usage: "煎服，6～12g。", notice: "無", img: "百合.png" },
   { name: "鹿茸", property: "溫", toxicity: "--", nature: "甘、鹹。歸腎、肝經。", effect: "補腎陽，益精血，強筋骨，調沖任，托瘡毒。", usage: "研粉沖服，1～2g。", notice: "不可驟用大量，以免陽升風動，頭暈目赤，或傷陰動血。凡發熱者忌服。", img: "鹿茸.png" },
   { name: "巴戟天", property: "微溫", toxicity: "--", nature: "甘、辛。歸腎、肝經。", effect: "補腎助陽，祛風除濕。", usage: "煎服，6～10g。", notice: "陰虛火旺及有熱者不宜服。", img: "巴戟天.png" },
   { name: "山楂", property: "微溫", toxicity: "--", nature: "酸、甘。歸脾、胃、肝經。", effect: "消食化積，行氣散瘀。", usage: "煎服，9～12g。", notice: "無", img: "山楂.png" }
