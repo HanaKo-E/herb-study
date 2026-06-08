@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>屬性 – 小毒 / 大毒</title>
+  <style>
+      :root { 
+          --text-white: #ffffff; 
+          --main-bg: #F7F3F0;
+          --title-color: #31483c; 
+          --heading-bg: rgba(82, 171, 163, 0.1); 
+          
+          --color-xiaodu: #D99B4E;
+          --color-dadu: #A32D2D;
+      }
+      body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
+      .cabinet-section { width: 100%; max-width: 500px; }
+      
+      .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+      .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
+      
+      .bg-xiaodu { background-color: var(--color-xiaodu); }
+      .bg-dadu { background-color: var(--color-dadu); }
+ 
+      .drawer-text { 
+          background: rgba(255, 255, 255, 0.15); 
+          
+          aspect-ratio: 5 / 1; 
+          
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          border: 1px solid rgba(255, 255, 255, 0.25); 
+          border-radius: 4px;
+          
+          font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
+          
+          color: #ffffff; 
+          text-shadow: none;
+               
+          cursor: default; 
+          pointer-events: none;
+      }
+      
+      .drawer-text .name { 
+          font-size: 1.5rem; 
+          font-weight: bold; 
+          width: 100%; 
+          text-align: center;
+          line-height: 1; 
+      }
+      
+      .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
+      
+      .nav-btn { 
+          flex: 1; 
+          text-align: center;
+          padding: 12px; 
+          background: var(--heading-bg); 
+          color: var(--title-color); 
+          text-decoration: none; 
+          border-radius: 25px; 
+          font-weight: bold; 
+          
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+      }
+  </style>
+</head>
+<body>
+  <div class="cabinet-section" id="container"></div>
+ 
+  <div class="nav-footer">
+      <a href="/herb-study/index.html" class="nav-btn">←返回圖鑑</a>
+      <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; -moz-appearance: none; appearance: none; cursor: pointer;">
+          <option value="">切換其他藥性↓</option>
+          <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
+          <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
+          <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
+          <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
+          <option value="/herb-study/cabinet_du.html">屬性 - 小毒 / 大毒</option>
+      </select>
+  </div>
+ 
+  <script>
+      const DATA_小毒 = [
+          { layer: "第一層", items: [{ name: "細辛" }, { name: "蒼耳子" }] }
+      ];
+      const DATA_大毒 = [
+          { layer: "第一層", items: [{ name: "雷公藤" }] }
+      ];
+ 
+      const container = document.getElementById('container');
+ 
+      function renderSection(titleText, layerData, className) {
+          const heading = document.createElement('div');
+          heading.className = 'series-heading';
+          heading.innerText = titleText;
+          container.appendChild(heading);
+ 
+          layerData.forEach(layer => {
+               const unit = document.createElement('div');
+               unit.className = `lattice-unit ${className}`;
+               
+               layer.items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'drawer-text';
+                    div.innerHTML = `<div class="name">${item.name}</div>`;
+                    unit.appendChild(div);
+               });
+               container.appendChild(unit);
+          });
+      }
+ 
+      renderSection("屬性 - 小毒", DATA_小毒, "bg-xiaodu");
+      renderSection("屬性 - 大毒", DATA_大毒, "bg-dadu");
+  </script>
+</body>
+</html>
