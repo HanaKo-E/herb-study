@@ -1,13 +1,3 @@
-將藥性置頂標題（Section Heading）和格子內的藥材名字（Name）的字體尺寸精準調小。
-
-主要的修改細節如下：
-
-藥性區塊大標題 (.series-heading)：字體由原本的 1.5rem 等比例縮小至 1.2rem。
-
-藥材名字 (.drawer-text .name)：字體由原本的 1.7rem 等比例縮小至 1.4rem，並維持垂直置中與粗體設定。
-
-隱藏下拉箭頭：同樣為您將隱藏原生選單箭頭的 appearance: none; 補回按鈕樣式中，確保畫面不會有多餘的系統箭頭。
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -27,6 +17,8 @@
       }
       body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
       .cabinet-section { width: 100%; max-width: 500px; }
+      
+      /* 🟢 修改點 1：藥性置頂大標題字體設定為 1.5rem 🟢 */
       .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
       .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
       
@@ -36,7 +28,10 @@
  
       .drawer-text { 
           background: rgba(255, 255, 255, 0.15); 
-          aspect-ratio: 4 / 1; 
+          
+          /* 🟢 修改點 4：格子寬高比精準修改為 5 / 1 🟢 */
+          aspect-ratio: 5 / 1; 
+          
           display: flex; 
           align-items: center; 
           justify-content: center; 
@@ -53,8 +48,9 @@
           pointer-events: none;
       }
       
+      /* 🟢 修改點 2：格子內藥材名字縮小至 1.5rem，並完美維持垂直置中與粗體設定 🟢 */
       .drawer-text .name { 
-          font-size: 1.7rem; 
+          font-size: 1.5rem; 
           font-weight: bold; 
           width: 100%; 
           text-align: center; 
@@ -63,7 +59,7 @@
       
       .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
       
-      /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
+      /* 🟢 修改點 3：在 .nav-btn 中保留並補齊 appearance: none; 系列宣告，徹底拔除多餘系統箭頭 🟢 */
       .nav-btn {
         flex: 1;
         text-align: center;
@@ -74,7 +70,6 @@
         border-radius: 25px;
         font-weight: bold;
         
-        /* 🟢 補回隱藏瀏覽器原生多出的上下箭頭符號 🟢 */
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
@@ -86,11 +81,11 @@
  
   <div class="nav-footer">
       <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
-      <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; cursor: pointer;">
+      <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; -moz-appearance: none; appearance: none; cursor: pointer;">
           <option value="">切換其他藥性 ↓</option>
-          <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
-          <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
-          <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
+           <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
+        <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
+                   <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
           <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
       </select>
   </div>
