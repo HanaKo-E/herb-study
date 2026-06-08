@@ -1,97 +1,107 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>藥性 - 溫 / 微溫</title>
-   <style>
-       :root { 
-           --text-white: #ffffff; 
-           --main-bg: #F7F3F0; 
-           --title-color: #31483c; 
-           
-           /* 溫與微溫的新色碼 */
-           --color-wen: #CBA29E;
-           --color-wei-wen: #DAC1C2;
-       }
-       body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
-       .cabinet-section { width: 100%; max-width: 500px; }
-       .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
-       .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
-       
-       .bg-wen { background-color: var(--color-wen); }
-       .bg-wei-wen { background-color: var(--color-wei-wen); }
-
-       /* 🟢 核心修改區塊：純白字、無白邊、字形與格子比例鎖定 🟢 */
-       .drawer-text { 
-           background: rgba(255, 255, 255, 0.15); 
-           aspect-ratio: 4 / 1; /* 🟢 關鍵：嚴格保留 4/1 比例，確保格子尺寸與 Size 完全不變 🟢 */
-           display: flex; 
-           align-items: center; 
-           justify-content: center; 
-           border: 1px solid rgba(255, 255, 255, 0.25); 
-           border-radius: 4px; 
-           
-           /* 1. 注入指定字形：文鼎飛鳥圓體系列宣告（含中英文相容宣告） */
-           font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
-           
-           /* 2. 核心修改：字體顏色改回純白色，並且不加任何 text-shadow 白邊效果 */
-           color: #ffffff; 
-           text-shadow: none;
-                
-           cursor: default; 
-           pointer-events: none;
-       }
-       
-       /* 🟢 核心修改區塊：字體尺寸精準放大與垂直置中 🟢 */
-       .drawer-text .name { 
-           font-size: 1.7rem; /* 文字由 1.4rem 精準調大至 1.7rem */
-           font-weight: bold; 
-           width: 100%; 
-           text-align: center; 
-           line-height: 1; /* 強制行高為 1，確保大字在格子內部完美垂直置中不跑位 */
-       }
-       
-       /* 下方按鈕的顏色統一定義為 #889F8B */
-       .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
-       .nav-btn { flex: 1; text-align: center; padding: 12px; background: #889F8B; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
-   </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>藥性 - 溫 / 微溫</title>
+  <style>
+      :root { 
+          --text-white: #ffffff; 
+          --main-bg: #F7F3F0; 
+          --title-color: #31483c; 
+          
+          /* 溫與微溫的新色碼 */
+          --color-wen: #CBA29E;
+          --color-wei-wen: #DAC1C2;
+      }
+      body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
+      .cabinet-section { width: 100%; max-width: 500px; }
+      .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+      .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
+      
+      .bg-wen { background-color: var(--color-wen); }
+      .bg-wei-wen { background-color: var(--color-wei-wen); }
+ 
+      /* 🟢 核心修改區塊：純白字、無白邊、字形與格子比例鎖定 🟢 */
+      .drawer-text { 
+          background: rgba(255, 255, 255, 0.15); 
+          aspect-ratio: 4 / 1; /* 🟢 關鍵：嚴格保留 4/1 比例，確保格子尺寸與 Size 完全不變 🟢 */
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          border: 1px solid rgba(255, 255, 255, 0.25); 
+          border-radius: 4px; 
+          
+          /* 1. 注入指定字形：文鼎飛鳥圓體系列宣告（含中英文相容宣告） */
+          font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
+          
+          /* 2. 核心修改：字體顏色改回純白色，並且不加任何 text-shadow 白邊效果 */
+          color: #ffffff; 
+          text-shadow: none;
+               
+          cursor: default; 
+          pointer-events: none;
+      }
+      
+      /* 🟢 核心修改區塊：字體尺寸精準放大與垂直置中 🟢 */
+      .drawer-text .name { 
+          font-size: 1.7rem; /* 文字由 1.4rem 精準調大至 1.7rem */
+          font-weight: bold; 
+          width: 100%; 
+          text-align: center; 
+          line-height: 1; /* 強制行高為 1，確保大字在格子內部完美垂直置中不跑位 */
+      }
+      
+      .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
+      
+      /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
+      .nav-btn {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        background: var(--heading-bg); /* 這裡決定了按鈕的底色為 rgba(82, 171, 163, 0.1) */
+        color: var(--title-color);      /* 這裡決定了按鈕的字體顏色為 #31483c */
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: bold;
+      }
+  </style>
 </head>
 <body>
-   <div class="cabinet-section" id="container"></div>
-
-   <div class="nav-footer">
-       <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
-       <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
-           <option value="">切換其他藥性 ↓</option>
-           <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
-           <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
-           <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
-           <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
-       </select>
-   </div>
+  <div class="cabinet-section" id="container"></div>
  
-   <script>
-       const DATA_溫 = [
-           { layer: "第一層", items: [{ name: "麻黃" }, { name: "桂枝" }, { name: "生薑" }, { name: "羌活" }] },
-           { layer: "第二層", items: [{ name: "白芷" }, { name: "細辛" }, { name: "藁(稿)本" }, { name: "蒼耳子" }] },
-           { layer: "第三層", items: [{ name: "蔥白" }, { name: "辛夷" }, { name: "當歸" }, { name: "鹿茸" }] },
-           { layer: "第四層", items: [{ name: "紫蘇葉" }, { name: "威靈仙" }, { name: "木瓜" }] }
-       ];
-       const DATA_微溫 = [
-           { layer: "第一層", items: [{ name: "香薷(儒)" }, { name: "荊芥" }, { name: "防風" }, { name: "獨活" }] },
-           { layer: "第二層", items: [{ name: "巴戟天" }, { name: "山楂" }] }
-       ];
+  <div class="nav-footer">
+      <a href="/herb-study/index.html" class="nav-btn">← 返回圖鑑</a>
+      <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; cursor: pointer;">
+          <option value="">切換其他藥性 ↓</option>
+          <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
+          <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
+          <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
+          <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
+      </select>
+  </div>
  
-       const container = document.getElementById('container');
+  <script>
+      const DATA_溫 = [
+          { layer: "第一層", items: [{ name: "麻黃" }, { name: "桂枝" }, { name: "生薑" }, { name: "羌活" }] },
+          { layer: "第二層", items: [{ name: "白芷" }, { name: "細辛" }, { name: "藁(稿)本" }, { name: "蒼耳子" }] },
+          { layer: "第三層", items: [{ name: "蔥白" }, { name: "辛夷" }, { name: "當歸" }, { name: "鹿茸" }] },
+          { layer: "第四層", items: [{ name: "紫蘇葉" }, { name: "威靈仙" }, { name: "木瓜" }] }
+      ];
+      const DATA_微溫 = [
+          { layer: "第一層", items: [{ name: "香薷(儒)" }, { name: "荊芥" }, { name: "防風" }, { name: "獨活" }] },
+          { layer: "第二層", items: [{ name: "巴戟天" }, { name: "山楂" }] }
+      ];
  
-       function renderSection(titleText, layerData, className) {
-           const heading = document.createElement('div');
-           heading.className = 'series-heading';
-           heading.innerText = titleText;
-           container.appendChild(heading);
-
-           layerData.forEach(layer => {
+      const container = document.getElementById('container');
+ 
+      function renderSection(titleText, layerData, className) {
+          const heading = document.createElement('div');
+          heading.className = 'series-heading';
+          heading.innerText = titleText;
+          container.appendChild(heading);
+ 
+          layerData.forEach(layer => {
                const unit = document.createElement('div');
                unit.className = `lattice-unit ${className}`;
                
@@ -102,11 +112,11 @@
                     unit.appendChild(div);
                });
                container.appendChild(unit);
-           });
-       }
-
-       renderSection("藥性 – 溫", DATA_溫, "bg-wen");
-       renderSection("藥性 – 微溫", DATA_微溫, "bg-wei-wen");
-   </script>
+          });
+      }
+ 
+      renderSection("藥性 – 溫", DATA_溫, "bg-wen");
+      renderSection("藥性 – 微溫", DATA_微溫, "bg-wei-wen");
+  </script>
 </body>
 </html>
