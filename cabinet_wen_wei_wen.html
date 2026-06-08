@@ -10,7 +10,7 @@
            --main-bg: #F7F3F0; 
            --title-color: #31483c; 
            
-           /* 核心修改點：溫與微溫的新色碼 */
+           /* 溫與微溫的新色碼 */
            --color-wen: #CBA29E;
            --color-wei-wen: #DAC1C2;
        }
@@ -22,22 +22,38 @@
        .bg-wen { background-color: var(--color-wen); }
        .bg-wei-wen { background-color: var(--color-wei-wen); }
 
+       /* 🟢 核心修改區塊：純白字、無白邊、字形與格子比例鎖定 🟢 */
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
-           aspect-ratio: 4 / 1; 
+           aspect-ratio: 4 / 1; /* 🟢 關鍵：嚴格保留 4/1 比例，確保格子尺寸與 Size 完全不變 🟢 */
            display: flex; 
            align-items: center; 
            justify-content: center; 
            border: 1px solid rgba(255, 255, 255, 0.25); 
            border-radius: 4px; 
-           color: var(--text-white); 
+           
+           /* 1. 注入指定字形：文鼎飛鳥圓體系列宣告（含中英文相容宣告） */
+           font-family: "文鼎飛鳥圓體", "AR Asuka Maru", "AR AsukaMaru", "飛鳥圓體", sans-serif;
+           
+           /* 2. 核心修改：字體顏色改回純白色，並且不加任何 text-shadow 白邊效果 */
+           color: #ffffff; 
+           text-shadow: none;
+                
            cursor: default; 
            pointer-events: none;
        }
-       .drawer-text .name { font-size: 1.4rem; font-weight: bold; width: 100%; text-align: center; }
-       .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
        
-       /* 核心修改點：將下方按鈕的顏色統一定義為 #889F8B */
+       /* 🟢 核心修改區塊：字體尺寸精準放大與垂直置中 🟢 */
+       .drawer-text .name { 
+           font-size: 1.7rem; /* 文字由 1.4rem 精準調大至 1.7rem */
+           font-weight: bold; 
+           width: 100%; 
+           text-align: center; 
+           line-height: 1; /* 強制行高為 1，確保大字在格子內部完美垂直置中不跑位 */
+       }
+       
+       /* 下方按鈕的顏色統一定義為 #889F8B */
+       .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
        .nav-btn { flex: 1; text-align: center; padding: 12px; background: #889F8B; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
    </style>
 </head>
