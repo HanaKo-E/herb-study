@@ -16,7 +16,9 @@
       }
       body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
       .cabinet-section { width: 100%; max-width: 500px; }
-      .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+      
+      /* 🟢 核心修改：藥性區塊標題由 1.5rem 縮小至 1.2rem 🟢 */
+      .series-heading { text-align: center; color: var(--title-color); background: var(--heading-bg); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.2rem; font-weight: bold; }
       .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
       
       .bg-han { background-color: var(--color-han); }
@@ -35,13 +37,14 @@
           /* 核心修改點：藥材名字用純白色，無白邊 */
           color: #ffffff; 
           text-shadow: none;
-               
+                
           cursor: default; 
           pointer-events: none;
       }
       
+      /* 🟢 核心修改：藥材名字由 1.7rem 縮小至 1.4rem 🟢 */
       .drawer-text .name { 
-          font-size: 1.7rem; 
+          font-size: 1.4rem; 
           font-weight: bold; 
           width: 100%; 
           text-align: center; 
@@ -50,16 +53,20 @@
       
       .nav-footer { display: flex; gap: 10px; margin-top: 20px; width: 100%; max-width: 500px; }
       
-      /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色 */
+      /* 核心修改點：按鈕顏色改成置頂大標題的底色及字體顏色，並防止產生原生上下箭頭 */
       .nav-btn { 
-         flex: 1; 
-         text-align: center; 
-         padding: 12px; 
-         background: var(--heading-bg); /* 這裡決定了按鈕的底色為 rgba(82, 171, 163, 0.1) */
-         color: var(--title-color);      /* 這裡決定了按鈕的字體顏色為 #31483c */
-         text-decoration: none; 
-         border-radius: 25px; 
-         font-weight: bold; 
+          flex: 1; 
+          text-align: center; 
+          padding: 12px; 
+          background: var(--heading-bg); /* 這裡決定了按鈕的底色為 rgba(82, 171, 163, 0.1) */
+          color: var(--title-color);      /* 這裡決定了按鈕的字體顏色為 #31483c */
+          text-decoration: none; 
+          border-radius: 25px; 
+          font-weight: bold; 
+          
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
       }
   </style>
 </head>
