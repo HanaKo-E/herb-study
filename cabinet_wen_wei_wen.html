@@ -10,11 +10,19 @@
            --main-bg: #F7F3F0; 
            --title-color: #31483c; 
            --btn-color: #597A69;   
+           
+           /* 核心修改點：在此定義溫與微溫的專屬色碼 */
+           --color-wen: #CBA29E;
+           --color-wei-wen: #DAC1C2;
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
        .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
+       
+       .bg-wen { background-color: var(--color-wen); }
+       .bg-wei-wen { background-color: var(--color-wei-wen); }
+
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
            aspect-ratio: 4 / 1; 
@@ -60,7 +68,7 @@
  
        const container = document.getElementById('container');
  
-       function renderSection(titleText, layerData, bgColor) {
+       function renderSection(titleText, layerData, className) {
            const heading = document.createElement('div');
            heading.className = 'series-heading';
            heading.innerText = titleText;
@@ -68,8 +76,7 @@
 
            layerData.forEach(layer => {
                const unit = document.createElement('div');
-               unit.className = 'lattice-unit';
-               unit.style.backgroundColor = bgColor;
+               unit.className = `lattice-unit ${className}`;
                
                layer.items.forEach(item => {
                     const div = document.createElement('div');
@@ -81,8 +88,8 @@
            });
        }
 
-       renderSection("藥性 – 溫", DATA_溫, "#C49A88");
-       renderSection("藥性 – 微溫", DATA_微溫, "#D9BBAE");
+       renderSection("藥性 – 溫", DATA_溫, "bg-wen");
+       renderSection("藥性 – 微溫", DATA_微溫, "bg-wei-wen");
    </script>
 </body>
 </html>
