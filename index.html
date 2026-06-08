@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中藥學習圖鑑</title>
+    <title>中藥自學圖鑑</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#6B5B6B">
@@ -78,8 +78,9 @@
 </head>
 <body>
 <header>
-    <a href="cabinet_800.html" class="cabinet-btn">藥材屬性</a>
-    <div class="header-title">中藥學習圖鑑</div>
+    <!-- 核心修改點：將路徑對接至最新的 herb-study 藥櫃分流網頁 -->
+    <a href="/herb-study/cabinet_wei_da_han.html" class="cabinet-btn">藥材屬性</a>
+    <div class="header-title">中藥自學圖鑑</div>
 </header>
 <div class="top-bar">
     <div class="search-container">
@@ -209,7 +210,6 @@ function updateUI() {
 
     document.getElementById('medImage').src = encodeURIComponent(med.img);
     
-    // 修改：移除萬能的 querySelectorAll，改為精準只隱藏 藥名、屬性、毒性 三個欄位
     document.getElementById('medName').classList.add('hidden');
     document.getElementById('medProp').classList.add('hidden');
     document.getElementById('medTox').classList.add('hidden');
