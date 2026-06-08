@@ -28,27 +28,27 @@
         }
         header {
             background-color: var(--primary-color); color: #FFFFFF; width: 100%;
-            padding: 15px 0; text-align: center;
+            padding: 18px 0; text-align: center; /* 🚀 微調內邊距給予加大按鈕舒適空間 */
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-bottom: 2px solid var(--accent-color);
             position: relative;
         }
         .header-title { font-size: 1.4rem; letter-spacing: 3px; font-weight: bold; }
         
-        /* 藥材屬性按鈕樣式修改（紅色底 + 醒目白邊） */
+        /* 🔴 藥材屬性按鈕完美放大優化 🔴 */
         .cabinet-btn {
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
             background-color: var(--danger-color);
             color: white; text-decoration: none;
-            /* 關鍵修改點：改為 2px 寬度的純白邊框 */
-            padding: 4px 10px; border-radius: 15px; font-size: 0.9rem;
+            padding: 6px 14px; border-radius: 18px; font-size: 1rem; /* 🚀 完美加大：字體放大至 1rem，擴大點擊與內邊距範圍 */
             border: 2px solid #FFFFFF; transition: all 0.2s;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            font-weight: bold; /* 🚀 加粗文字使其在放大後更具結構美感 */
         }
-        /* 滑鼠懸停與點擊視覺回饋（維持白邊） */
+        /* 滑鼠懸停與點擊視覺回饋（極致維持醒目白邊） */
         .cabinet-btn:hover {
             background-color: #C23B3B;
-            border: 2px solid #FFFFFF; /* 確保懸停時白邊依然清晰 */
+            border: 2px solid #FFFFFF; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .cabinet-btn:active {
@@ -151,7 +151,7 @@ const medicines = [
   { name: "升麻", property: "微寒", toxicity: "--", nature: "辛、甘。歸肺、脾、胃、大腸經。", effect: "解表透疹，清熱解毒，升舉陽氣。", usage: "煎服，3～9g。", notice: "麻疹已透，陰虛火旺，以及陰虛陽亢者，均當忌用。", img: "升麻.png" },
   { name: "葛根", property: "涼", toxicity: "--", nature: "甘、辛。歸脾、胃經。", effect: "解肌退熱，透疹，生津止渴，升陽止瀉。", usage: "煎服，9～15g。", notice: "解肌退熱、透疹、生津宜生用，升陽止瀉宜煨用。", img: "葛根.png" },
   { name: "浮萍", property: "寒", toxicity: "--", nature: "辛。歸肺、膀胱經。", effect: "發汗解表，透疹止癢，利尿消腫。", usage: "煎服，3～9g。", notice: "表虛自汗者不宜。", img: "浮萍.png" },
-  { name: "木賊", property: "平", toxicity: "--", nature: "甘、苦。歸肺、肝經。", effect: "疏散風熱，明目退翳。", usage: "煎服，3～10g。", notice: "氣虛、血虛目疾者慎用。", img: "木賊.png" },
+  { name: "木賊", property: "平", toxicity: "--", nature: "甘、苦. 歸肺、肝經。", effect: "疏散風熱，明目退翳。", usage: "煎服，3～10g。", notice: "氣虛、血虛目疾者慎用。", img: "木賊.png" },
   { name: "決明子", property: "微寒", toxicity: "--", nature: "甘、苦、鹹。歸肝、大腸經。", effect: "清熱明目，潤腸通便。", usage: "煎服，10～15g。", notice: "氣虛便溏者不宜用。", img: "決明子.png" },
   { name: "石膏", property: "大寒", toxicity: "--", nature: "甘、辛。歸肺、胃經。", effect: "生用：清熱瀉火，除煩止渴；煆用：斂瘡生肌，收濕，止血。", usage: "煎服，15～60g。宜先煎。", notice: "脾胃虛寒及陰虛內熱者忌用。", img: "石膏.png" },
   { name: "知母", property: "寒", toxicity: "--", nature: "苦、甘。歸肺、胃、腎經。", effect: "清熱瀉火，生津潤燥。", usage: "煎服，6～12g。", notice: "性寒質潤，有滑腸作用，脾虛便溏者不宜用。", img: "知母.png" },
