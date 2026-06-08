@@ -3,17 +3,17 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>藥性 - 平 與 涼</title>
+   <title>藥性 - 平 / 涼</title>
    <style>
        :root { 
            --text-white: #ffffff; 
            --main-bg: #F7F3F0; 
-           --title-color: #3a4d56; 
-           --btn-color: #556c77;   
+           --title-color: #31483c; 
+           --btn-color: #597A69;   
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
-       .series-heading { text-align: center; color: var(--title-color); background: rgba(102, 130, 142, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
+       .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
@@ -42,18 +42,17 @@
            <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
            <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
            <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
-           <option value="/herb-study/cabinet_ping_liang.html" selected>藥性 - 平 / 涼</option>
+           <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
        </select>
    </div>
  
    <script>
        const DATA_平 = [
-           { layer: "第一層", items: [{ name: "木賊" }, { name: "土茯苓" }, { name: "烏梢蛇" }, { name: "路路通" }] },
+           { layer: "第一層", items: [{ name: "木賊" }, { name: "土茯苓" }, { name: "烏梢(筲)蛇" }, { name: "路路通" }] },
            { layer: "第二層", items: [{ name: "秦艽" }, { name: "桑枝" }] }
        ];
-
        const DATA_涼 = [
-           { layer: "第五層", items: [{ name: "薄荷" }, { name: "葛根" }, { name: "西洋參" }] }
+           { layer: "第一層", items: [{ name: "薄荷" }, { name: "葛根" }, { name: "西洋參" }] }
        ];
  
        const container = document.getElementById('container');
@@ -79,8 +78,8 @@
            });
        }
 
-       renderSection("藥性 – 平", DATA_平, "#66828E");
-       renderSection("藥性 – 涼", DATA_涼, "#9DA8AF");
+       renderSection("藥性 – 平", DATA_平, "#BDB7A9");
+       renderSection("藥性 – 涼", DATA_涼, "#A6B5AD");
    </script>
 </body>
 </html>
