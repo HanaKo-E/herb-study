@@ -6,7 +6,7 @@
  <title>藥性 - 溫 / 微溫</title>
  <style>
     :root { 
-        --text-white: #ffffff; 
+        --text-white: #ffffff;
         --main-bg: #F7F3F0; 
         --title-color: #31483c; 
         
@@ -17,7 +17,7 @@
     body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
     .cabinet-section { width: 100%; max-width: 500px; }
     
-    /* 🟢 修改點 1：藥性置頂標題字體設定為 1.5rem 🟢 */
+    /* 🟢 修改點 1：藥性置頂標題字體精準設定為 1.5rem 🟢 */
     .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
     .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
      
@@ -83,8 +83,8 @@
     <select class="nav-btn" onchange="if(this.value) location.href=this.value;" style="text-align-last: center; border: none; font-size: inherit; font-family: inherit; -webkit-appearance: none; -moz-appearance: none; appearance: none; cursor: pointer;">
         <option value="">切換其他藥性 ↓</option>
         <option value="/herb-study/cabinet_han.html">藥性 - 寒</option>
-     <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
-                <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
+        <option value="/herb-study/cabinet_wei_da_han.html">藥性 - 微寒 / 大寒</option>
+        <option value="/herb-study/cabinet_wen_wei_wen.html">藥性 - 溫 / 微溫</option>
         <option value="/herb-study/cabinet_ping_liang.html">藥性 - 平 / 涼</option>
     </select>
  </div>
@@ -120,7 +120,7 @@
                     unit.appendChild(div);
                });
                container.appendChild(unit);
-        });
+         });
     }
  
     renderSection("藥性 – 溫", DATA_溫, "bg-wen");
