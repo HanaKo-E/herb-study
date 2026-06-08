@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>藥性 - 微寒 / 大寒</title>
+   <title>藥性 - 寒</title>
    <style>
        :root { 
            --text-white: #ffffff; 
@@ -11,18 +11,16 @@
            --title-color: #31483c; 
            --btn-color: #597A69;   
            
-           /* 核心修改點：在此定義微寒與大寒的專屬色碼 */
-           --color-wei-han: #BFD1C4;
-           --color-da-han: #889F8B;
+           /* 核心修改點 1：定義「寒」藥性的專屬色碼 */
+           --color-han: #93A3A0;
        }
        body { font-family: sans-serif; background-color: var(--main-bg); padding: 10px; display: flex; flex-direction: column; align-items: center; }
        .cabinet-section { width: 100%; max-width: 500px; }
        .series-heading { text-align: center; color: var(--title-color); background: rgba(82, 171, 163, 0.1); padding: 10px; border-radius: 6px; margin: 15px 0 10px 0; font-size: 1.5rem; font-weight: bold; }
        .lattice-unit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 8px; margin-bottom: 8px; border-radius: 8px; }
        
-       /* 透過類別名稱（Class）來直接控制每一層抽屜的底色 */
-       .bg-wei-han { background-color: var(--color-wei-han); }
-       .bg-da-han { background-color: var(--color-da-han); }
+       /* 核心修改點 2：透過 CSS 類別套用專屬底色 */
+       .bg-han { background-color: var(--color-han); }
 
        .drawer-text { 
            background: rgba(255, 255, 255, 0.15); 
@@ -56,17 +54,17 @@
    </div>
  
    <script>
-       const DATA_微寒 = [
-           { layer: "第一層", items: [{ name: "菊花" }, { name: "柴胡" }, { name: "升麻" }, { name: "天花粉" }] },
-           { layer: "第二層", items: [{ name: "玄參" }, { name: "連翹(橋)" }] }
-       ];
-       const DATA_大寒 = [
-           { layer: "第一層", items: [{ name: "石膏" }] }
+       const DATA_寒 = [
+           { layer: "第一層", items: [{ name: "桑葉" }, { name: "知母" }, { name: "黃連" }, { name: "龍膽" }] },
+           { layer: "第二層", items: [{ name: "大黃" }, { name: "昆布" }, { name: "蟬蛻" }, { name: "浮萍" }] },
+           { layer: "第三層", items: [{ name: "黃芩" }, { name: "黃柏" }, { name: "射干" }, { name: "芒硝" }] },
+           { layer: "第四層", items: [{ name: "牛蒡子" }, { name: "板藍根" }, { name: "漢防己" }, { name: "金銀花" }] },
+           { layer: "第五層", items: [{ name: "雷公藤" }] }
        ];
  
        const container = document.getElementById('container');
  
-       // 優化後的渲染函式：傳入對應的 CSS 類別名稱
+       // 優化後的渲染函式
        function renderSection(titleText, layerData, className) {
            const heading = document.createElement('div');
            heading.className = 'series-heading';
@@ -87,9 +85,8 @@
            });
        }
 
-       // 傳入對應的樣式類別名稱，而非死板的色碼
-       renderSection("藥性 – 微寒", DATA_微寒, "bg-wei-han");
-       renderSection("藥性 – 大寒", DATA_大寒, "bg-da-han");
+       // 核心修改點 4：傳入 CSS 類別名稱 bg-han 代替直接傳入色碼
+       renderSection("藥性 – 寒", DATA_寒, "bg-han");
    </script>
 </body>
 </html>
