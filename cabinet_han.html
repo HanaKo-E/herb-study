@@ -18,22 +18,21 @@
        
        .bg-han { background-color: var(--color-han); }
 
-       /* 🟢 核心修改點：格子邊框是什麼顏色，字就自動變什麼顏色 🟢 */
+       /* 🟢 核心修改區塊：格子與文字樣式 🟢 */
        .drawer-text { 
-           background: rgba(255, 255, 255, 0.15); 
+           background: rgba(255, 255, 255, 0.15); /* 1. 格子底色：保持原本的半透明白，不作更改 */
            aspect-ratio: 4 / 1; 
            display: flex; 
            align-items: center; 
            justify-content: center; 
            
-           /* 1. 格子邊框維持不變：原本是淡淡的半透明白 border */
-           border: 1px solid rgba(255, 255, 255, 0.25); 
+           border: 1px solid rgba(255, 255, 255, 0.25); /* 2. 格子邊框：保持原本的淡淡半透明白，不作更改 */
            border-radius: 4px; 
            
-           /* 2. 關鍵修改：將文字顏色綁定邊框顏色，邊框是啥色文字就是啥色 */
-           color: currentColor; 
+           /* 3. 解決字體變黑：直接指定與格子邊框視覺效果相同的銀白灰色 */
+           color: #e6eee8; 
            
-           /* 3. 為文字加上 1px 的純白外邊（以確保讀取淡色邊框時字體依然清晰） */
+           /* 4. 文字外層的純白邊效果 */
            text-shadow: 
                -1px -1px 0 #ffffff,  
                 1px -1px 0 #ffffff,
